@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Casts\PhoneCast;
+use App\Enums\UserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -12,37 +14,79 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
+        'type',
+        'hospital_id',
+        'doctor_id',
+        'patient_id',
+        'username',
         'name',
+        'phone',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'password' => 'hashed',
+        'type' => UserType::class,
+        'phone' => PhoneCast::class,
+    ];
+
+    protected $appends = ['type_label'];
+
+    public function hospital(): BelongsTo
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Hospital::class);
+    }
+
+    public function doctor(): BelongsTo
+    {
+        return $this->belongsTo(Doctor::class);
+    }
+
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    public function checkHospital(int $hospital_id): bool
+    {
+        if ($this->isDoctor()) {
+            return $this->hospital_id === $hospital_id;
+        } else if ($this->isAdmin()) {
+            return $this->hospital_id === null || $this->hospital_id === $hospital_id;
+        }
+
+        return false;
+    }
+
+    public function isPatient(): bool
+    {
+        return $this->type === UserType::PATIENT && $this->doctor_id === null;
+    }
+
+    public function isDoctor(): bool
+    {
+        return $this->type === UserType::DOCTOR || $this->doctor_id !== null;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->type === UserType::ADMIN && $this->doctor_id === null;
+    }
+
+    public function hasHospital(): bool
+    {
+        return $this->hospital_id !== null;
+    }
+
+    public function getTypeLabelAttribute(): string
+    {
+        return trans("enums.user.type.{$this->type->name}");
     }
 }

@@ -1,6 +1,7 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
+import path from 'path';
 import vue from '@vitejs/plugin-vue';
+import laravel from 'laravel-vite-plugin';
+import {defineConfig} from 'vite';
 
 export default defineConfig({
     plugins: [
@@ -17,4 +18,9 @@ export default defineConfig({
             },
         }),
     ],
+    resolve: {
+        alias: {
+            '@/Images': path.resolve(__dirname, './resources/images'),
+        },
+    },
 });

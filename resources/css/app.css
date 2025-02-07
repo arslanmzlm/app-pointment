@@ -1,3 +1,137 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer tailwind-base, primevue, tailwind-utilities;
+
+@layer tailwind-base {
+    @tailwind base;
+}
+
+@layer tailwind-utilities {
+    @tailwind components;
+    @tailwind utilities;
+}
+
+body {
+    @apply bg-surface-200 text-surface-600 dark:bg-surface-900 dark:text-surface-200;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    @apply font-bold;
+}
+
+h1 {
+    @apply text-4xl;
+}
+
+h2 {
+    @apply text-3xl;
+}
+
+h3 {
+    @apply text-2xl;
+}
+
+h4 {
+    @apply text-xl;
+}
+
+h5 {
+    @apply text-lg;
+}
+
+h6 {
+    @apply text-base;
+}
+
+.surface-default {
+    @apply bg-white dark:bg-surface-800 dark:border-surface-700
+}
+
+.sidebar-item {
+    @apply relative flex w-full items-center gap-2 rounded-md px-4 py-3 font-medium text-surface-300 duration-300 ease-in-out hover:bg-surface-700 hover:text-white;
+}
+
+.sidebar-item.active {
+    @apply bg-surface-700 text-white;
+}
+
+.p-datatable {
+    .p-datatable-header {
+        @apply dark:border-surface-700;
+    }
+
+    .p-datatable-header-cell {
+        @apply dark:border-surface-700;
+    }
+
+    .p-datatable-tbody > tr > td {
+        @apply text-surface-600 dark:text-surface-200 dark:border-surface-700;
+    }
+
+    &.p-datatable-lg .p-datatable-header {
+        @apply px-0;
+    }
+
+    .p-datatable-paginator-bottom {
+        @apply border-b-0;
+    }
+
+    .table-actions {
+        @apply flex flex-wrap gap-2
+    }
+
+    &.p-datatable-sm .p-datatable-thead > tr > th,
+    &.p-datatable-sm .p-datatable-tbody > tr > td {
+        @apply px-1.5 py-2
+    }
+}
+
+.p-button.btn-block {
+    @apply w-full;
+}
+
+.p-card {
+    @apply rounded;
+
+    .p-card-title {
+        @apply mb-2 border-b pb-4 text-xl font-bold;
+    }
+
+    .p-card-content {
+        @apply space-y-5;
+    }
+}
+
+.p-card.card-fluid {
+    .p-card-body {
+        @apply rounded-none p-0;
+    }
+
+    .p-datatable-paginator-bottom {
+        @apply border-b-0;
+    }
+}
+
+.p-confirmpopup-content {
+    @apply max-w-96;
+}
+
+.fc .fc-event.bg-success {
+    @apply !bg-success;
+}
+
+.fc .fc-event.bg-info {
+    @apply !bg-info;
+}
+
+.fc .fc-event.bg-warn {
+    @apply !bg-warn;
+}
+
+.fc .fc-event.bg-danger {
+    @apply !bg-danger;
+}
+

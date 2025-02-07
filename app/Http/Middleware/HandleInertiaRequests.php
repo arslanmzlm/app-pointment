@@ -34,6 +34,78 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'toasts' => $this->getToasts($request),
         ];
+    }
+
+    private function getToasts(Request $request): array
+    {
+        $toast = [];
+
+        if ($messages = $request->session()->get('toast.success')) {
+            if (is_array($messages)) {
+                foreach ($messages as $item) {
+                    $toast[] = [
+                        'type' => 'success',
+                        'message' => $item,
+                    ];
+                }
+            } else {
+                $toast[] = [
+                    'type' => 'success',
+                    'message' => $messages,
+                ];
+            }
+        }
+
+        if ($messages = $request->session()->get('toast.error')) {
+            if (is_array($messages)) {
+                foreach ($messages as $item) {
+                    $toast[] = [
+                        'type' => 'error',
+                        'message' => $item,
+                    ];
+                }
+            } else {
+                $toast[] = [
+                    'type' => 'error',
+                    'message' => $messages,
+                ];
+            }
+        }
+
+        if ($messages = $request->session()->get('toast.warn')) {
+            if (is_array($messages)) {
+                foreach ($messages as $item) {
+                    $toast[] = [
+                        'type' => 'warn',
+                        'message' => $item,
+                    ];
+                }
+            } else {
+                $toast[] = [
+                    'type' => 'warn',
+                    'message' => $messages,
+                ];
+            }
+        }
+
+        if ($messages = $request->session()->get('toast.info')) {
+            if (is_array($messages)) {
+                foreach ($messages as $item) {
+                    $toast[] = [
+                        'type' => 'info',
+                        'message' => $item,
+                    ];
+                }
+            } else {
+                $toast[] = [
+                    'type' => 'info',
+                    'message' => $messages,
+                ];
+            }
+        }
+
+        return $toast;
     }
 }
