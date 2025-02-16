@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-import {Card, Tag} from 'primevue';
+import {Card} from 'primevue';
+import ReportCard from '@/Components/Reports/ReportCard.vue';
 import {paymentMethod, transactionType} from '@/Utilities/enumHelper';
 import {currencyFormat} from '@/Utilities/formatters';
 import {PaymentMethod, TransactionType} from '@/types/enums';
-import {TransactionReport} from '@/types/response';
+import {TransactionReportItem} from '@/types/response';
 
 defineProps<{
-    report: TransactionReport;
-    hospitalName: string;
+    report: TransactionReportItem;
+    hospitalName?: string;
 }>();
 
-function typeLabel(key: string) {
+function typeLabel(key: keyof TransactionReportItem) {
     switch (key) {
         case 'income':
         case 'income_cash':
@@ -27,7 +28,7 @@ function typeLabel(key: string) {
     }
 }
 
-function typeIcon(key: string) {
+function typeIcon(key: keyof TransactionReportItem) {
     switch (key) {
         case 'income':
         case 'income_cash':
@@ -44,7 +45,7 @@ function typeIcon(key: string) {
     }
 }
 
-function typeSeverity(key: string) {
+function typeSeverity(key: keyof TransactionReportItem) {
     switch (key) {
         case 'income':
         case 'income_cash':
@@ -61,7 +62,7 @@ function typeSeverity(key: string) {
     }
 }
 
-function methodLabel(key: string) {
+function methodLabel(key: keyof TransactionReportItem) {
     switch (key) {
         case 'income_cash':
         case 'expense_cash':
@@ -79,11 +80,11 @@ function methodLabel(key: string) {
         case 'expense':
             return 'Toplam Gider';
         default:
-            return null;
+            return 'Toplam';
     }
 }
 
-function methodIcon(key: string) {
+function methodIcon(key: keyof TransactionReportItem) {
     switch (key) {
         case 'income_cash':
         case 'expense_cash':
@@ -99,7 +100,7 @@ function methodIcon(key: string) {
     }
 }
 
-function methodSeverity(key: string) {
+function methodSeverity(key: keyof TransactionReportItem) {
     switch (key) {
         case 'income_cash':
         case 'expense_cash':
@@ -118,47 +119,21 @@ function methodSeverity(key: string) {
 
 <template>
     <Card>
+        <template v-if="hospitalName" #title>{{ hospitalName }}</template>
         <template #content>
             <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-full">
-                    <h3>{{ hospitalName }}</h3>
-                </div>
-                <div v-for="(total, key) in report" :key class="col-span-12 md:col-span-6 lg:col-span-4">
-                    <div class="rounded border p-4 shadow-sm dark:border-surface-700">
-                        <div class="mb-4 flex justify-between">
-                            <div>
-                                <span
-                                    class="mb-4 block font-medium text-surface-500 dark:text-surface-300"
-                                    >{{ methodLabel(key) }}</span
-                                >
-                                <div
-                                    class="text-xl font-medium text-surface-900 dark:text-surface-0"
-                                >
-                                    {{ currencyFormat(total) }}
-                                </div>
-                            </div>
-                            <Tag
-                                :icon="methodIcon(key)"
-                                :severity="methodSeverity(key)"
-                                class="method-icon flex size-12 items-center justify-center rounded !p-0"
-                            />
-                        </div>
-                        <Tag
-                            :icon="typeIcon(key)"
-                            :severity="typeSeverity(key)"
-                            :value="typeLabel(key)"
-                        />
-                    </div>
-                </div>
+                <ReportCard
+                    v-for="(total, key) in report"
+                    :key
+                    :icon="methodIcon(key)"
+                    :severity="methodSeverity(key)"
+                    :title="methodLabel(key)"
+                    :type-icon="typeIcon(key)"
+                    :type-label="typeLabel(key)"
+                    :type-severity="typeSeverity(key)"
+                    :value="currencyFormat(total)"
+                />
             </div>
         </template>
     </Card>
 </template>
-
-<style scoped>
-.method-icon .p-tag-icon {
-    @apply size-5;
-    font-size: 20px !important;
-    line-height: 1 !important;
-}
-</style>

@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Patient extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'province_id',
@@ -64,7 +65,7 @@ class Patient extends Model
 
     public function appointments(): HasMany
     {
-        return $this->hasMany(Appointment::class, 'patient_id')->orderByDesc('id');
+        return $this->hasMany(Appointment::class, 'patient_id')->orderByDesc('start_date');
     }
 
     public function createdBy(): BelongsTo

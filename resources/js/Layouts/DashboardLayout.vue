@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import {Head, usePage} from '@inertiajs/vue3';
-import {ConfirmPopup, Toast, useToast} from 'primevue';
+import {ConfirmDialog, ConfirmPopup, Toast, useToast} from 'primevue';
 import {MenuItem} from 'primevue/menuitem';
 import {computed, onMounted, reactive, watch} from 'vue';
 import DashboardBreadcrumb from '@/Layouts/Parts/DashboardBreadcrumb.vue';
 import DashboardHeader from '@/Layouts/Parts/DashboardHeader.vue';
 import DashboardSidebar from '@/Layouts/Parts/DashboardSidebar.vue';
 import CalendarCircleExclamationIcon from '@/Icons/CalendarCircleExclamationIcon.vue';
+import CalendarDayIcon from '@/Icons/CalendarDayIcon.vue';
 import CalendarIcon from '@/Icons/CalendarIcon.vue';
 import CashRegisterIcon from '@/Icons/CashRegisterIcon.vue';
 import ClipboardAttachmentIcon from '@/Icons/ClipboardAttachmentIcon.vue';
@@ -15,6 +16,7 @@ import HospitalUserIcon from '@/Icons/HospitalUserIcon.vue';
 import IdCardIcon from '@/Icons/IdCardIcon.vue';
 import NoteMedicalIcon from '@/Icons/NoteMedicalIcon.vue';
 import PrescriptionBottleMedicalIcon from '@/Icons/PrescriptionBottleMedicalIcon.vue';
+import PresentationChartIcon from '@/Icons/PresentationChartIcon.vue';
 import SuitcaseMedical from '@/Icons/SuitcaseMedical.vue';
 import UsersIcon from '@/Icons/UsersIcon.vue';
 import {SidebarMenuRow} from '@/types/component';
@@ -78,6 +80,11 @@ if (page.props.auth.user.type === UserType.ADMIN) {
                     label: 'Randevular',
                     url: route('dashboard.appointment.list'),
                 },
+                {
+                    icon: NoteMedicalIcon,
+                    label: 'İşlemler',
+                    url: route('dashboard.treatment.list'),
+                },
             ],
         },
         {
@@ -99,9 +106,24 @@ if (page.props.auth.user.type === UserType.ADMIN) {
             name: 'RAPORLAR',
             items: [
                 {
-                    icon: NoteMedicalIcon,
+                    icon: PresentationChartIcon,
                     label: 'Kasa Raporu',
                     url: route('dashboard.report.transaction'),
+                },
+                {
+                    icon: PresentationChartIcon,
+                    label: 'Hasta Raporu',
+                    url: route('dashboard.report.patient'),
+                },
+                {
+                    icon: PresentationChartIcon,
+                    label: 'İşlem Raporu',
+                    url: route('dashboard.report.treatment'),
+                },
+                {
+                    icon: PresentationChartIcon,
+                    label: 'Randevu Raporu',
+                    url: route('dashboard.report.appointment'),
                 },
             ],
         },
@@ -113,6 +135,11 @@ if (page.props.auth.user.type === UserType.ADMIN) {
                     icon: ClipboardAttachmentIcon,
                     label: 'Hasta Kayıt Ek Alanlar',
                     url: route('dashboard.field.list'),
+                },
+                {
+                    icon: CalendarDayIcon,
+                    label: 'Randevu Tipleri',
+                    url: route('dashboard.appointment.type.list'),
                 },
             ],
         },
@@ -127,6 +154,11 @@ if (page.props.auth.user.type === UserType.ADMIN) {
                 {
                     icon: CalendarIcon,
                     label: 'Randevular',
+                    url: route('dashboard.appointment.list'),
+                },
+                {
+                    icon: CalendarIcon,
+                    label: 'Takvim',
                     url: route('dashboard.appointment.calendar'),
                 },
             ],
@@ -178,7 +210,7 @@ if (page.props.auth.user.type === UserType.ADMIN) {
 
             <!-- ===== Main Content Start ===== -->
             <main>
-                <div class="mx-auto space-y-6 p-4 md:p-6 2xl:p-10">
+                <div class="mx-auto space-y-6 p-4 md:p-4 2xl:p-8">
                     <DashboardBreadcrumb
                         v-if="title || breadcrumbs"
                         :home-url="route('dashboard.index')"
@@ -195,5 +227,6 @@ if (page.props.auth.user.type === UserType.ADMIN) {
 
     <Toast position="bottom-center" />
 
-    <ConfirmPopup />
+    <ConfirmPopup group="popup" />
+    <ConfirmDialog group="dialog" />
 </template>

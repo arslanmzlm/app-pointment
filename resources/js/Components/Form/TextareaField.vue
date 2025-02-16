@@ -23,7 +23,7 @@ const id = computed(() => {
     <FormField :error :for="id" :label :required>
         <Textarea :id v-model="model" :invalid="!!error" :placeholder auto-resize fluid />
 
-        <template #message>
+        <template v-if="$slots.message" #message>
             <slot name="message"></slot>
         </template>
     </FormField>

@@ -5,21 +5,34 @@ import ProductForm from '@/Forms/ProductForm.vue';
 import {ProductFormType} from '@/types/form';
 import {Hospital} from '@/types/model';
 
-defineProps<{
+const props = defineProps<{
+    hospitals: Hospital[];
     categories: string[];
-    hospitals?: Hospital[];
+    brands: string[];
 }>();
 
 const breadcrumbs = [{label: 'Ürünler', url: route('dashboard.product.list')}];
 
 const form = useForm<ProductFormType>({
-    hospital_id: 0,
     active: true,
     category: '',
+    brand: '',
     name: '',
-    code: null,
-    stock: null,
+    slug: null,
+    code: '',
     price: null,
+    description: '',
+    stocks: [],
+    images: [],
+});
+
+props.hospitals.forEach((hospital: Hospital) => {
+    form.stocks.push({
+        id: null,
+        hospital_id: hospital.id,
+        hospital_name: hospital.name,
+        stock: 0,
+    });
 });
 
 function submit() {
@@ -29,6 +42,6 @@ function submit() {
 
 <template>
     <DashboardLayout :breadcrumbs title="Ürün Oluştur">
-        <ProductForm :categories :form :hospitals @submit.prevent="submit" />
+        <ProductForm :brands :categories :form :hospitals @submit.prevent="submit" />
     </DashboardLayout>
 </template>

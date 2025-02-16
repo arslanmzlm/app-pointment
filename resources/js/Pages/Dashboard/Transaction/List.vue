@@ -115,7 +115,12 @@ if (props.hospitals) {
                     </template>
                 </MultiSelectField>
 
-                <PatientSelector v-model="filters.patient.value" show-clear size="small" />
+                <PatientSelector
+                    v-model.number="filters.patient.value"
+                    :default-data="transactions.data[0]?.patient ?? undefined"
+                    show-clear
+                    size="small"
+                />
 
                 <DateField
                     v-model="filters.start_date.value"

@@ -21,10 +21,10 @@ class PatientFactory extends Factory
     {
         $firstName = $this->faker->firstName();
         $lastName = $this->faker->lastName();
-        $date = $this->faker->dateTimeBetween('start of the year');
+        $date = $this->faker->dateTimeBetween('-2 months');
 
         return [
-            'province_id' => Province::all()->random()->id,
+            'province_id' => Province::query()->inRandomOrder()->first()->id,
             'old' => $this->faker->boolean(),
             'name' => $firstName,
             'surname' => $lastName,
@@ -34,7 +34,7 @@ class PatientFactory extends Factory
             'gender' => $this->faker->randomElement(Gender::cases()),
             'birthday' => $this->faker->date(),
             'notification' => $this->faker->boolean(),
-            'created_by' => $this->faker->boolean() ? User::all()->random()->id : null,
+            'created_by' => $this->faker->boolean() ? User::query()->inRandomOrder()->first()->id : null,
             'created_at' => $date,
             'updated_at' => $date,
         ];

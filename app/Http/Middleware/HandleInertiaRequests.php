@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\AppointmentService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,6 +36,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'toasts' => $this->getToasts($request),
+            'activeAppointment' => $this->getActiveAppointment()
         ];
     }
 
@@ -107,5 +109,14 @@ class HandleInertiaRequests extends Middleware
         }
 
         return $toast;
+    }
+
+    private function getActiveAppointment(): ?\App\Models\Appointment
+    {
+        if (auth()->check() && auth()->user()->isDoctor() && auth()->user()->doctor_id !== null) {
+            return AppointmentService::getActiveByDoctor(auth()->user()->doctor_id);
+        }
+
+        return null;
     }
 }

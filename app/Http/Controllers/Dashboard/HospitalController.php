@@ -57,15 +57,6 @@ class HospitalController extends Controller
         return to_route('dashboard.hospital.list');
     }
 
-    public function destroy(Hospital $hospital)
-    {
-        $this->hospitalService->delete($hospital);
-
-        session()->flash('toast.success', trans('messages.hospital.updated'));
-
-        return to_route('dashboard.hospital.list');
-    }
-
     public function info()
     {
         return response()->json($this->hospitalService->getInfo());

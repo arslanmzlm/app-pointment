@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Traits\Request\SharedRequest;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StorePassiveDateRequest extends FormRequest
 {
+    use SharedRequest;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -28,14 +30,6 @@ class StorePassiveDateRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:255'],
         ];
 
-        if (auth()->user() && auth()->user()->isAdmin()) {
-            if (auth()->user()->hasHospital()) {
-                $rules['doctor_id'] = ['required', Rule::exists('doctors', 'id')->where('hospital_id', auth()->user()->hospital_id)];
-            } else {
-                $rules['doctor_id'] = ['required', Rule::exists('doctors', 'id')];
-            }
-        }
-
-        return $rules;
+        return $this->checkForDoctor($rules);
     }
 }

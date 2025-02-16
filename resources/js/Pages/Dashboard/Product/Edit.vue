@@ -5,10 +5,13 @@ import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import ProductForm from '@/Forms/ProductForm.vue';
 import {ProductFormType} from '@/types/form';
 import {Product} from '@/types/model';
+import {ProductStockResponse} from '@/types/response';
 
 const props = defineProps<{
     product: Product;
+    stocks: ProductStockResponse[];
     categories: string[];
+    brands: string[];
 }>();
 
 const product = props.product;
@@ -18,10 +21,13 @@ const breadcrumbs = [{label: 'Ürünler', url: route('dashboard.product.list')}]
 const form = useForm<ProductFormType>({
     active: product.active,
     category: product.category,
+    brand: product.brand,
     name: product.name,
+    slug: product.slug,
     code: product.code,
-    stock: product.stock,
     price: product.price,
+    description: product.description,
+    stocks: props.stocks,
 });
 
 function submit() {
@@ -31,6 +37,6 @@ function submit() {
 
 <template>
     <DashboardLayout :breadcrumbs :title="pageTitle">
-        <ProductForm :categories :form @submit.prevent="submit" />
+        <ProductForm :brands :categories :form @submit.prevent="submit" />
     </DashboardLayout>
 </template>

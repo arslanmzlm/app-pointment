@@ -8,6 +8,9 @@ use App\Http\Requests\StoreTreatmentRequest;
 use App\Http\Requests\UpdateTreatmentRequest;
 use App\Models\Treatment;
 use App\Services\AppointmentService;
+use App\Services\AppointmentTypeService;
+use App\Services\DoctorService;
+use App\Services\HospitalService;
 use App\Services\PassiveDateService;
 use App\Services\ProductService;
 use App\Services\ServiceService;
@@ -17,30 +20,46 @@ use Inertia\Inertia;
 class TreatmentController extends Controller
 {
     public function __construct(
-        private TreatmentService   $treatmentService,
-        private ProductService     $productService,
-        private ServiceService     $serviceService,
-        private AppointmentService $appointmentService,
-        private PassiveDateService $passiveDateService
+        private TreatmentService       $treatmentService,
+        private HospitalService        $hospitalService,
+        private DoctorService          $doctorService,
+        private ProductService         $productService,
+        private ServiceService         $serviceService,
+        private AppointmentService     $appointmentService,
+        private AppointmentTypeService $appointmentTypeService,
+        private PassiveDateService     $passiveDateService
     )
     {
     }
 
     public function list()
     {
-        return Inertia::render('Dashboard/Treatment/List', [
+        $data = [
             'treatments' => $this->treatmentService->filter(),
-        ]);
+        ];
+
+        if (!auth()->user()->hasHospital()) {
+            $data['hospitals'] = $this->hospitalService->getAll();
+        }
+
+        if (!auth()->user()->isDoctor()) {
+            $data['doctors'] = $this->doctorService->getAll();
+        }
+
+        return Inertia::render('Dashboard/Treatment/List', $data);
     }
 
     public function create()
     {
-        return Inertia::render('Dashboard/Treatment/Create', [
+        $data = [
             'services' => $this->serviceService->getAll(),
             'products' => $this->productService->getAll(),
             'paymentMethods' => PaymentMethod::getAll(),
-            'passiveDates' => $this->passiveDateService->getPassiveDays(auth()->user()->doctor_id),
-        ]);
+            'passiveDates' => auth()->user()->doctor_id ? $this->passiveDateService->getPassiveDays(auth()->user()->doctor_id) : [],
+            'appointmentTypes' => $this->appointmentTypeService->getAll(),
+        ];
+
+        return Inertia::render('Dashboard/Treatment/Create', $data);
     }
 
     public function store(StoreTreatmentRequest $request)
@@ -64,7 +83,7 @@ class TreatmentController extends Controller
         return Inertia::render('Dashboard/Treatment/Edit', [
             'treatment' => $treatment->load(['doctor', 'patient', 'services.service', 'products.product']),
             'services' => $this->serviceService->getAll($treatment->doctor->hospital_id),
-            'products' => $this->productService->getAll($treatment->doctor->hospital_id),
+            'products' => $this->productService->getAll(),
             'paymentMethod' => $treatment->transaction->method,
             'paymentMethods' => PaymentMethod::getAll(),
         ]);

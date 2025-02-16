@@ -22,17 +22,17 @@ class TransactionFactory extends Factory
      */
     public function definition(): array
     {
-        $hospital_id = Hospital::all()->random()->id;
-        $date = $this->faker->dateTimeBetween('start of the year');
+        $hospitalId = Hospital::query()->inRandomOrder()->first()->id;
+        $date = $this->faker->dateTimeBetween('-2 months');
 
         return [
             'type' => $this->faker->randomElement(TransactionType::cases()),
             'method' => $this->faker->randomElement(PaymentMethod::cases()),
             'total' => $this->faker->randomFloat(2, 200, 99999),
-            'user_id' => User::all()->random()->id,
-            'hospital_id' => $hospital_id,
-            'doctor_id' => $this->faker->boolean() ? Doctor::query()->where('hospital_id', $hospital_id)->get()->random()->id : null,
-            'patient_id' => $this->faker->boolean() ? Patient::all()->random()->id : null,
+            'user_id' => User::query()->inRandomOrder()->first()->id,
+            'hospital_id' => $hospitalId,
+            'doctor_id' => $this->faker->boolean() ? Doctor::query()->where('hospital_id', $hospitalId)->get()->random()->id : null,
+            'patient_id' => $this->faker->boolean() ? Patient::query()->inRandomOrder()->first()->id : null,
             'treatment_id' => null,
             'description' => null,
             'created_at' => $date,

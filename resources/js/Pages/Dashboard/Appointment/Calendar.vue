@@ -9,7 +9,7 @@ import FullCalendar from '@fullcalendar/vue3';
 import {router} from '@inertiajs/vue3';
 import dayjs from 'dayjs';
 import {isArray} from 'lodash';
-import {Button, Card, ContextMenu, Tag} from 'primevue';
+import {Button, Card, ContextMenu, Tag, useConfirm} from 'primevue';
 import {MenuItem} from 'primevue/menuitem';
 import {computed, reactive, ref, watch} from 'vue';
 import {useHospitalStore} from '@/Stores/hospital';
@@ -138,13 +138,7 @@ function reloadData() {
     });
 }
 
-watch(
-    filters.value,
-    () => {
-        reloadData();
-    },
-    {deep: true},
-);
+watch(filters, reloadData, {deep: true});
 
 const appointment = computed(() => {
     if (eventId.value) {
@@ -156,6 +150,34 @@ const appointment = computed(() => {
 
     return null;
 });
+
+const confirm = useConfirm();
+
+function showConfirm(event: Event, url: string) {
+    confirm.require({
+        target: <HTMLElement>event.currentTarget,
+        message: 'Randevuyu iptal etmek istediğinizden emin misiniz?',
+        icon: 'pi pi-exclamation-triangle',
+        position: 'center',
+        group: 'dialog',
+        rejectProps: {
+            label: 'Kapat',
+            severity: 'secondary',
+            outlined: true,
+        },
+        acceptProps: {
+            label: 'İptal Et',
+            severity: 'warn',
+        },
+        accept: () => {
+            router.post(url, undefined, {
+                onSuccess: () => {
+                    updateEvents();
+                },
+            });
+        },
+    });
+}
 
 const eventId = ref<number | string | null>(null);
 const menu = ref();
@@ -172,6 +194,16 @@ const menuItems = reactive<MenuItem[]>([
         icon: 'pi pi-calendar-clock',
         command: () => {
             router.get(route('dashboard.appointment.edit', {id: eventId.value}));
+        },
+    },
+    {
+        label: 'İptal Et',
+        icon: 'pi pi-calendar-times',
+        command: (event) => {
+            showConfirm(
+                event.originalEvent,
+                route('dashboard.appointment.cancel', {id: eventId.value}),
+            );
         },
     },
 ]);

@@ -8,13 +8,13 @@ const props = defineProps<{
 
 const confirm = useConfirm();
 
-const showConfirm = (event: Event) => {
+function showConfirm(event: Event) {
     confirm.require({
         target: <HTMLElement>event.currentTarget,
         message:
             'Silme işlemi, bu veri ile bağlantılı olan verileride silecektir ve bu işlem geri alınamaz. Silmek istediğinizden emin misiniz?',
         icon: 'pi pi-exclamation-triangle',
-        position: 'bottomright',
+        group: 'popup',
         rejectProps: {
             label: 'İptal',
             severity: 'secondary',
@@ -28,7 +28,7 @@ const showConfirm = (event: Event) => {
             router.post(props.url);
         },
     });
-};
+}
 </script>
 
 <template>

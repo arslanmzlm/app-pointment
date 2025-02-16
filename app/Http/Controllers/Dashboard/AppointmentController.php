@@ -12,6 +12,7 @@ use App\Http\Requests\UpdateAppointmentRequest;
 use App\Models\Appointment;
 use App\Rules\CheckAppointmentOverlap;
 use App\Services\AppointmentService;
+use App\Services\AppointmentTypeService;
 use App\Services\DoctorService;
 use App\Services\HospitalService;
 use App\Services\PassiveDateService;
@@ -24,22 +25,23 @@ use Inertia\Inertia;
 class AppointmentController extends Controller
 {
     public function __construct(
-        private AppointmentService $appointmentService,
-        private PassiveDateService $passiveDateService,
-        private HospitalService    $hospitalService,
-        private DoctorService      $doctorService,
-        private ServiceService     $serviceService,
-        private ProductService     $productService,
-        private TreatmentService   $treatmentService
+        private AppointmentService     $appointmentService,
+        private AppointmentTypeService $appointmentTypeService,
+        private PassiveDateService     $passiveDateService,
+        private HospitalService        $hospitalService,
+        private DoctorService          $doctorService,
+        private ServiceService         $serviceService,
+        private ProductService         $productService,
+        private TreatmentService       $treatmentService
     )
     {
     }
 
-    public
-    function list()
+    public function list()
     {
         $data = [
             'appointments' => $this->appointmentService->filter(),
+            'appointmentTypes' => $this->appointmentTypeService->getAll(),
             'appointmentStates' => AppointmentState::getAll(),
         ];
 
@@ -58,6 +60,7 @@ class AppointmentController extends Controller
     {
         $data = [
             'appointments' => $this->appointmentService->dateRange(),
+            'appointmentTypes' => $this->appointmentTypeService->getAll(),
             'appointmentStates' => AppointmentState::getAll(),
         ];
 
@@ -74,12 +77,18 @@ class AppointmentController extends Controller
 
     public function create()
     {
-        $data = [];
+        $data = [
+            'appointmentTypes' => $this->appointmentTypeService->getAll(),
+        ];
 
-        if (auth()->user()->doctor_id) {
-            $data = [
-                'passiveDates' => $this->passiveDateService->getPassiveDays(auth()->user()->doctor_id),
-            ];
+        if (!auth()->user()->hasHospital()) {
+            $data['hospitals'] = $this->hospitalService->getAll();
+        }
+
+        if (auth()->user()->isDoctor()) {
+            $data['passiveDates'] = $this->passiveDateService->getPassiveDays(auth()->user()->doctor_id);
+        } else {
+            $data['doctors'] = $this->doctorService->getAll();
         }
 
         return Inertia::render('Dashboard/Appointment/Create', $data);
@@ -87,7 +96,8 @@ class AppointmentController extends Controller
 
     public function store(StoreAppointmentRequest $request)
     {
-        $this->appointmentService->storeMany(auth()->user()->doctor_id, $request->validated('patient_id'), $request->validated('appointments'));
+        $doctorId = auth()->user()->doctor_id ?? $request->input('doctor_id');
+        $this->appointmentService->storeMany($doctorId, $request->validated('patient_id'), $request->validated('appointments'));
 
         session()->flash('toast.success', trans('messages.appointment.created'));
 
@@ -97,8 +107,9 @@ class AppointmentController extends Controller
     public function edit(Appointment $appointment)
     {
         return Inertia::render('Dashboard/Appointment/Edit', [
-            'appointment' => $appointment->load('patient'),
-            'passiveDates' => $this->passiveDateService->getPassiveDays(auth()->user()->doctor_id),
+            'appointment' => $appointment->load(['patient']),
+            'appointmentTypes' => $this->appointmentTypeService->getAll(),
+            'passiveDates' => $this->passiveDateService->getPassiveDays($appointment->doctor_id),
             'appointments' => $this->appointmentService->getActiveByPatient($appointment->patient_id),
         ]);
     }
@@ -106,7 +117,7 @@ class AppointmentController extends Controller
     public function update(UpdateAppointmentRequest $request, Appointment $appointment)
     {
         Validator::make(
-            ['appointment' => $request->validated()],
+            ['appointment' => $request->validated(), 'doctor_id' => $appointment->doctor_id],
             ['appointment' => (new CheckAppointmentOverlap())->appointment($appointment->id)]
         )->validate();
 
@@ -127,15 +138,16 @@ class AppointmentController extends Controller
     public function process(Appointment $appointment)
     {
         if (!$appointment->isActive()) {
-            session()->flash('toast.error', trans('messages.treatment.already_completed'));
+            session()->flash('toast.error', trans('messages.appointment.finalized'));
 
             return back();
         }
 
         return Inertia::render('Dashboard/Appointment/Process', [
             'appointment' => $appointment->load('patient'),
+            'appointmentTypes' => $this->appointmentTypeService->getAll(),
             'services' => $this->serviceService->getAll(auth()->user()->hospital_id),
-            'products' => $this->productService->getAll(auth()->user()->hospital_id),
+            'products' => $this->productService->getAll(),
             'paymentMethods' => PaymentMethod::getAll(),
             'passiveDates' => $this->passiveDateService->getPassiveDays(auth()->user()->doctor_id),
             'appointments' => $this->appointmentService->getActiveByPatient($appointment->patient_id),
@@ -145,7 +157,7 @@ class AppointmentController extends Controller
     public function complete(CompleteAppointmentRequest $request, Appointment $appointment)
     {
         if (!$appointment->isActive()) {
-            session()->flash('toast.error', trans('messages.treatment.already_completed'));
+            session()->flash('toast.warn', trans('messages.appointment.finalized'));
 
             return back();
         }
@@ -162,16 +174,30 @@ class AppointmentController extends Controller
 
         $this->appointmentService->completeByTreatment($appointment, $treatment);
 
-        session()->flash('toast.success', trans('messages.treatment.completed'));
+        session()->flash('toast.success', trans('messages.appointment.completed'));
 
         return to_route('dashboard.treatment.list');
     }
 
-    public function schedule(PreviewAppointmentsRequest $request)
+    public function cancel(Appointment $appointment)
     {
-        return response()->json([
-            'dates' => $this->appointmentService->previewDates(auth()->user()->doctor_id, $request->validated('dates')),
-        ]);
+        if (!$appointment->isActive()) {
+            session()->flash('toast.warn', trans('messages.appointment.finalized'));
+
+            return;
+        }
+
+        $this->appointmentService->cancel($appointment);
+
+        session()->flash('toast.success', trans('messages.appointment.canceled'));
     }
 
+    public function schedule(PreviewAppointmentsRequest $request)
+    {
+        $doctorId = auth()->user()->doctor_id ?? $request->input('doctor_id');
+
+        return response()->json([
+            'dates' => $doctorId ? $this->appointmentService->previewDates($doctorId, $request->validated('dates')) : [],
+        ]);
+    }
 }

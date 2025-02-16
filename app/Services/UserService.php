@@ -20,6 +20,7 @@ class UserService
             ->idFilter('hospital')
             ->enumMultiple(['type' => UserType::class])
             ->hasHospital()
+            ->deleted()
             ->paginate();
     }
 
@@ -45,26 +46,30 @@ class UserService
         return $user->delete();
     }
 
-    public function storeOrUpdateDoctor(Doctor $doctor): User
+    public function storeOrUpdateDoctor(Doctor $doctor): ?User
     {
         $data = $this->getDataForRelatedCreate($doctor);
 
         if ($doctor->user) {
             return $this->update($doctor->user, $data);
-        } else {
+        } else if (!User::query()->where('username', $data['username'])->withTrashed()->exists()) {
             return $this->store($data, UserType::DOCTOR);
         }
+
+        return null;
     }
 
-    public function storeOrUpdatePatient(Patient $patient): User
+    public function storeOrUpdatePatient(Patient $patient): ?User
     {
         $data = $this->getDataForRelatedCreate($patient);
 
         if ($patient->user) {
             return $this->update($patient->user, $data);
-        } else {
+        } else if (!User::query()->where('username', $data['username'])->withTrashed()->exists()) {
             return $this->store($data, UserType::PATIENT);
         }
+
+        return null;
     }
 
     private function assignAttributes(User $user, array $data): User

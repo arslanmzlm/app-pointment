@@ -1,16 +1,18 @@
 <script lang="ts" setup>
-import {Column, Tag} from 'primevue';
+import {router} from '@inertiajs/vue3';
+import {Button, Column, Tag, useConfirm} from 'primevue';
 import {computed, ref, watch} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import PatientSelector from '@/Forms/Parts/PatientSelector.vue';
 import BaseDataTable from '@/Components/BaseDataTable.vue';
+import DeletePopup from '@/Components/DeletePopup.vue';
 import EditLink from '@/Components/EditLink.vue';
 import DateRangeField from '@/Components/Form/DateRangeField.vue';
 import InputField from '@/Components/Form/InputField.vue';
 import MultiSelectField from '@/Components/Form/MultiSelectField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
 import {appointmentState} from '@/Utilities/enumHelper';
-import {dateTimeFormat} from '@/Utilities/formatters';
+import {dateFormat, dateTimeFormat, timeFormat} from '@/Utilities/formatters';
 import {DataTableFilter} from '@/types/component';
 import {Appointment, Doctor, Hospital} from '@/types/model';
 import {EnumResponse, PaginateResponse} from '@/types/response';
@@ -82,6 +84,29 @@ if (props.hospitals) {
 
 if (props.doctors) {
     filters.value.doctor = {value: null, type: 'number'};
+}
+
+const confirm = useConfirm();
+
+function showConfirm(event: Event, url: string) {
+    confirm.require({
+        target: <HTMLElement>event.currentTarget,
+        message: 'Randevuyu iptal etmek istediğinizden emin misiniz?',
+        icon: 'pi pi-exclamation-triangle',
+        group: 'popup',
+        rejectProps: {
+            label: 'Kapat',
+            severity: 'secondary',
+            outlined: true,
+        },
+        acceptProps: {
+            label: 'İptal Et',
+            severity: 'warn',
+        },
+        accept: () => {
+            router.post(url);
+        },
+    });
 }
 </script>
 
@@ -159,15 +184,6 @@ if (props.doctors) {
             </template>
 
             <Column field="id" header="ID" sortable />
-            <Column field="state" header="Durum">
-                <template #body="slotProps">
-                    <Tag
-                        :icon="appointmentState(slotProps.data.state).icon"
-                        :severity="appointmentState(slotProps.data.state).severity"
-                        :value="slotProps.data.state_label"
-                    />
-                </template>
-            </Column>
             <Column v-if="hospitals" field="hospital" header="Hastane">
                 <template #body="slotProps">
                     {{ hospitalNames[slotProps.data.hospital_id] }}
@@ -179,17 +195,28 @@ if (props.doctors) {
                 </template>
             </Column>
             <Column field="patient.full_name" header="Hasta" />
-            <Column field="start_date" header="Başlangıç Tarihi" sortable>
+            <Column field="type_name" header="Randevu Tipi" />
+            <Column field="state" header="Durum">
                 <template #body="slotProps">
-                    {{ dateTimeFormat(slotProps.data.start_date) }}
+                    <Tag
+                        :icon="appointmentState(slotProps.data.state).icon"
+                        :severity="appointmentState(slotProps.data.state).severity"
+                        :value="slotProps.data.state_label"
+                    />
                 </template>
             </Column>
-            <Column field="due_date" header="Bitiş Tarihi" sortable>
+            <Column field="start_date" header="Tarihi" sortable>
                 <template #body="slotProps">
-                    {{ dateTimeFormat(slotProps.data.due_date) }}
+                    <div class="whitespace-nowrap">
+                        <div>{{ dateFormat(slotProps.data.start_date) }}</div>
+                        <div>
+                            {{ timeFormat(slotProps.data.start_date) }} -
+                            {{ timeFormat(slotProps.data.due_date) }}
+                        </div>
+                        <div>{{ slotProps.data.duration }} dk</div>
+                    </div>
                 </template>
             </Column>
-            <Column field="duration" header="Seans Süresi (dakika)" sortable />
             <Column field="updated_at" header="Son Düzenlenme Tarihi">
                 <template #body="slotProps">
                     {{ dateTimeFormat(slotProps.data.updated_at) }}
@@ -197,7 +224,28 @@ if (props.doctors) {
             </Column>
             <Column header="İşlemler">
                 <template #body="slotProps">
-                    <EditLink :url="route('dashboard.appointment.edit', {id: slotProps.data.id})" />
+                    <div class="table-actions">
+                        <DeletePopup
+                            :url="route('dashboard.appointment.destroy', {id: slotProps.data.id})"
+                        />
+
+                        <Button
+                            class="size-12"
+                            icon="pi pi-times"
+                            severity="warn"
+                            title="Sil"
+                            @click="
+                                showConfirm(
+                                    $event,
+                                    route('dashboard.appointment.cancel', {id: slotProps.data.id}),
+                                )
+                            "
+                        />
+
+                        <EditLink
+                            :url="route('dashboard.appointment.edit', {id: slotProps.data.id})"
+                        />
+                    </div>
                 </template>
             </Column>
         </BaseDataTable>

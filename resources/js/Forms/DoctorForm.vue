@@ -30,7 +30,7 @@ defineProps<{
                     required
                 />
 
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid gap-6 lg:grid-cols-2">
                     <InputField
                         v-model="form.name"
                         :error="form.errors.name"

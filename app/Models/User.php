@@ -6,13 +6,14 @@ use App\Casts\PhoneCast;
 use App\Enums\UserType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'type',
@@ -54,12 +55,12 @@ class User extends Authenticatable
         return $this->belongsTo(Patient::class);
     }
 
-    public function checkHospital(int $hospital_id): bool
+    public function checkHospital(int $hospitalId): bool
     {
         if ($this->isDoctor()) {
-            return $this->hospital_id === $hospital_id;
+            return $this->hospital_id === $hospitalId;
         } else if ($this->isAdmin()) {
-            return $this->hospital_id === null || $this->hospital_id === $hospital_id;
+            return $this->hospital_id === null || $this->hospital_id === $hospitalId;
         }
 
         return false;

@@ -41,7 +41,7 @@ const id = computed(() => {
             fluid
         />
 
-        <template #message>
+        <template v-if="$slots.message" #message>
             <slot name="message"></slot>
         </template>
     </FormField>

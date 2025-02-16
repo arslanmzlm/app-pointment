@@ -1,14 +1,16 @@
 <script lang="ts" setup>
 import {InertiaForm} from '@inertiajs/vue3';
 import {clone} from 'lodash';
-import {Button, Card, DatePicker, FloatLabel, InputNumber, InputText} from 'primevue';
+import {Button, Card, DatePicker, FloatLabel, InputNumber, InputText, Select} from 'primevue';
 import {computed} from 'vue';
 import PreviewDates from '@/Forms/Parts/PreviewDates.vue';
 import {AppointmentMultipleFormType, TreatmentFormType} from '@/types/form';
+import {AppointmentType} from '@/types/model';
 
 const props = defineProps<{
     form: InertiaForm<AppointmentMultipleFormType | TreatmentFormType>;
     passiveDates?: string[];
+    appointmentTypes: AppointmentType[];
 }>();
 
 function add() {
@@ -16,7 +18,8 @@ function add() {
         props.form.appointments.push({
             start_date: null,
             duration: 60,
-            title: `${props.form.appointments.length + 1}. seans`,
+            appointment_type_id: null,
+            title: `${props.form.appointments.length + 1}. randevu`,
         });
     }
 }
@@ -76,15 +79,15 @@ const disabledDates = computed(() => {
 
 <template>
     <Card>
-        <template #title>Seanslar</template>
+        <template #title>Randevular</template>
         <template #content>
-            <div v-if="form" class="space-y-3">
+            <div v-if="form" class="space-y-4">
                 <div
                     v-if="form && form.length"
                     class="hidden lg:grid lg:grid-cols-5 lg:gap-3 lg:pr-10"
                 >
                     <div class="col-span-1 font-bold">Tarih</div>
-                    <div class="col-span-1 font-bold">Seans süresi (dakika)</div>
+                    <div class="col-span-1 font-bold">Randevu süresi (dakika)</div>
                     <div class="col-span-3 font-bold">Başlık</div>
                 </div>
 
@@ -93,7 +96,7 @@ const disabledDates = computed(() => {
                     :key="index"
                     class="flex gap-3"
                 >
-                    <div class="grid grow gap-3 lg:grid-cols-5">
+                    <div class="grid grow gap-3 lg:grid-cols-7">
                         <FloatLabel class="lg:col-span-1" variant="on">
                             <DatePicker
                                 v-model="appointment.start_date"
@@ -121,6 +124,7 @@ const disabledDates = computed(() => {
                         <FloatLabel class="lg:col-span-1" variant="on">
                             <InputNumber
                                 v-model="appointment.duration"
+                                :invalid="!!form.errors[`appointments.${index}.duration`]"
                                 :step="5"
                                 button-layout="horizontal"
                                 fluid
@@ -135,10 +139,26 @@ const disabledDates = computed(() => {
                                 </template>
                             </InputNumber>
 
-                            <label class="block lg:hidden">Seans süresi (dakika)</label>
+                            <label class="block lg:hidden">Randevu süresi (dakika)</label>
                         </FloatLabel>
 
-                        <FloatLabel class="lg:col-span-3" variant="on">
+                        <FloatLabel class="lg:col-span-1" variant="on">
+                            <Select
+                                v-model="appointment.appointment_type_id"
+                                :invalid="
+                                    !!form.errors[`appointments.${index}.appointment_type_id`]
+                                "
+                                :options="appointmentTypes"
+                                fluid
+                                option-label="name"
+                                option-value="id"
+                                size="small"
+                            />
+
+                            <label class="block lg:hidden">Randevu Tipi</label>
+                        </FloatLabel>
+
+                        <FloatLabel class="lg:col-span-4" variant="on">
                             <InputText v-model="appointment.title" fluid size="small" />
 
                             <label class="block lg:hidden">Başlık</label>
@@ -163,12 +183,12 @@ const disabledDates = computed(() => {
                         icon="pi pi-minus"
                         severity="danger"
                         size="small"
-                        title="Seansı Çıkar"
+                        title="Randevuyu Çıkar"
                         @click="remove(index)"
                     />
                 </div>
 
-                <Button icon="pi pi-plus" label="Seans Ekle" size="small" @click="add" />
+                <Button icon="pi pi-plus" label="Randevu Ekle" size="small" @click="add" />
             </div>
         </template>
     </Card>

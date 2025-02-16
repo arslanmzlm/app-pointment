@@ -17,17 +17,17 @@ class PatientService
     {
         $query = Patient::query()->orderBy('full_name');
 
-        $this->relationFilter($query);
-
         $q = request('search');
         if ($q) {
             $like = "%{$q}%";
             $query->whereLike('full_name', $like);
             $query->orWhereLike('phone', $like);
             $query->orWhereLike('email', $like);
+
+            if (is_numeric($q)) $query->where('id', intval($q));
         }
 
-        return $query->get();
+        return $query->limit(100)->get();
     }
 
     public function filter(): LengthAwarePaginator
@@ -44,6 +44,14 @@ class PatientService
             ->date(['birthday' => 'Y-m-d'])
             ->enum(['gender' => Gender::class])
             ->paginate();
+    }
+
+    public function today(): Collection
+    {
+        return Patient::query()
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->orderBy('created_at')
+            ->get();
     }
 
     public function store(array $data): ?Patient
@@ -73,6 +81,10 @@ class PatientService
 
     public function delete(Patient $patient): bool
     {
+        if ($patient->user) {
+            $patient->user->delete();
+        }
+
         return $patient->delete();
     }
 
@@ -101,13 +113,13 @@ class PatientService
 
         foreach ($values as $row) {
             $id = $row['id'];
-            $field_id = $row['field_id'];
+            $fieldId = $row['field_id'];
             $value = $row['value'] ?? null;
 
             if (empty($value) && !empty($id)) {
                 $patientFields->find($id)->delete();
             } else if (!empty($value)) {
-                $field = $fields->find($field_id);
+                $field = $fields->find($fieldId);
 
                 $data = [
                     'field_id' => $field->id

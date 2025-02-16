@@ -10,8 +10,18 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        Schema::create('appointment_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->nullable();
+            $table->timestamps();
+        });
+
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('appointment_type_id')
+                ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->foreignId('user_id')
                 ->nullable()
                 ->constrained()
@@ -50,5 +60,6 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('appointments');
+        Schema::dropIfExists('appointment_types');
     }
 };

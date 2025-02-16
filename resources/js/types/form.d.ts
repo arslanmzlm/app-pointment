@@ -77,13 +77,28 @@ export interface ServiceFormType extends FormDataType {
 }
 
 export interface ProductFormType extends FormDataType {
-    hospital_id?: number;
     active: boolean;
     category: string;
+    brand: string;
     name: string;
+    slug: string | null;
     code: string | null;
-    stock: number | null;
     price: number | null;
+    description: string;
+    stocks: {
+        id?: number | null;
+        hospital_id: number;
+        stock: number | null;
+        hospital_name?: string;
+    }[];
+    images?: (
+        | File
+        | {
+              id?: number | null;
+              file: File | null;
+              order: number | null;
+          }
+    )[];
 }
 
 export interface TreatmentServiceFormType {
@@ -105,6 +120,7 @@ export interface TreatmentProductFormType {
 export interface AppointmentItemFormType extends FormDataType {
     start_date: Date | null;
     duration: number;
+    appointment_type_id: number | null;
     title: string | null;
 }
 
@@ -134,8 +150,13 @@ export interface PassiveDateFromType extends FormDataType {
     description: string | null;
 }
 
+export interface AppointmentTypeFormType extends FormDataType {
+    name: string;
+}
+
 export interface AppointmentFormType extends FormDataType {
     patient_id?: number;
+    appointment_type_id: number;
     start_date: Date | null;
     duration: number;
     title: string | null;
@@ -143,6 +164,7 @@ export interface AppointmentFormType extends FormDataType {
 }
 
 export interface AppointmentMultipleFormType extends FormDataType {
+    doctor_id?: number;
     patient_id: number;
     appointments: AppointmentItemFormType[];
 }

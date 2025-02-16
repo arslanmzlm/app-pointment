@@ -53,7 +53,7 @@ watch(
 </script>
 
 <template>
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid gap-4 lg:grid-cols-2">
         <DateField
             v-model="startDate"
             :max-date="maxDateForStart"

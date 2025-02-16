@@ -68,7 +68,7 @@ defineProps<{
                     :min="0"
                     :step="5"
                     button-layout="horizontal"
-                    label="Seans süresi"
+                    label="Randevu süresi"
                     name="duration"
                     required
                     show-buttons

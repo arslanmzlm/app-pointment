@@ -5,6 +5,7 @@ import {SelectFilterEvent} from 'primevue/select';
 import {reactive, ref} from 'vue';
 import InputField from '@/Components/Form/InputField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
+import {patientLabel} from '@/Utilities/labels';
 import {Patient} from '@/types/model';
 
 const props = defineProps<{
@@ -46,17 +47,13 @@ function getPatients(event: SelectFilterEvent) {
 </script>
 
 <template>
-    <InputField
-        v-if="readonly"
-        :model-value="`${readonly.full_name} - ${readonly.phone}`"
-        label="Hasta"
-    />
+    <InputField v-if="readonly" :model-value="patientLabel(readonly)" label="Hasta" />
     <SelectField
         v-else
         v-model="model"
         :error="error"
         :loading
-        :option-label="(data: Patient) => `${data.full_name} - ${data.phone}`"
+        :option-label="patientLabel"
         :options="patients"
         :show-clear
         :size

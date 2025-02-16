@@ -11,11 +11,12 @@ import TextareaField from '@/Components/Form/TextareaField.vue';
 import AppointmentTable from '@/Components/Tables/AppointmentTable.vue';
 import {PaymentMethod} from '@/types/enums';
 import {TreatmentFormType} from '@/types/form';
-import {Appointment, Product, Service} from '@/types/model';
+import {Appointment, AppointmentType, Product, Service} from '@/types/model';
 import {EnumResponse} from '@/types/response';
 
 const props = defineProps<{
     appointment: Appointment;
+    appointmentTypes: AppointmentType[];
     services: Service[];
     products: Product[];
     paymentMethods: EnumResponse[];
@@ -53,7 +54,12 @@ function submit() {
 
             <TreatmentProducts :data="form.products" :errors="form.errors" :products />
 
-            <AppointmentMultipleForm v-if="form.appointments" :form :passive-dates />
+            <AppointmentMultipleForm
+                v-if="form.appointments"
+                :appointment-types
+                :form
+                :passive-dates
+            />
 
             <AppointmentTable :appointments title="Hastanın Aktif Randevuları" />
 

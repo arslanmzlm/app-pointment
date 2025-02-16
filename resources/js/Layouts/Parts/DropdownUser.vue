@@ -12,7 +12,7 @@ const user = computed(() => page.props.auth.user ?? {name: 'Test User'});
 const menu = ref();
 const items = ref<MenuItem[]>([
     {
-        label: 'Logout',
+        label: 'Çıkış Yap',
         icon: PrimeIcons.SIGN_OUT,
         command: () => {
             router.post(route('logout'));

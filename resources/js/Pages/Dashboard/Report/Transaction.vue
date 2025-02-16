@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
-import ReportDateFilter from '@/Components/ReportDateFilter.vue';
-import TransactionCard from '@/Components/TransactionCard.vue';
+import ReportDateFilter from '@/Components/Reports/ReportDateFilter.vue';
+import TransactionReportCard from '@/Components/Reports/TransactionReportCard.vue';
 import {Hospital} from '@/types/model';
-import {EnumResponse, TransactionReport} from '@/types/response';
+import {EnumResponse, TransactionReportResponse} from '@/types/response';
 
 const props = defineProps<{
-    reports: {[key: number]: TransactionReport};
+    reports: TransactionReportResponse;
     hospitals?: Hospital[];
     transactionTypes: EnumResponse[];
     paymentMethods: EnumResponse[];
 }>();
 
 const hospitalNames = computed(() => {
-    const data: {[key: number]: string} = {};
+    const data: {[key: number]: string} = {0: 'Tüm Hastaneler'};
 
     if (props.hospitals) {
         props.hospitals.forEach((hospital) => {
@@ -31,20 +31,12 @@ const hospitalNames = computed(() => {
         <ReportDateFilter />
 
         <div v-if="reports" class="space-y-6">
-            <TransactionCard
+            <TransactionReportCard
                 v-for="(report, hospitalId) in reports"
                 :key="hospitalId"
-                :hospital-name="hospitalNames[hospitalId]"
+                :hospital-name="hospitalNames[hospitalId] ?? undefined"
                 :report
             />
         </div>
     </DashboardLayout>
 </template>
-
-<style>
-.method-icon .p-tag-icon {
-    @apply size-5;
-    font-size: 20px !important;
-    line-height: 1 !important;
-}
-</style>

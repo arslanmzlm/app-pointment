@@ -5,7 +5,7 @@ import PassiveDateForm from '@/Forms/PassiveDateForm.vue';
 import {PassiveDateFromType} from '@/types/form';
 import {Doctor, Hospital} from '@/types/model';
 
-defineProps<{
+const props = defineProps<{
     hospitals?: Hospital[];
     doctors?: Doctor[];
 }>();
@@ -18,6 +18,10 @@ const form = useForm<PassiveDateFromType>({
     due_date: null,
     description: null,
 });
+
+if (!props.doctors) {
+    form.doctor_id = undefined;
+}
 
 function submit() {
     form.post(route('dashboard.passive.date.store'));

@@ -17,12 +17,16 @@ defineProps<{
         <template #content>
             <DataTable
                 :class="{'text-sm': size === 'small', 'text-lg': size === 'large'}"
+                :rows="10"
                 :size
                 :value="appointments"
                 data-key="id"
+                paginator
                 row-hover
             >
                 <Column field="id" header="ID" />
+                <Column field="doctor.full_name" header="Doktor" />
+                <Column field="type_name" header="Randevu Tipi" />
                 <Column field="state" header="Durum">
                     <template #body="slotProps">
                         <Tag
@@ -34,21 +38,15 @@ defineProps<{
                 </Column>
                 <Column field="start_date" header="Tarih">
                     <template #body="slotProps">
-                        {{ dateFormat(slotProps.data.start_date) }}
+                        <div class="whitespace-nowrap">
+                            <div>{{ dateFormat(slotProps.data.start_date) }}</div>
+                            <div>
+                                {{ timeFormat(slotProps.data.start_date) }} -
+                                {{ timeFormat(slotProps.data.due_date) }}
+                            </div>
+                            <div>{{ slotProps.data.duration }} dk</div>
+                        </div>
                     </template>
-                </Column>
-                <Column field="start_date" header="Başlangıç Saati">
-                    <template #body="slotProps">
-                        {{ timeFormat(slotProps.data.start_date) }}
-                    </template>
-                </Column>
-                <Column field="due_date" header="Bitiş Saati">
-                    <template #body="slotProps">
-                        {{ timeFormat(slotProps.data.due_date) }}
-                    </template>
-                </Column>
-                <Column field="duration" header="Seans Süresi">
-                    <template #body="slotProps"> {{ slotProps.data.duration }} dk</template>
                 </Column>
                 <Column field="created_at" header="Kayıt Tarihi">
                     <template #body="slotProps">
@@ -59,5 +57,3 @@ defineProps<{
         </template>
     </Card>
 </template>
-
-<style scoped></style>

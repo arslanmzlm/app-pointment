@@ -3,6 +3,7 @@ import {Column} from 'primevue';
 import {computed, ref} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import BaseDataTable from '@/Components/BaseDataTable.vue';
+import DeletePopup from '@/Components/DeletePopup.vue';
 import EditLink from '@/Components/EditLink.vue';
 import InputField from '@/Components/Form/InputField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
@@ -31,6 +32,7 @@ const hospitalNames = computed(() => {
 const filters = ref<DataTableFilter>({
     search: {value: ''},
     branch: {value: null},
+    deleted: {value: null, type: 'number'},
 });
 
 if (props.hospitals) {
@@ -76,6 +78,20 @@ if (props.hospitals) {
                     show-clear
                     size="small"
                 />
+
+                <SelectField
+                    v-model="filters.deleted.value"
+                    :options="[
+                        {label: 'Silinmiş Kayıtlarıda Listele', value: 1},
+                        {label: 'Sadece Silinmiş Kayıtları Listele', value: 2},
+                    ]"
+                    class="col-span-1"
+                    label="Kayıt Durumu"
+                    option-label="label"
+                    option-value="value"
+                    show-clear
+                    size="small"
+                />
             </template>
 
             <Column field="id" header="ID" sortable />
@@ -90,7 +106,13 @@ if (props.hospitals) {
             <Column field="phone" header="Telefon" />
             <Column header="İşlemler">
                 <template #body="slotProps">
-                    <EditLink :url="route('dashboard.doctor.edit', {id: slotProps.data.id})" />
+                    <div v-if="slotProps.data.deleted_at === null" class="table-actions">
+                        <DeletePopup
+                            :url="route('dashboard.doctor.destroy', {id: slotProps.data.id})"
+                        />
+
+                        <EditLink :url="route('dashboard.doctor.edit', {id: slotProps.data.id})" />
+                    </div>
                 </template>
             </Column>
         </BaseDataTable>

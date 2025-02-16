@@ -12,12 +12,12 @@ class ServiceService
 {
     use HospitalQuery;
 
-    public function getAll(?int $hospital_id = null): Collection
+    public function getAll(?int $hospitalId = null): Collection
     {
         $query = Service::query()->orderBy('name');
 
-        if ($hospital_id) {
-            $query->where('hospital_id', $hospital_id);
+        if ($hospitalId) {
+            $query->where('hospital_id', $hospitalId);
         } else {
             $this->addHospitalToQuery($query);
         }

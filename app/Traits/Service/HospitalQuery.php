@@ -19,4 +19,11 @@ trait HospitalQuery
             request()->merge([$key => auth()->user()->hospital_id]);
         }
     }
+
+    public function addDoctorToQuery(Builder $query): void
+    {
+        if (auth()->user() && auth()->user()->isDoctor()) {
+            $query->where('doctor_id', auth()->user()->doctor_id);
+        }
+    }
 }

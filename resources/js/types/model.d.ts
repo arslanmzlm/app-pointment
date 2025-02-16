@@ -22,6 +22,7 @@ export interface User extends Model {
     name: string;
     phone: string;
     email: string;
+    deleted_at: string | null;
 
     type_label: string;
 }
@@ -60,6 +61,7 @@ export interface Doctor extends Model {
     email: string | null;
     resume: string | null;
     certificate: string | null;
+    deleted_at: string | null;
 
     hospital?: Hospital;
     avatar_src: string | null;
@@ -76,6 +78,8 @@ export interface Patient extends Model {
     gender: Gender;
     birthday: string | null;
     notification: boolean;
+    created_by: number | null;
+    deleted_at: string | null;
 
     gender_label: string;
     province?: Province;
@@ -105,22 +109,44 @@ export interface Service extends Model {
 }
 
 export interface Product extends Model {
-    hospital_id: number;
     active: boolean;
     category: string;
+    brand: string;
     name: string;
+    slug: string | null;
     code: string | null;
-    stock: number;
     price: number | null;
+    description: string;
+
+    stocks: ProductStock[];
+    images: ProductImage[];
+}
+
+export interface ProductStock extends Model {
+    hospital_id: number;
+    product_id: number;
+    stock: number;
+
+    hospital_name: string;
+}
+
+export interface ProductImage extends Model {
+    product_id: number;
+    file: string;
+    order: number;
+
+    file_src: string;
 }
 
 export interface Treatment extends Model {
     user_id: number;
+    hospital_id: number;
     doctor_id: number;
     patient_id: number;
     total: number;
     note: string | null;
 
+    hospital?: Hospital;
     doctor: Doctor;
     patient: Patient;
     services: TreatmentService[];
@@ -157,9 +183,15 @@ export interface Transaction extends Model {
 
     type_label: string;
     method_label: string;
+    patient?: Patient;
+}
+
+export interface AppointmentType extends Model {
+    name: string;
 }
 
 export interface Appointment extends Model {
+    appointment_type_id: number;
     doctor_id: number;
     patient_id: number;
     state: AppointmentState;
@@ -170,6 +202,10 @@ export interface Appointment extends Model {
     note: string | null;
     treatment_id: number | null;
 
+    type_name: string;
+    state_label: string;
+    hospital?: Hospital;
+    doctor?: Doctor;
     patient?: Patient;
 }
 

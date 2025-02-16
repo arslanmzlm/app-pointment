@@ -11,7 +11,8 @@ const model = defineModel<boolean>({required: true});
             <small
                 >Kullanıcılar sadece aktif verileri görüntüleyebilir ve onlarla işlem yapabilir. Bu
                 verinin tüm işlemlere açık olması için bu seçeneği seçiniz diğer durumda veri sadece
-                yöneticilere görünecektir.</small
+                yöneticilere görünecektir. Veri bütünlüğünü sağlamak için veriyi silmek yerine pasif
+                hale getirebilirsiniz.</small
             >
         </p>
     </div>

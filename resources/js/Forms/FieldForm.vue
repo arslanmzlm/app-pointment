@@ -42,7 +42,13 @@ watch(
     <form class="space-y-6">
         <Card>
             <template #content>
-                <InputField v-model="form.name" :error="form.errors.name" label="Alan" required />
+                <InputField
+                    v-model="form.name"
+                    :error="form.errors.name"
+                    label="Alan"
+                    name="name"
+                    required
+                />
 
                 <SelectField
                     v-model="form.input"

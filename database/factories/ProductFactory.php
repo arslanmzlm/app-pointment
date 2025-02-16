@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Hospital;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -42,10 +44,24 @@ class ProductFactory extends Factory
         return [
             'active' => true,
             'category' => $this->faker->randomElement(['İlaç', 'Takviye', 'Tıbbi Malzeme']),
+            'brand' => $this->faker->company,
             'name' => $this->faker->randomElement($elements),
+            'slug' => $this->faker->unique()->slug(),
             'code' => $this->faker->postcode(),
-            'stock' => $this->faker->numberBetween(50, 500),
             'price' => $this->faker->numberBetween(100, 1000),
+            'description' => $this->faker->randomHtml(),
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Product $product) {
+            Hospital::all()->each(function (Hospital $hospital) use ($product) {
+                $product->stocks()->create(['hospital_id' => $hospital->id, 'stock' => $this->faker->numberBetween(1, 1000)]);
+            });
+        });
     }
 }

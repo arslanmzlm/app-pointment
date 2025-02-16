@@ -10,7 +10,7 @@ import TreatmentServices from '@/Forms/Parts/TreatmentServices.vue';
 import TextareaField from '@/Components/Form/TextareaField.vue';
 import {PaymentMethod} from '@/types/enums';
 import {TreatmentFormType} from '@/types/form';
-import {Product, Service} from '@/types/model';
+import {AppointmentType, Product, Service} from '@/types/model';
 import {EnumResponse} from '@/types/response';
 
 defineProps<{
@@ -18,6 +18,7 @@ defineProps<{
     products: Product[];
     paymentMethods: EnumResponse[];
     passiveDates: string[];
+    appointmentTypes: AppointmentType[];
 }>();
 
 const breadcrumbs = [{label: 'İşlemler', url: route('dashboard.treatment.list')}];
@@ -51,7 +52,12 @@ function submit() {
 
             <TreatmentProducts :data="form.products" :errors="form.errors" :products />
 
-            <AppointmentMultipleForm v-if="form.appointments" :form :passive-dates />
+            <AppointmentMultipleForm
+                v-if="form.appointments"
+                :appointment-types
+                :form
+                :passive-dates
+            />
 
             <TreatmentPayment :form :payment-methods />
 

@@ -16,9 +16,6 @@ class FieldController extends Controller
     {
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function list()
     {
         return Inertia::render('Dashboard/Field/List', [
@@ -26,9 +23,6 @@ class FieldController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return Inertia::render('Dashboard/Field/Create', [
@@ -36,9 +30,6 @@ class FieldController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreFieldRequest $request)
     {
         $this->fieldService->store($request->validated());
@@ -48,9 +39,6 @@ class FieldController extends Controller
         return to_route('dashboard.field.list');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Field $field)
     {
         return Inertia::render('Dashboard/Field/Edit', [
@@ -59,9 +47,6 @@ class FieldController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateFieldRequest $request, Field $field)
     {
         $this->fieldService->update($field, $request->validated());
@@ -71,15 +56,10 @@ class FieldController extends Controller
         return to_route('dashboard.field.list');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Field $field)
     {
         $this->fieldService->delete($field);
 
-        session()->flash('toast.success', trans('messages.field.updated'));
-
-        return to_route('dashboard.field.list');
+        session()->flash('toast.success', trans('messages.field.deleted'));
     }
 }

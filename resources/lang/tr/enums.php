@@ -41,7 +41,7 @@ return [
             'PENDING' => 'Onay bekliyor',
             'CONFIRMED' => 'Beklemede',
             'COMPLETED' => 'Tamamlandı',
-            'RESCHEDULED' => 'Yeniden planlandı',
+            'RESCHEDULED' => 'Ertelendi',
             'CANCELED' => 'İptal edildi',
         ],
     ],

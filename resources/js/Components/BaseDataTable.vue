@@ -13,6 +13,7 @@ const props = defineProps<{
     only: string | string[];
     createUrl?: string;
     createLabel?: string;
+    rowClass?: (data: any) => string | object;
 }>();
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -140,6 +141,10 @@ function reloadData(event: DataTableSortEvent | DataTablePageEvent | null = null
         },
     });
 }
+
+const rowClass = (data: any) => {
+    return {deleted: data.deleted_at !== undefined && data.deleted_at !== null};
+};
 </script>
 
 <template>
@@ -149,6 +154,7 @@ function reloadData(event: DataTableSortEvent | DataTablePageEvent | null = null
                 v-model:expanded-rows="expandedRows"
                 :first="(params.page - 1) * params.perPage"
                 :loading
+                :row-class
                 :rows="params.perPage"
                 :rows-per-page-options="[15, 30, 50, 100]"
                 :sort-field="params.sortField ?? undefined"
@@ -197,11 +203,11 @@ function reloadData(event: DataTableSortEvent | DataTablePageEvent | null = null
                     </div>
                 </template>
 
-                <template #expansion="slotProps">
+                <template v-if="$slots.expansion" #expansion="slotProps">
                     <slot :data="slotProps.data" :index="slotProps.index" name="expansion"></slot>
                 </template>
 
-                <template #footer>
+                <template v-if="$slots.footer" #footer>
                     <slot name="footer"></slot>
                 </template>
             </DataTable>

@@ -11,13 +11,13 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class TransactionService
 {
-    public static function storeByTreatment(Treatment $treatment, PaymentMethod $method, int $hospital_id): Transaction
+    public static function storeByTreatment(Treatment $treatment, PaymentMethod $method, int $hospitalId): Transaction
     {
         $transaction = new Transaction();
         $transaction->type = TransactionType::INCOME;
         $transaction->method = $method;
         $transaction->user_id = $treatment->user_id;
-        $transaction->hospital_id = $hospital_id;
+        $transaction->hospital_id = $hospitalId;
         $transaction->doctor_id = $treatment->doctor_id;
         $transaction->patient_id = $treatment->patient_id;
         $transaction->treatment_id = $treatment->id;

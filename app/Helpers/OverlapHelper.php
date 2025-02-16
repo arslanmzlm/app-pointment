@@ -1,4 +1,4 @@
-<?php /** @noinspection ALL */
+<?php
 
 namespace App\Helpers;
 
@@ -15,18 +15,18 @@ class OverlapHelper
     private Carbon $start;
     private Carbon $due;
     private ?int $appointment = null;
-    private ?int $passive_date = null;
+    private ?int $passiveDate = null;
 
-    public function __construct(Doctor|int $doctor, Carbon|string $start_date, Carbon|int $due_date)
+    public function __construct(Doctor|int $doctor, Carbon|string $startDate, Carbon|int $dueDate)
     {
         $this->doctor($doctor);
-        $this->start($start_date);
-        $this->due($due_date);
+        $this->start($startDate);
+        $this->due($dueDate);
     }
 
-    public static function check(Doctor|int $doctor, Carbon|string $start_date, Carbon|int $due_date): static
+    public static function check(Doctor|int $doctor, Carbon|string $startDate, Carbon|int $dueDate): static
     {
-        return new static($doctor, $start_date, $due_date);
+        return new static($doctor, $startDate, $dueDate);
     }
 
     public function get(): int
@@ -47,16 +47,16 @@ class OverlapHelper
         return $this;
     }
 
-    public function start(Carbon|string $start_date): self
+    public function start(Carbon|string $startDate): self
     {
-        $this->start = is_string($start_date) ? Carbon::parse($start_date)->setTimezone('Europe/Istanbul')->setSecond(0) : $start_date;
+        $this->start = is_string($startDate) ? Carbon::parse($startDate)->setTimezone('Europe/Istanbul')->setSecond(0) : $startDate;
 
         return $this;
     }
 
-    public function due(Carbon|int $due_date): self
+    public function due(Carbon|int $dueDate): self
     {
-        $this->due = is_int($due_date) ? $this->start->clone()->addMinutes($due_date - 1)->setSecond(59) : $due_date;
+        $this->due = is_int($dueDate) ? $this->start->clone()->addMinutes($dueDate - 1)->setSecond(59) : $dueDate;
 
         return $this;
     }
@@ -70,7 +70,7 @@ class OverlapHelper
 
     public function passiveDate(PassiveDate|int $passiveDate): self
     {
-        $this->passive_date = $passiveDate instanceof PassiveDate ? $passiveDate->id : $passiveDate;
+        $this->passiveDate = $passiveDate instanceof PassiveDate ? $passiveDate->id : $passiveDate;
 
         return $this;
     }
@@ -97,12 +97,12 @@ class OverlapHelper
         $query = PassiveDate::query()
             ->where('doctor_id', $this->doctor)
             ->where(function (Builder $query) {
-                $query->whereBetween('start_date', [$this->start, $this->due]);
-                $query->orWhereBetween('due_date', [$this->start, $this->due]);
+                $query->whereRaw("'{$this->start}' BETWEEN `start_date` AND `due_date`");
+                $query->orWhereRaw("'{$this->due}' BETWEEN `start_date` AND `due_date`");
             });
 
-        if ($this->passive_date) {
-            $query->where('id', '!=', $this->passive_date);
+        if ($this->passiveDate) {
+            $query->where('id', '!=', $this->passiveDate);
         }
 
         return $query->exists();

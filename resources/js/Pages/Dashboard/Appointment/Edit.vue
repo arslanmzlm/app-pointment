@@ -4,10 +4,11 @@ import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import AppointmentForm from '@/Forms/AppointmentForm.vue';
 import {AppointmentFormType} from '@/types/form';
-import {Appointment} from '@/types/model';
+import {Appointment, AppointmentType} from '@/types/model';
 
 const props = defineProps<{
     appointment: Appointment;
+    appointmentTypes: AppointmentType[];
     passiveDates: string[];
     appointments?: Appointment[];
 }>();
@@ -18,6 +19,7 @@ const breadcrumbs = [{label: 'Randevular', url: route('dashboard.appointment.lis
 
 const form = useForm<AppointmentFormType>({
     start_date: new Date(appointment.start_date),
+    appointment_type_id: appointment.appointment_type_id,
     duration: appointment.duration,
     title: appointment.title,
     note: appointment.note,
@@ -31,7 +33,9 @@ function submit() {
 <template>
     <DashboardLayout :breadcrumbs :title="pageTitle">
         <AppointmentForm
+            :appointment-types
             :appointments
+            :doctor-id="appointment.doctor_id"
             :form
             :passive-dates
             :patient="appointment.patient"

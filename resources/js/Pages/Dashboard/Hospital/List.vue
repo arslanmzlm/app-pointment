@@ -33,13 +33,7 @@ const filters = ref<DataTableFilter>({
 
 <template>
     <DashboardLayout title="Hastaneler">
-        <BaseDataTable
-            :create-url="route('dashboard.hospital.create')"
-            :filters
-            :paginate="hospitals"
-            create-label="Hastane Ekle"
-            only="hospitals"
-        >
+        <BaseDataTable :filters :paginate="hospitals" only="hospitals">
             <template #filters>
                 <InputField
                     v-model.trim="filters.search.value"

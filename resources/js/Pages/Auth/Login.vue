@@ -18,7 +18,6 @@ function submit() {
     form.post(route('login.store'), {
         onSuccess: () => {
             axios.get(route('dashboard.hospital.info')).then((response) => {
-                console.log(response.data);
                 if (response.data !== null && isObject(response.data)) {
                     hospitalStore.update(response.data);
                 }

@@ -1,4 +1,4 @@
-import {AppointmentState, PaymentMethod, TransactionType, UserType} from '@/types/enums';
+import {AppointmentState, Gender, PaymentMethod, TransactionType, UserType} from '@/types/enums';
 
 export function userType(method: UserType): {
     severity: string;
@@ -101,6 +101,24 @@ export function appointmentState(state: AppointmentState): {
                 class: 'bg-danger',
                 severity: 'danger',
                 icon: 'pi pi-calendar-times',
+            };
+    }
+}
+
+export function genderHelper(method: Gender): {
+    severity: string;
+    icon: string;
+} {
+    switch (method) {
+        case Gender.MALE:
+            return {
+                severity: 'success',
+                icon: 'pi pi-mars',
+            };
+        case Gender.FEMALE:
+            return {
+                severity: 'danger',
+                icon: 'pi pi-venus',
             };
     }
 }

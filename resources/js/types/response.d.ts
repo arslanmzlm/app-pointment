@@ -1,4 +1,4 @@
-import {FieldInput} from '@/types/enums';
+import {AppointmentState, FieldInput} from '@/types/enums';
 import {Model} from '@/types/model';
 
 export interface PaginateResponse<TModel extends Model> {
@@ -47,7 +47,7 @@ export interface PatientFieldResponse {
     order: number | null;
 }
 
-export interface TransactionReport {
+export interface TransactionReportItem {
     total: number;
     income: number;
     expense: number;
@@ -57,4 +57,78 @@ export interface TransactionReport {
     expense_cash: number;
     expense_card: number;
     expense_transfer: number;
+}
+
+export interface TransactionReportResponse {
+    [hospital_id: number]: TransactionReportItem;
+}
+
+export interface PatientReportResponse {
+    total: number;
+    old_patient: number;
+    registered_own: number;
+    per_gender: {
+        gender: number;
+        count: number;
+    }[];
+    per_province: {
+        province_id: number;
+        count: number;
+    }[];
+}
+
+export interface TreatmentReportResponse {
+    [hospital_id: number]: {
+        per_doctor: {
+            doctor_id: number;
+            full_name: string;
+            branch: string;
+            count: number;
+            total: number;
+        }[];
+        per_service: {
+            service_id: number;
+            code: string;
+            name: string;
+            count: number;
+            total: number | string;
+        }[];
+    };
+}
+
+export interface PerProductReportResponse {
+    product_id: number;
+    code: string;
+    name: string;
+    count: number;
+    count_total: string;
+    total: number;
+}
+
+export interface ProductStockResponse {
+    hospital_id: number;
+    hospital_name: string;
+    stock: number | null;
+}
+
+export interface AppointmentReportResponse {
+    per_state: {
+        state: AppointmentState;
+        count: number;
+        state_label: string;
+    }[];
+    per_patient: number;
+    per_doctor: {
+        [hospital_id: number]: {
+            [doctor_id: number]: {
+                hospital_id: number;
+                doctor_id: number;
+                state: AppointmentState;
+                full_name: string;
+                branch: string;
+                count: number;
+                state_label: string;
+            }[];
+        }[];
+    };
 }

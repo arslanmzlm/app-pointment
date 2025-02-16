@@ -38,7 +38,7 @@ onBeforeMount(() => {
     <FormField :error :for="id" :label :required>
         <InputMask :id v-model="model" :invalid="!!error" :mask="getMask" :placeholder fluid />
 
-        <template #message>
+        <template v-if="$slots.message" #message>
             <slot name="message"></slot>
         </template>
     </FormField>

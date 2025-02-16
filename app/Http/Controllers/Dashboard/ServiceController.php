@@ -69,6 +69,6 @@ class ServiceController extends Controller
     {
         $this->serviceService->delete($service);
 
-        session()->flash('toast.success', trans('messages.service.updated'));
+        session()->flash('toast.success', trans('messages.service.deleted'));
     }
 }

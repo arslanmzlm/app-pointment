@@ -4,12 +4,16 @@ namespace App\Models;
 
 use App\Enums\AppointmentState;
 use App\Services\AppointmentService;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Appointment extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
+        'appointment_type_id',
         'user_id',
         'hospital_id',
         'doctor_id',
@@ -29,7 +33,12 @@ class Appointment extends Model
         'due_date' => 'datetime',
     ];
 
-    protected $appends = ['state_label'];
+    protected $appends = ['type_name', 'state_label'];
+
+    public function type(): BelongsTo
+    {
+        return $this->belongsTo(AppointmentType::class, 'appointment_type_id');
+    }
 
     public function user(): BelongsTo
     {
@@ -59,6 +68,11 @@ class Appointment extends Model
     public function isActive(): bool
     {
         return in_array($this->state, AppointmentService::ACTIVE_STATES);
+    }
+
+    public function getTypeNameAttribute()
+    {
+        return $this->type->name;
     }
 
     public function getStateLabelAttribute(): string

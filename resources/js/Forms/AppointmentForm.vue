@@ -7,16 +7,19 @@ import PreviewDates from '@/Forms/Parts/PreviewDates.vue';
 import DateField from '@/Components/Form/DateField.vue';
 import InputField from '@/Components/Form/InputField.vue';
 import NumberField from '@/Components/Form/NumberField.vue';
+import SelectField from '@/Components/Form/SelectField.vue';
 import TextareaField from '@/Components/Form/TextareaField.vue';
 import AppointmentTable from '@/Components/Tables/AppointmentTable.vue';
 import {AppointmentFormType} from '@/types/form';
-import {Appointment, Patient} from '@/types/model';
+import {Appointment, AppointmentType, Patient} from '@/types/model';
 
 const props = defineProps<{
     form: InertiaForm<AppointmentFormType>;
+    appointmentTypes: AppointmentType[];
     passiveDates: string[];
     patient?: Patient;
     appointments?: Appointment[];
+    doctorId?: number;
 }>();
 
 const disabledDates = computed(() => {
@@ -37,6 +40,14 @@ const disabledDates = computed(() => {
                     :readonly="patient"
                 />
 
+                <SelectField
+                    v-model="form.appointment_type_id"
+                    :error="form.errors.appointment_type_id"
+                    :options="appointmentTypes"
+                    label="Randevu Tipi"
+                    required
+                />
+
                 <DateField
                     v-model="form.start_date"
                     :disabled-dates
@@ -52,7 +63,7 @@ const disabledDates = computed(() => {
                     :error="form.errors.duration"
                     :step="5"
                     button-layout="horizontal"
-                    label="Stok"
+                    label="Randevu Süresi"
                     name="duration"
                     required
                     show-buttons
@@ -74,7 +85,7 @@ const disabledDates = computed(() => {
             </template>
         </Card>
 
-        <PreviewDates :form />
+        <PreviewDates :doctor-id :form />
 
         <AppointmentTable
             v-if="appointments && appointments.length > 0"

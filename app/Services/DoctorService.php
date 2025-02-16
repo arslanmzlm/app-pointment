@@ -34,6 +34,7 @@ class DoctorService
             ->idFilter('hospital')
             ->basicFilter('branch')
             ->hasHospital()
+            ->deleted()
             ->paginate();
     }
 
@@ -74,6 +75,10 @@ class DoctorService
 
     public function delete(Doctor $doctor): bool
     {
+        if ($doctor->user) {
+            $doctor->user->delete();
+        }
+
         return $doctor->delete();
     }
 

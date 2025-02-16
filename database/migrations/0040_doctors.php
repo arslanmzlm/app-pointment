@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->text('resume')->nullable();
             $table->text('certificate')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('passive_dates', function (Blueprint $table) {

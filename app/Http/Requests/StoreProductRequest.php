@@ -22,19 +22,20 @@ class StoreProductRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
+        return [
             'active' => ['boolean'],
             'category' => ['required', 'string', 'max:255'],
+            'brand' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255'],
             'code' => ['nullable', 'string', 'max:255'],
-            'stock' => ['required', 'integer'],
             'price' => ['nullable', 'numeric'],
+            'description' => ['nullable', 'string'],
+            'stocks' => ['array'],
+            'stocks.*.hospital_id' => ['required', 'integer', Rule::exists('hospitals', 'id')],
+            'stocks.*.stock' => ['required', 'integer'],
+            'images' => ['array'],
+            'images.*' => ['required', 'image', 'max:5120'],
         ];
-
-        if (auth()->user() && !auth()->user()->hasHospital()) {
-            $rules['hospital_id'] = ['required', Rule::exists('hospitals', 'id')];
-        }
-
-        return $rules;
     }
 }

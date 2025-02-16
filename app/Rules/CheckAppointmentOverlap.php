@@ -9,9 +9,9 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class CheckAppointmentOverlap implements DataAwareRule, ValidationRule
 {
-    private mixed $doctor_id;
-    private ?int $appointment_id = null;
-    private ?int $passive_date_id = null;
+    private mixed $doctorId;
+    private ?int $appointmentId = null;
+    private ?int $passiveDateId = null;
 
     /**
      * Run the validation rule.
@@ -21,16 +21,16 @@ class CheckAppointmentOverlap implements DataAwareRule, ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if (
-            !empty($this->doctor_id) && is_int($this->doctor_id) && !empty($value['start_date']) && !empty($value['duration']) && is_numeric($value['duration'])
+            !empty($this->doctorId) && is_int($this->doctorId) && !empty($value['start_date']) && !empty($value['duration']) && is_numeric($value['duration'])
         ) {
-            $helper = OverlapHelper::check($this->doctor_id, $value['start_date'], $value['duration']);
+            $helper = OverlapHelper::check($this->doctorId, $value['start_date'], $value['duration']);
 
-            if ($this->appointment_id) {
-                $helper->appointment($this->appointment_id);
+            if ($this->appointmentId) {
+                $helper->appointment($this->appointmentId);
             }
 
-            if ($this->passive_date_id) {
-                $helper->passiveDate($this->passive_date_id);
+            if ($this->passiveDateId) {
+                $helper->passiveDate($this->passiveDateId);
             }
 
             $result = $helper->get();
@@ -48,21 +48,21 @@ class CheckAppointmentOverlap implements DataAwareRule, ValidationRule
 
     public function setData(array $data): self
     {
-        $this->doctor_id = $data['doctor_id'] ?? auth()->user()->doctor_id;
+        $this->doctorId = auth()->user()->doctor_id ?? $data['doctor_id'];
 
         return $this;
     }
 
     public function appointment(int $id): self
     {
-        $this->appointment_id = $id;
+        $this->appointmentId = $id;
 
         return $this;
     }
 
     public function passiveDate(int $id): self
     {
-        $this->passive_date_id = $id;
+        $this->passiveDateId = $id;
 
         return $this;
     }

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {Button, Column, Tag} from 'primevue';
+import {Button, Column} from 'primevue';
 import {computed, ref} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import BaseDataTable from '@/Components/BaseDataTable.vue';
@@ -7,7 +7,14 @@ import EditLink from '@/Components/EditLink.vue';
 import DateField from '@/Components/Form/DateField.vue';
 import InputField from '@/Components/Form/InputField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
-import {dateFormat, dateTimeFormat} from '@/Utilities/formatters';
+import BirthdayTag from '@/Components/Tags/BirthdayTag.vue';
+import EmailTag from '@/Components/Tags/EmailTag.vue';
+import GenderTag from '@/Components/Tags/GenderTag.vue';
+import NotificationTag from '@/Components/Tags/NotificationTag.vue';
+import OldTag from '@/Components/Tags/OldTag.vue';
+import StoreTypeTag from '@/Components/Tags/StoreTypeTag.vue';
+import TimestampTag from '@/Components/Tags/TimestampTag.vue';
+import {dateTimeFormat} from '@/Utilities/formatters';
 import {DataTableFilter} from '@/types/component';
 import {Patient, Province} from '@/types/model';
 import {EnumResponse, PaginateResponse} from '@/types/response';
@@ -76,7 +83,11 @@ const filters = ref<DataTableFilter>({
                     option-value="value"
                     show-clear
                     size="small"
-                />
+                >
+                    <template #option="slotProps">
+                        <OldTag :value="slotProps.data.option.value" />
+                    </template>
+                </SelectField>
 
                 <SelectField
                     v-model.number="filters.gender.value"
@@ -87,7 +98,14 @@ const filters = ref<DataTableFilter>({
                     option-value="value"
                     show-clear
                     size="small"
-                />
+                >
+                    <template #option="slotProps">
+                        <GenderTag
+                            :label="slotProps.data.option.label"
+                            :value="slotProps.data.option.value"
+                        />
+                    </template>
+                </SelectField>
 
                 <DateField
                     v-model="filters.birthday.value"
@@ -109,7 +127,11 @@ const filters = ref<DataTableFilter>({
                     option-value="value"
                     show-clear
                     size="small"
-                />
+                >
+                    <template #option="slotProps">
+                        <NotificationTag :value="slotProps.data.option.value" />
+                    </template>
+                </SelectField>
             </template>
 
             <Column expander style="width: 3rem" />
@@ -144,40 +166,14 @@ const filters = ref<DataTableFilter>({
             </Column>
 
             <template #expansion="{data}">
-                <div class="flex items-center gap-4 p-4">
-                    <Tag
-                        v-if="data.gender"
-                        :severity="data.gender == 1 ? 'info' : 'danger'"
-                        :value="data.gender_label"
-                        title="Cinsiyet"
-                    />
-                    <Tag
-                        :severity="data.old ? 'secondary' : 'primary'"
-                        :value="data.old ? 'Eski Kayıt' : 'Yeni Kayıt'"
-                        title="Kayıt durumu"
-                    />
-                    <Tag
-                        :severity="data.notification ? 'info' : 'warn'"
-                        :value="data.notification ? 'Bildirimler Aktif' : 'Bildirimler Pasif'"
-                        title="Bildirim durumu"
-                    />
-                    <Tag
-                        v-if="data.birthday"
-                        :value="dateFormat(data.birthday)"
-                        severity="primary"
-                        title="Doğum tarihi"
-                    />
-                    <Tag
-                        v-if="data.email"
-                        :value="data.email"
-                        severity="warn"
-                        title="E-posta adresi"
-                    />
-                    <Tag
-                        :value="dateTimeFormat(data.created_at)"
-                        severity="danger"
-                        title="Kayıt tarihi"
-                    />
+                <div class="flex flex-wrap items-center gap-4 p-4">
+                    <GenderTag :label="data.gender_label" :value="data.gender" />
+                    <OldTag :value="data.old" />
+                    <NotificationTag :value="data.notification" />
+                    <StoreTypeTag :value="data.created_by" />
+                    <BirthdayTag :value="data.birthday" />
+                    <EmailTag :value="data.email" />
+                    <TimestampTag :value="data.created_at" />
                 </div>
             </template>
         </BaseDataTable>

@@ -1,4 +1,4 @@
-<?php /** @noinspection ALL */
+<?php
 
 namespace App\Helpers;
 
@@ -46,12 +46,12 @@ class FilterHelper
     public function sort(string ...$attributes): self
     {
         if (count($attributes)) {
-            $sort_field = request('sort_field');
+            $sortField = request('sort_field');
 
-            if ($sort_field && in_array($sort_field, $attributes)) {
-                $sort_order = request()->integer('sort_order') === -1 ? 'desc' : 'asc';
+            if ($sortField && in_array($sortField, $attributes)) {
+                $sortOrder = request()->integer('sort_order') === -1 ? 'desc' : 'asc';
 
-                $this->query->orderBy($sort_field, $sort_order);
+                $this->query->orderBy($sortField, $sortOrder);
             } else {
                 $this->query->orderByDesc('id');
             }
@@ -124,24 +124,37 @@ class FilterHelper
         return $this;
     }
 
-    public function dateRange(?string $attribute = null): self
+    public function dateRange(?string $attribute = null, ?int $default = null): self
     {
         if (request('start_date')) {
             try {
-                $start_date = request()->date('start_date');
-                $start_date->setTimezone('Europe/Istanbul');
-                $this->query->where($attribute ?? 'start_date', '>=', $start_date->startOfDay());
+                $startDate = request()->date('start_date');
+                $startDate->setTimezone('Europe/Istanbul');
             } catch (\Exception|\Error $e) {
+                $startDate = null;
             }
         }
 
         if (request('due_date')) {
             try {
-                $due_date = request()->date('due_date');
-                $due_date->setTimezone('Europe/Istanbul');
-                $this->query->where($attribute ?? 'due_date', '<=', $due_date->endOfDay());
+                $dueDate = request()->date('due_date');
+                $dueDate->setTimezone('Europe/Istanbul');
             } catch (\Exception|\Error $e) {
+                $dueDate = null;
             }
+        }
+
+        if ($default && empty($startDate) || empty($dueDate)) {
+            $startDate = now()->subMonths($default)->startOfMonth();
+            $dueDate = now()->addMonths($default)->endOfMonth();
+        }
+
+        if (isset($startDate)) {
+            $this->query->where($attribute ?? 'start_date', '>=', $startDate->startOfDay());
+        }
+
+        if (isset($dueDate)) {
+            $this->query->where($attribute ?? 'due_date', '<=', $dueDate->endOfDay());
         }
 
         return $this;
@@ -200,15 +213,31 @@ class FilterHelper
         return $this;
     }
 
+    public function deleted(): self
+    {
+        if (request('deleted')) {
+            switch (request()->integer('deleted')) {
+                case 1:
+                    $this->query->withTrashed();
+                    break;
+                case 2:
+                    $this->query->onlyTrashed();
+                    break;
+            }
+        }
+
+        return $this;
+    }
+
     public function query(): Builder
     {
         return $this->query;
     }
 
-    public function paginate(?int $default_per_page = 15): LengthAwarePaginator
+    public function paginate(?int $defaultPerPage = 15): LengthAwarePaginator
     {
-        $per_page = request()->integer('per_page', $default_per_page);
+        $perPage = request()->integer('per_page', $defaultPerPage);
 
-        return $this->query->paginate($per_page);
+        return $this->query->paginate($perPage);
     }
 }

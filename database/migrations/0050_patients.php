@@ -30,6 +30,7 @@ return new class extends Migration {
                 ->nullOnDelete()
                 ->cascadeOnUpdate();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('fields', function (Blueprint $table) {

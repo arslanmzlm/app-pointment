@@ -47,7 +47,7 @@ h6 {
 }
 
 .surface-default {
-    @apply bg-white dark:bg-surface-800 dark:border-surface-700
+    @apply bg-white border rounded-sm p-3 dark:bg-surface-800 dark:border-surface-700
 }
 
 .sidebar-item {
@@ -59,6 +59,10 @@ h6 {
 }
 
 .p-datatable {
+    .p-datatable-table {
+        @apply max-lg:min-w-full max-lg:w-max;
+    }
+
     .p-datatable-header {
         @apply dark:border-surface-700;
     }
@@ -87,6 +91,11 @@ h6 {
     &.p-datatable-sm .p-datatable-tbody > tr > td {
         @apply px-1.5 py-2
     }
+
+    tr.deleted td,
+    tr.deleted th {
+        @apply line-through;
+    }
 }
 
 .p-button.btn-block {
@@ -97,7 +106,7 @@ h6 {
     @apply rounded;
 
     .p-card-title {
-        @apply mb-2 border-b pb-4 text-xl font-bold;
+        @apply mb-2 border-b pb-4 text-xl font-bold dark:border-surface-700;
     }
 
     .p-card-content {

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import {IconField, InputIcon, InputText} from 'primevue';
 import {useSidebarStore} from '@/Stores/sidebar';
 import DarkModeSwitcher from '@/Layouts/Parts/DarkModeSwitcher.vue';
 import DropdownUser from '@/Layouts/Parts/DropdownUser.vue';
+import HeaderActiveAppointment from '@/Layouts/Parts/HeaderActiveAppointment.vue';
+import HeaderSearch from '@/Layouts/Parts/HeaderSearch.vue';
 
 const {toggleSidebar} = useSidebarStore();
 const sidebarStore = useSidebarStore();
@@ -48,20 +49,11 @@ const sidebarStore = useSidebarStore();
                 </button>
                 <!-- Hamburger Toggle BTN -->
             </div>
-            <div class="hidden sm:block">
-                <form method="POST">
-                    <div class="relative">
-                        <IconField>
-                            <InputIcon>
-                                <span class="pi pi-search"></span>
-                            </InputIcon>
-                            <InputText placeholder="Arama yap" size="small" type="search" />
-                        </IconField>
-                    </div>
-                </form>
-            </div>
+            <HeaderSearch />
 
             <div class="flex items-center gap-3 sm:gap-7">
+                <HeaderActiveAppointment />
+
                 <!-- Dark Mode Toggler -->
                 <DarkModeSwitcher />
                 <!-- Dark Mode Toggler -->

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TreatmentService extends Model
 {
-    protected $fillable = ['treatment_id', 'product_id', 'service_id', 'price'];
+    protected $fillable = ['treatment_id', 'service_id', 'price'];
 
     protected $casts = [
         'price' => 'float',

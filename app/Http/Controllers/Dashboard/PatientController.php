@@ -33,8 +33,8 @@ class PatientController extends Controller
             'patient' => $patient->withoutRelations(),
             'province' => $patient->province,
             'fields' => $this->fieldService->getValuesForView($patient),
-            'treatments' => $patient->treatments->load('services.service', 'products.product'),
-            'appointments' => $patient->appointments,
+            'treatments' => $patient->treatments->load(['doctor', 'services.service', 'products.product']),
+            'appointments' => $patient->appointments->load(['doctor']),
         ]);
     }
 
@@ -74,6 +74,13 @@ class PatientController extends Controller
         session()->flash('toast.success', trans('messages.patient.updated'));
 
         return to_route('dashboard.patient.list');
+    }
+
+    public function destroy(Patient $patient)
+    {
+        $this->patientService->delete($patient);
+
+        session()->flash('toast.success', trans('messages.patient.deleted'));
     }
 
     public function search()

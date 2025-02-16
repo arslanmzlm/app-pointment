@@ -18,29 +18,20 @@ class ProductController extends Controller
 
     public function list()
     {
-        $data = [
+        return Inertia::render('Dashboard/Product/List', [
             'products' => $this->productService->filter(),
             'categories' => $this->productService->getCategories(),
-        ];
-
-        if (!auth()->user()->hasHospital()) {
-            $data['hospitals'] = $this->hospitalService->getAll();
-        }
-
-        return Inertia::render('Dashboard/Product/List', $data);
+            'brands' => $this->productService->getBrands(),
+        ]);
     }
 
     public function create()
     {
-        $data = [
+        return Inertia::render('Dashboard/Product/Create', [
             'categories' => $this->productService->getCategories(),
-        ];
-
-        if (!auth()->user()->hasHospital()) {
-            $data['hospitals'] = $this->hospitalService->getAll();
-        }
-
-        return Inertia::render('Dashboard/Product/Create', $data);
+            'brands' => $this->productService->getBrands(),
+            'hospitals' => $this->hospitalService->getAll(),
+        ]);
     }
 
     public function store(StoreProductRequest $request)
@@ -55,8 +46,10 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         return Inertia::render('Dashboard/Product/Edit', [
-            'product' => $product,
+            'product' => $product->load(['images']),
+            'stocks' => $this->productService->getStocks($product),
             'categories' => $this->productService->getCategories(),
+            'brands' => $this->productService->getBrands(),
         ]);
     }
 
@@ -73,6 +66,6 @@ class ProductController extends Controller
     {
         $this->productService->delete($product);
 
-        session()->flash('toast.success', trans('messages.product.updated'));
+        session()->flash('toast.success', trans('messages.product.deleted'));
     }
 }

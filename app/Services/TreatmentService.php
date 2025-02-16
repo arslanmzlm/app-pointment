@@ -7,6 +7,7 @@ use App\Helpers\FilterHelper;
 use App\Models\Treatment;
 use App\Traits\Service\HospitalQuery;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class TreatmentService
 {
@@ -18,7 +19,29 @@ class TreatmentService
             ->search('total', 'note')
             ->sort('id')
             ->idFilter('patient')
+            ->hasHospital()
             ->paginate();
+    }
+
+    public function today(): Collection
+    {
+        $query = Treatment::query()->with('patient');
+
+        if (!auth()->user()->hasHospital()) {
+            $query->with('hospital');
+        }
+
+        if (!auth()->user()->isDoctor()) {
+            $query->with('doctor');
+        }
+
+        $this->addHospitalToQuery($query);
+        $this->addDoctorToQuery($query);
+
+        $query->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()]);
+        $query->orderBy('created_at');
+
+        return $query->get();
     }
 
     public function store(array $data): Treatment
@@ -149,9 +172,9 @@ class TreatmentService
 
                     if ($product->count !== $count) {
                         if ($product->count - $item['count'] > 0) {
-                            ProductService::incrementStock($product->product_id, $product->count - $count);
+                            ProductService::incrementStock($treatment->hospital_id, $product->product_id, $product->count - $count);
                         } else {
-                            ProductService::decrementStock($product->product_id, $count - $product->count);
+                            ProductService::decrementStock($treatment->hospital_id, $product->product_id, $count - $product->count);
                         }
                     }
 

@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import {Link} from '@inertiajs/vue3';
 import {computed, ref} from 'vue';
+import {useSidebarStore} from '@/Stores/sidebar';
 import ChevronDownIcon from '@/Icons/ChevronDownIcon.vue';
 import {SidebarMenuItem} from '@/types/component';
 
 const props = defineProps<{
     item: SidebarMenuItem;
 }>();
+
+const sidebarStore = useSidebarStore();
 
 const showDropdown = ref(false);
 
@@ -49,7 +52,13 @@ if (props.item.children && props.item.children.length > 0) {
             class="absolute right-4 top-1/2 size-4 -translate-y-1/2 transition-transform duration-300"
         />
     </button>
-    <Link v-else-if="item.url" :class="{active: item.active}" :href="item.url" class="sidebar-item">
+    <Link
+        v-else-if="item.url"
+        :class="{active: item.active}"
+        :href="item.url"
+        class="sidebar-item"
+        @click="sidebarStore.toggleSidebar()"
+    >
         <component :is="{...item.icon}" v-if="item.icon" height="18" width="18"></component>
 
         {{ item.label }}
@@ -67,6 +76,7 @@ if (props.item.children && props.item.children.length > 0) {
             :class="{active: child.active}"
             :href="child.url"
             class="sidebar-item"
+            @click="sidebarStore.toggleSidebar()"
         >
             <component :is="{...child.icon}" v-if="child.icon" height="18" width="18"></component>
 

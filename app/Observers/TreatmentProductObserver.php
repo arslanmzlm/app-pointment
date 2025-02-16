@@ -12,7 +12,7 @@ class TreatmentProductObserver
      */
     public function created(TreatmentProduct $treatmentProduct): void
     {
-        ProductService::decrementStock($treatmentProduct->product_id, $treatmentProduct->count);
+        ProductService::decrementStock($treatmentProduct->treatment->hospital_id, $treatmentProduct->product_id, $treatmentProduct->count);
     }
 
     /**
@@ -20,6 +20,6 @@ class TreatmentProductObserver
      */
     public function deleted(TreatmentProduct $treatmentProduct): void
     {
-        ProductService::incrementStock($treatmentProduct->product_id, $treatmentProduct->count);
+        ProductService::incrementStock($treatmentProduct->treatment->hospital_id, $treatmentProduct->product_id, $treatmentProduct->count);
     }
 }

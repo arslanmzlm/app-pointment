@@ -73,6 +73,6 @@ class DoctorController extends Controller
     {
         $this->doctorService->delete($doctor);
 
-        session()->flash('toast.success', trans('messages.doctor.updated'));
+        session()->flash('toast.success', trans('messages.doctor.deleted'));
     }
 }

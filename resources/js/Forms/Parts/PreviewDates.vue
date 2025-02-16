@@ -9,6 +9,7 @@ import {AppointmentFormType, AppointmentMultipleFormType, TreatmentFormType} fro
 
 const props = defineProps<{
     form: InertiaForm<AppointmentFormType | AppointmentMultipleFormType | TreatmentFormType>;
+    doctorId?: number;
 }>();
 
 watch(() => props.form.data(), getPreviewDates, {deep: true});
@@ -29,11 +30,30 @@ function getPreviewDates() {
     }
 
     if (dates.length > 0) {
-        axios.post(route('dashboard.appointment.schedule'), {dates}).then((response) => {
-            if (response.data && response.data.dates) {
-                previewDates.value = response.data.dates;
+        let can = true;
+        const data: {dates: Date[]; doctor_id?: number | null} = {dates};
+
+        if (props.form.doctor_id !== undefined) {
+            if (props.form.doctor_id !== 0 && props.form.doctor_id !== null) {
+                data.doctor_id = props.form.doctor_id;
+            } else {
+                can = false;
             }
-        });
+        } else if (props.doctorId) {
+            if (props.doctorId !== 0 && props.doctorId !== null) {
+                data.doctor_id = props.doctorId;
+            } else {
+                can = false;
+            }
+        }
+
+        if (can) {
+            axios.post(route('dashboard.appointment.schedule'), data).then((response) => {
+                if (response.data && response.data.dates) {
+                    previewDates.value = response.data.dates;
+                }
+            });
+        }
     }
 }
 </script>

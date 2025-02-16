@@ -35,12 +35,12 @@ class AppointmentService
             $checks = [];
 
             foreach ($dates as $date) {
-                $start_date = Carbon::parse($date)->setTimezone('Europe/Istanbul')->setHour(0)->setMinute(0)->setSecond(0);
-                $due_date = $start_date->clone()->setHour(23)->setMinute(59)->setSecond(59);
+                $startDate = Carbon::parse($date)->setTimezone('Europe/Istanbul')->setHour(0)->setMinute(0)->setSecond(0);
+                $dueDate = $startDate->clone()->setHour(23)->setMinute(59)->setSecond(59);
 
                 $checks[] = [
-                    'start_date' => $start_date,
-                    'due_date' => $due_date,
+                    'start_date' => $startDate,
+                    'due_date' => $dueDate,
                 ];
             }
 
@@ -101,6 +101,21 @@ class AppointmentService
         return [];
     }
 
+    public static function getActiveByDoctor(Doctor|int $doctor): ?Appointment
+    {
+        if ($doctor instanceof Doctor) {
+            $doctor = $doctor->id;
+        }
+
+        return Appointment::query()
+            ->with('patient')
+            ->where('doctor_id', $doctor)
+            ->whereIn('state', self::ACTIVE_STATES)
+            ->whereBetween('due_date', [now(), now()->endOfDay()])
+            ->orderBy('start_date')
+            ->first();
+    }
+
     public function getActiveByPatient(Patient|int $patient): Collection
     {
         if ($patient instanceof Patient) {
@@ -108,6 +123,7 @@ class AppointmentService
         }
 
         return Appointment::query()
+            ->with('doctor')
             ->whereIn('state', self::ACTIVE_STATES)
             ->where('patient_id', $patient)
             ->get();
@@ -126,21 +142,46 @@ class AppointmentService
             ->paginate();
     }
 
-    public function dateRange()
+    public function dateRange(): Collection
     {
         $query = Appointment::query()->with('patient');
 
         return FilterHelper::filter($query)
-            ->dateRange()
-            ->query()->get();
+            ->dateRange(default: 0)
+            ->query()
+            ->get();
     }
 
-    public function storeMany(int $doctor_id, int $patient_id, array $data): void
+    public function today(): Collection
+    {
+        $query = Appointment::query()->with('patient');
+
+        if (!auth()->user()->hasHospital()) {
+            $query->with('hospital');
+        }
+
+        if (!auth()->user()->isDoctor()) {
+            $query->with('doctor');
+            $startDate = now()->startOfDay();
+        } else {
+            $startDate = now();
+        }
+
+        $this->addHospitalToQuery($query);
+        $this->addDoctorToQuery($query);
+
+        $query->whereBetween('due_date', [$startDate, now()->endOfDay()]);
+        $query->orderBy('start_date');
+
+        return $query->get();
+    }
+
+    public function storeMany(int $doctorId, int $patientId, array $data): void
     {
         $data = collect($data)->sortBy('start_date');
 
-        $data->each(function ($item) use ($doctor_id, $patient_id) {
-            $this->store(array_merge($item, ['doctor_id' => $doctor_id, 'patient_id' => $patient_id]));
+        $data->each(function ($item) use ($doctorId, $patientId) {
+            $this->store(array_merge($item, ['doctor_id' => $doctorId, 'patient_id' => $patientId]));
         });
     }
 
@@ -148,6 +189,7 @@ class AppointmentService
     {
         $appointment = new Appointment();
         $appointment->user_id = auth()->id();
+        $appointment->appointment_type_id = $data['appointment_type_id'];
         $appointment->doctor_id = $data['doctor_id'];
         $appointment->hospital_id = $appointment->doctor->hospital_id;
         $appointment->patient_id = $data['patient_id'];
@@ -165,10 +207,10 @@ class AppointmentService
 
     public function update(Appointment $appointment, array $data): Appointment
     {
-        if ($data['start_date']) {
-            $start_date = Carbon::parse($data['start_date'])->setTimezone('Europe/Istanbul')->setSecond(0);
+        if ($appointment->isActive() && $data['start_date']) {
+            $startDate = Carbon::parse($data['start_date'])->setTimezone('Europe/Istanbul')->setSecond(0);
 
-            if (!$start_date->equalTo($appointment->start_date) || $data['duration'] !== $appointment->duration) {
+            if (!$startDate->equalTo($appointment->start_date) || $data['duration'] !== $appointment->duration) {
                 $appointment->start_date = Carbon::parse($data['start_date'])->setTimezone('Europe/Istanbul')->setSecond(0);
                 $appointment->due_date = $appointment->start_date->clone()->addMinutes($data['duration'] - 1)->setSecond(59);
                 $appointment->state = AppointmentState::RESCHEDULED;
@@ -176,6 +218,7 @@ class AppointmentService
             }
         }
 
+        $appointment->appointment_type_id = $data['appointment_type_id'];
         $appointment->title = $data['title'] ?? $appointment->title;
         $appointment->note = $data['note'] ?? $appointment->note;
 
@@ -197,6 +240,12 @@ class AppointmentService
 
         $appointment->state = AppointmentState::COMPLETED;
         $appointment->treatment_id = $treatment;
+        $appointment->save();
+    }
+
+    public function cancel(Appointment $appointment): void
+    {
+        $appointment->state = AppointmentState::CANCELED;
         $appointment->save();
     }
 }

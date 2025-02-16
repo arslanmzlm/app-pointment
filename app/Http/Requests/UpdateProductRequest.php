@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateProductRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->checkHospital($this->route('product')->hospital_id);
+        return true;
     }
 
     /**
@@ -24,10 +25,15 @@ class UpdateProductRequest extends FormRequest
         return [
             'active' => ['boolean'],
             'category' => ['required', 'string', 'max:255'],
+            'brand' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255'],
             'code' => ['nullable', 'string', 'max:255'],
-            'stock' => ['required', 'integer'],
             'price' => ['nullable', 'numeric'],
+            'description' => ['nullable', 'string'],
+            'stocks' => ['array'],
+            'stocks.*.hospital_id' => ['required', 'integer', Rule::exists('hospitals', 'id')],
+            'stocks.*.stock' => ['required', 'integer'],
         ];
     }
 }

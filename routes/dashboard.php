@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Dashboard\AppointmentController;
+use App\Http\Controllers\Dashboard\AppointmentTypeController;
 use App\Http\Controllers\Dashboard\DefaultController;
 use App\Http\Controllers\Dashboard\DoctorController;
 use App\Http\Controllers\Dashboard\FieldController;
@@ -33,7 +34,6 @@ Route::middleware('auth')
         Route::post('hospital/store', [HospitalController::class, 'store'])->name('hospital.store');
         Route::get('hospital/edit/{hospital}', [HospitalController::class, 'edit'])->name('hospital.edit');
         Route::post('hospital/update/{hospital}', [HospitalController::class, 'update'])->name('hospital.update');
-        Route::post('hospital/delete/{hospital}', [HospitalController::class, 'destroy'])->name('hospital.destroy');
         Route::get('hospital/info', [HospitalController::class, 'info'])->name('hospital.info');
 
         Route::get('doctors', [DoctorController::class, 'list'])->name('doctor.list');
@@ -56,6 +56,7 @@ Route::middleware('auth')
         Route::post('patient/store', [PatientController::class, 'store'])->name('patient.store');
         Route::get('patient/edit/{patient}', [PatientController::class, 'edit'])->name('patient.edit');
         Route::post('patient/update/{patient}', [PatientController::class, 'update'])->name('patient.update');
+        Route::post('patient/delete/{patient}', [PatientController::class, 'destroy'])->name('patient.destroy');
         Route::get('patient/search', [PatientController::class, 'search'])->name('patient.search');
 
         Route::get('services', [ServiceController::class, 'list'])->name('service.list');
@@ -63,14 +64,12 @@ Route::middleware('auth')
         Route::post('service/store', [ServiceController::class, 'store'])->name('service.store');
         Route::get('service/edit/{service}', [ServiceController::class, 'edit'])->name('service.edit');
         Route::post('service/update/{service}', [ServiceController::class, 'update'])->name('service.update');
-        Route::post('service/delete/{service}', [ServiceController::class, 'destroy'])->name('service.destroy');
 
         Route::get('products', [ProductController::class, 'list'])->name('product.list');
         Route::get('product/create', [ProductController::class, 'create'])->name('product.create');
         Route::post('product/store', [ProductController::class, 'store'])->name('product.store');
         Route::get('product/edit/{product}', [ProductController::class, 'edit'])->name('product.edit');
         Route::post('product/update/{product}', [ProductController::class, 'update'])->name('product.update');
-        Route::post('product/delete/{product}', [ProductController::class, 'destroy'])->name('product.destroy');
 
         Route::get('treatments', [TreatmentController::class, 'list'])->name('treatment.list');
         Route::get('treatment/create', [TreatmentController::class, 'create'])->name('treatment.create');
@@ -86,6 +85,12 @@ Route::middleware('auth')
         Route::post('transaction/update/{transaction}', [TransactionController::class, 'update'])->name('transaction.update');
         Route::post('transaction/delete/{transaction}', [TransactionController::class, 'destroy'])->name('transaction.destroy');
 
+        Route::get('appointment/types', [AppointmentTypeController::class, 'list'])->name('appointment.type.list');
+        Route::get('appointment/type/create', [AppointmentTypeController::class, 'create'])->name('appointment.type.create');
+        Route::post('appointment/type/store', [AppointmentTypeController::class, 'store'])->name('appointment.type.store');
+        Route::get('appointment/type/edit/{appointment}', [AppointmentTypeController::class, 'edit'])->name('appointment.type.edit');
+        Route::post('appointment/type/update/{appointment}', [AppointmentTypeController::class, 'update'])->name('appointment.type.update');
+
         Route::get('appointments', [AppointmentController::class, 'list'])->name('appointment.list');
         Route::get('appointment/calendar', [AppointmentController::class, 'calendar'])->name('appointment.calendar');
         Route::get('appointment/create', [AppointmentController::class, 'create'])->name('appointment.create');
@@ -96,6 +101,7 @@ Route::middleware('auth')
         Route::post('appointments/schedule', [AppointmentController::class, 'schedule'])->name('appointment.schedule');
         Route::get('appointment/process/{appointment}', [AppointmentController::class, 'process'])->name('appointment.process');
         Route::post('appointment/complete/{appointment}', [AppointmentController::class, 'complete'])->name('appointment.complete');
+        Route::post('appointment/cancel/{appointment}', [AppointmentController::class, 'cancel'])->name('appointment.cancel');
 
         Route::get('days-off', [PassiveDateController::class, 'list'])->name('passive.date.list');
         Route::get('day-off/create', [PassiveDateController::class, 'create'])->name('passive.date.create');
@@ -106,4 +112,7 @@ Route::middleware('auth')
         Route::post('days-off/schedule', [PassiveDateController::class, 'schedule'])->name('passive.date.schedule');
 
         Route::get('report/transaction', [ReportController::class, 'transaction'])->name('report.transaction');
+        Route::get('report/patient', [ReportController::class, 'patient'])->name('report.patient');
+        Route::get('report/treatment', [ReportController::class, 'treatment'])->name('report.treatment');
+        Route::get('report/appointment', [ReportController::class, 'appointment'])->name('report.appointment');
     });

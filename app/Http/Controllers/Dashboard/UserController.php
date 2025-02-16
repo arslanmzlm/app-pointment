@@ -72,6 +72,6 @@ class UserController extends Controller
     {
         $this->userService->delete($user);
 
-        session()->flash('toast.success', trans('messages.user.updated'));
+        session()->flash('toast.success', trans('messages.user.deleted'));
     }
 }

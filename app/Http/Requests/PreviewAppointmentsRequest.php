@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PreviewAppointmentsRequest extends FormRequest
 {
@@ -22,6 +23,7 @@ class PreviewAppointmentsRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'doctor_id' => ['nullable', 'integer', Rule::exists('doctors', 'id')],
             'dates' => ['required', 'array'],
             'dates.*' => ['required', 'date'],
         ];

@@ -12,16 +12,39 @@ return new class extends Migration {
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->boolean('active')->default(false)->index();
+            $table->string('category')->index();
+            $table->string('brand')->nullable()->index();
+            $table->string('name');
+            $table->string('slug')->nullable()->unique();
+            $table->string('code')->nullable();
+            $table->decimal('price', 10)->nullable();
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('product_stocks', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('hospital_id')
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
-            $table->boolean('active')->default(false)->index();
-            $table->string('category')->index();
-            $table->string('name');
-            $table->string('code')->nullable();
+            $table->foreignId('product_id')
+                ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->integer('stock')->nullable();
-            $table->decimal('price', 10)->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('product_images', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')
+                ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
+            $table->string('file');
+            $table->unsignedSmallInteger('order')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +54,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('product_images');
+        Schema::dropIfExists('product_stocks');
         Schema::dropIfExists('products');
     }
 };
