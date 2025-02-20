@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->foreignId('province_id')
+                ->nullable()
                 ->constrained()
                 ->cascadeOnUpdate();
             $table->boolean('old')->default(false);

@@ -17,9 +17,9 @@ class ProductService
 {
     const IMAGE_PATH = 'product/:id/images';
 
-    public static function getImagePath(Product $product): string
+    public static function getImagePath(int $productId): string
     {
-        return Str::replace(':id', $product->id, self::IMAGE_PATH);
+        return Str::replace(':id', $productId, self::IMAGE_PATH);
     }
 
     public static function incrementStock(int $hospitalId, int $productId, int $count): int
@@ -43,6 +43,16 @@ class ProductService
     public function getAll(): Collection
     {
         return Product::query()->orderBy('name')->get();
+    }
+
+    public function getActive(): Collection
+    {
+        return Product::query()
+            ->where('active', true)
+            ->orderBy('category')
+            ->orderBy('brand')
+            ->orderBy('name')
+            ->get();
     }
 
     public function filter(): LengthAwarePaginator
@@ -156,7 +166,7 @@ class ProductService
     private function storeImages(Product $product, array $images): void
     {
         $storage = Storage::disk('public');
-        $imagePath = self::getImagePath($product);
+        $imagePath = self::getImagePath($product->id);
 
         foreach ($images as $index => $file) {
             $imageIndex = $index + 1;
@@ -178,7 +188,7 @@ class ProductService
     {
         $images = collect($images)->sortBy('order');
         $storage = Storage::disk('public');
-        $imagePath = self::getImagePath($product);
+        $imagePath = self::getImagePath($product->id);
 
         $uploaded = [];
 

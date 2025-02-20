@@ -26,6 +26,14 @@ class DoctorService
         return $query->get();
     }
 
+    public function getActive(): Collection
+    {
+        return Doctor::query()
+            ->orderBy('full_name')
+            ->get()
+            ->load('hospital');
+    }
+
     public function filter(): LengthAwarePaginator
     {
         return FilterHelper::filter(Doctor::query())

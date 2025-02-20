@@ -19,6 +19,8 @@ class Doctor extends Model
         'name',
         'surname',
         'full_name',
+        'branch',
+        'avatar',
         'title',
         'phone',
         'email',
@@ -45,5 +47,10 @@ class Doctor extends Model
     public function getAvatarSrcAttribute(): ?string
     {
         return $this->avatar ? "/storage/" . DoctorService::IMAGE_PATH . "/{$this->avatar}" : null;
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->avatar ? url($this->avatar_src) : null;
     }
 }

@@ -29,7 +29,7 @@ class UserService
         $user = new User();
         $user->type = $userType;
 
-        if (auth()->user()->hospital_id !== null) {
+        if (auth()->user() && auth()->user()->hospital_id !== null) {
             $user->hospital_id = auth()->user()->hospital_id;
         }
 
@@ -46,6 +46,20 @@ class UserService
         return $user->delete();
     }
 
+    public function updatePassword(array $data): bool
+    {
+        $user = auth()->user();
+        $check = Hash::check($data['password'], $user->password);
+
+        if ($check) {
+            $user->password = Hash::make($data['new_password']);
+            $user->save();
+            return true;
+        }
+
+        return false;
+    }
+
     public function storeOrUpdateDoctor(Doctor $doctor): ?User
     {
         $data = $this->getDataForRelatedCreate($doctor);
@@ -59,9 +73,9 @@ class UserService
         return null;
     }
 
-    public function storeOrUpdatePatient(Patient $patient): ?User
+    public function storeOrUpdatePatient(Patient $patient, ?string $password = null): ?User
     {
-        $data = $this->getDataForRelatedCreate($patient);
+        $data = $this->getDataForRelatedCreate($patient, $password);
 
         if ($patient->user) {
             return $this->update($patient->user, $data);
@@ -91,7 +105,7 @@ class UserService
         return $user;
     }
 
-    private function getDataForRelatedCreate(Patient|Doctor $model): array
+    private function getDataForRelatedCreate(Patient|Doctor $model, ?string $password = null): array
     {
         $phoneClean = preg_replace('/^(?:\+90|90|0)\s*/', '', $model->phone->getRawNumber());
 
@@ -102,7 +116,7 @@ class UserService
                 $data['doctor_id'] = $model->id;
                 $data['hospital_id'] = $model->hospital_id;
             }
-            $data['password'] = substr($phoneClean, -6);
+            $data['password'] = $password ?? substr($phoneClean, -6);
         }
 
         $data['username'] = $phoneClean;

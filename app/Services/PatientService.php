@@ -68,6 +68,23 @@ class PatientService
         return $patient;
     }
 
+    public function register(array $data): ?Patient
+    {
+        $patient = new Patient();
+        $patient->old = false;
+        $patient->name = $data['name'];
+        $patient->surname = $data['surname'];
+        $patient->full_name = "{$data['name']} {$data['surname']}";
+        $patient->phone = $data['phone'];
+        $patient->notification = true;
+
+        $patient->save();
+
+        (new UserService())->storeOrUpdatePatient($patient, $data['password']);
+
+        return $patient;
+    }
+
     public function update(Patient $patient, array $data): Patient
     {
         $patient = $this->assignAttributes($patient, $data);

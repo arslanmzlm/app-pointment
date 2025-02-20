@@ -59,4 +59,9 @@ class Hospital extends Model
     {
         return $this->logo ? "/storage/" . HospitalService::getLogoPath($this) . "/{$this->logo}" : null;
     }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        return $this->logo ? url($this->logo_src) : null;
+    }
 }

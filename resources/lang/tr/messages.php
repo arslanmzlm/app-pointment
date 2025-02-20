@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'generic' => [
+        'updated' => 'Bilgileriniz güncellendi.',
+    ],
     'appointment' => [
         'type' => [
             'created' => 'Randevu tipi oluşturuldu.',
@@ -65,5 +68,7 @@ return [
         'created' => 'Kullanıcı oluşturuldu.',
         'updated' => 'Kullanıcı düzenlendi.',
         'deleted' => 'Kullanıcı silindi.',
+        'password_updated' => 'Şifre güncelledi.',
+        'password_incorrect' => 'Şifreniz geçersiz.',
     ],
 ];

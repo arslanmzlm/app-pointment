@@ -19,6 +19,11 @@ class ProductImage extends Model
 
     public function getFileSrcAttribute(): ?string
     {
-        return $this->file ? "/storage/" . ProductService::IMAGE_PATH . "/{$this->file}" : null;
+        return "/storage/" . ProductService::getImagePath($this->product_id) . "/{$this->file}";
+    }
+
+    public function getFileUrlAttribute(): ?string
+    {
+        return url($this->file_src);
     }
 }
