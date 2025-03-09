@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
+import dayjs from 'dayjs';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import HospitalForm from '@/Forms/HospitalForm.vue';
 import {HospitalFormType} from '@/types/form';
@@ -14,9 +15,10 @@ const breadcrumbs = [{label: 'Hastaneler', url: route('dashboard.hospital.list')
 const form = useForm<HospitalFormType>({
     province_id: 0,
     name: '',
-    start_work: 0,
-    end_work: 23,
+    start_work: null,
+    end_work: null,
     duration: 60,
+    disabled_days: [],
     title: '',
     logo: null,
     description: '',
@@ -28,7 +30,11 @@ const form = useForm<HospitalFormType>({
 });
 
 function submit() {
-    form.post(route('dashboard.hospital.store'));
+    form.transform((data) => ({
+        ...data,
+        start_work: data.start_work !== null ? dayjs(data.start_work).format('HH:mm') : null,
+        end_work: data.end_work !== null ? dayjs(data.end_work).format('HH:mm') : null,
+    })).post(route('dashboard.hospital.store'));
 }
 </script>
 

@@ -12,6 +12,8 @@ class AppointmentTypeService
 {
     use HospitalQuery;
 
+    const DEFAULT_TYPE_ID = 1;
+
     public function getAll(): Collection
     {
         return AppointmentType::query()->orderBy('name')->get();

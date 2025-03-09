@@ -15,7 +15,7 @@ class HospitalController extends Controller
     public function all()
     {
         return response()->json([
-            'hospitals' => HospitalResource::collection($this->hospitalService->getAll()),
+            'hospitals' => HospitalResource::collection($this->hospitalService->getAll()->load('province')),
         ]);
     }
 }

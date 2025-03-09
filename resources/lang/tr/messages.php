@@ -16,6 +16,9 @@ return [
         'completed' => 'Randevu tamamlandı.',
         'canceled' => 'Randevu iptal edildi.',
         'finalized' => 'Randevu zaten tamamlanmış.',
+        'has_appointment' => 'Aktif randevunuz bulunmakta. Yeni randevu almak için yetkililerle iletişime geçin.',
+        'overlap' => 'Bu tarihte doktorun randevusu bulunmakta.',
+        'made' => 'Randevunuz oluşturuldu. Sağlıklı günler dileriz.',
     ],
     'doctor' => [
         'created' => 'Doktor oluşturuldu.',
@@ -70,5 +73,8 @@ return [
         'deleted' => 'Kullanıcı silindi.',
         'password_updated' => 'Şifre güncelledi.',
         'password_incorrect' => 'Şifreniz geçersiz.',
+    ],
+    'errors' => [
+        '500' => 'Sistemsel bir hata oluştu. Lütfen tekrar deneyin.',
     ],
 ];

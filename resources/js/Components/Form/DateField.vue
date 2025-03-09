@@ -21,6 +21,7 @@ const props = withDefaults(
         minDate?: Date;
         maxDate?: Date;
         disabledDates?: Date[];
+        timeOnly?: boolean;
     }>(),
     {
         type: 'text',
@@ -52,6 +53,7 @@ const id = computed(() => {
             :selection-mode
             :show-time
             :size
+            :time-only
             :type
         />
 

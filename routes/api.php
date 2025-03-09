@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\HospitalController;
@@ -32,5 +33,8 @@ Route::middleware(['api', 'throttle:60'])->group(function () {
 
         Route::get('/patient', [PatientController::class, 'patient']);
         Route::post('/patient/update', [PatientController::class, 'update']);
+
+        Route::get('/doctor/available/{doctor}', [DoctorController::class, 'available']);
+        Route::post('/appointment/make', [AppointmentController::class, 'make']);
     });
 });

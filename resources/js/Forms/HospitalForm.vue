@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import {InertiaForm} from '@inertiajs/vue3';
 import {Button, Card} from 'primevue';
+import CheckboxField from '@/Components/Form/CheckboxField.vue';
+import DateField from '@/Components/Form/DateField.vue';
 import EditorField from '@/Components/Form/EditorField.vue';
+import FormField from '@/Components/Form/FormField.vue';
 import ImageUploadField from '@/Components/Form/ImageUploadField.vue';
 import InputField from '@/Components/Form/InputField.vue';
 import MaskField from '@/Components/Form/MaskField.vue';
@@ -24,6 +27,7 @@ defineProps<{
             <template #content>
                 <SelectField
                     v-model="form.province_id"
+                    :error="form.errors.province_id"
                     :options="provinces"
                     filter
                     label="Şehir"
@@ -38,29 +42,79 @@ defineProps<{
                     required
                 />
 
-                <NumberField
-                    v-model.number="form.start_work"
+                <DateField
+                    v-model="form.start_work"
                     :error="form.errors.start_work"
-                    :max="form.end_work - 1"
-                    :min="0"
-                    button-layout="horizontal"
-                    label="Mesai başlangıç saati"
+                    :max-date="form.end_work ?? undefined"
+                    label="Randevu başlangıç saati"
                     name="start_work"
                     required
-                    show-buttons
+                    time-only
                 />
 
-                <NumberField
-                    v-model.number="form.end_work"
+                <DateField
+                    v-model="form.end_work"
                     :error="form.errors.end_work"
-                    :max="23"
-                    :min="form.start_work + 1"
-                    button-layout="horizontal"
-                    label="Mesai bitiş saati"
+                    :min-date="form.start_work ?? undefined"
+                    label="Randevu bitiş saati"
                     name="end_work"
                     required
-                    show-buttons
+                    time-only
                 />
+
+                <FormField label="Çalışılmayan Günler">
+                    <div class="surface-default space-y-2 !rounded border-surface-300">
+                        <CheckboxField
+                            v-model="form.disabled_days"
+                            :value="1"
+                            label="Pazartesi"
+                            name="disabledDay1"
+                        />
+                        <CheckboxField
+                            v-model="form.disabled_days"
+                            :value="2"
+                            label="Salı"
+                            name="disabledDay2"
+                        />
+                        <CheckboxField
+                            v-model="form.disabled_days"
+                            :value="3"
+                            label="Çarşamba"
+                            name="disabledDay3"
+                        />
+                        <CheckboxField
+                            v-model="form.disabled_days"
+                            :value="4"
+                            label="Perşembe"
+                            name="disabledDay4"
+                        />
+                        <CheckboxField
+                            v-model="form.disabled_days"
+                            :value="5"
+                            label="Cuma"
+                            name="disabledDay5"
+                        />
+                        <CheckboxField
+                            v-model="form.disabled_days"
+                            :value="6"
+                            label="Cumartesi"
+                            name="disabledDay6"
+                        />
+                        <CheckboxField
+                            v-model="form.disabled_days"
+                            :value="7"
+                            label="Pazar"
+                            name="disabledDay7"
+                        />
+                    </div>
+
+                    <template #message>
+                        <p>
+                            Seçili olan günler kullanıcıların randevu aldığı ekranlarda
+                            seçilemeyecek.
+                        </p>
+                    </template>
+                </FormField>
 
                 <NumberField
                     v-model.number="form.duration"
@@ -68,7 +122,7 @@ defineProps<{
                     :min="0"
                     :step="5"
                     button-layout="horizontal"
-                    label="Randevu süresi"
+                    label="Randevu süresi (dakika)"
                     name="duration"
                     required
                     show-buttons

@@ -17,9 +17,10 @@ export interface UserFormType extends FormDataType {
 export interface HospitalFormType extends FormDataType {
     province_id: number;
     name: string;
-    start_work: number;
-    end_work: number;
+    start_work: Date | null;
+    end_work: Date | null;
     duration: number;
+    disabled_days: number[];
     title: string | null;
     logo: File | null;
     description: string;

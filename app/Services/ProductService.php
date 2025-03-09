@@ -15,7 +15,7 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class ProductService
 {
-    const IMAGE_PATH = 'product/:id/images';
+    const IMAGE_PATH = 'product/:id';
 
     public static function getImagePath(int $productId): string
     {
@@ -49,9 +49,9 @@ class ProductService
     {
         return Product::query()
             ->where('active', true)
+            ->orderBy('name')
             ->orderBy('category')
             ->orderBy('brand')
-            ->orderBy('name')
             ->get();
     }
 

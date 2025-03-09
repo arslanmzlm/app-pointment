@@ -19,6 +19,7 @@ class Hospital extends Model
         'start_work',
         'end_work',
         'duration',
+        'disabled_days',
         'title',
         'logo',
         'description',
@@ -31,6 +32,7 @@ class Hospital extends Model
 
     protected $casts = [
         'phone' => PhoneCast::class,
+        'disabled_days' => 'json',
     ];
 
     protected $appends = ['logo_src'];

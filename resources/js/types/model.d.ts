@@ -35,9 +35,10 @@ export interface Province extends Model {
 export interface Hospital extends Model {
     name: string;
     province_id: number;
-    start_work: number;
-    end_work: number;
+    start_work: string;
+    end_work: string;
     duration: number;
+    disabled_days: number[];
     title: string | null;
     logo: string | null;
     description: string | null;

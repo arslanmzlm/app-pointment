@@ -3,11 +3,14 @@
 namespace App\Services;
 
 use App\Helpers\FilterHelper;
+use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Traits\Service\HospitalQuery;
+use Carbon\CarbonPeriod;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -55,6 +58,47 @@ class DoctorService
         return $query->get('branch')->pluck('branch')->unique();
     }
 
+    public function getAvailableDates(Doctor $doctor): array
+    {
+        $hospital = $doctor->hospital;
+
+        /*** @var $datePeriod \Carbon\Carbon[] */
+        $datePeriod = CarbonPeriod::create('now', '+10 day');
+
+        $dates = [];
+
+        foreach ($datePeriod as $date) {
+            if (!empty($hospital->disabled_days) && in_array($date->dayOfWeekIso, $hospital->disabled_days)) {
+                $dates[] = [
+                    'date' => $date->format('Y-m-d'),
+                    'day' => $date->day,
+                    'dayLabel' => $date->shortDayName,
+                    'times' => [],
+                ];
+            } else {
+                $startHour = intval(explode(':', $hospital->start_work)[0]);
+                $startMinute = intval(explode(':', $hospital->start_work)[1]);
+                $endHour = intval(explode(':', $hospital->end_work)[0]);
+                $endMinute = intval(explode(':', $hospital->end_work)[1]);
+                $duration = $hospital->duration;
+                $timePeriod = CarbonPeriod::create(
+                    $date->copy()->setTime($startHour, $startMinute),
+                    $date->copy()->setTime($endHour, $endMinute),
+                    "{$duration} minutes"
+                );
+
+                $dates[] = [
+                    'date' => $date->format('Y-m-d'),
+                    'day' => $date->day,
+                    'dayLabel' => $date->shortDayName,
+                    'times' => $this->filterAvailableTimes($doctor, $date, $timePeriod),
+                ];
+            }
+        }
+
+        return $dates;
+    }
+
     public function store(array $data): ?Doctor
     {
         $doctor = new Doctor();
@@ -88,6 +132,42 @@ class DoctorService
         }
 
         return $doctor->delete();
+    }
+
+    private function filterAvailableTimes(Doctor $doctor, \Carbon\Carbon $date, CarbonPeriod $timePeriod): array
+    {
+        $availableTimes = [];
+
+        $appointments = Appointment::query()
+            ->where('doctor_id', $doctor->id)
+            ->whereDate('start_date', $date->format('Y-m-d'))
+            ->whereIn('state', AppointmentService::ACTIVE_STATES)
+            ->orderBy('start_date')
+            ->get();
+
+        $bookedTimes = $appointments->map(function ($appointment) {
+            return [
+                'start' => Carbon::parse($appointment->start_date),
+                'end' => Carbon::parse($appointment->due_date),
+            ];
+        });
+
+        foreach ($timePeriod as $time) {
+            $isAvailable = true;
+
+            foreach ($bookedTimes as $bookedTime) {
+                if ($time->between($bookedTime['start'], $bookedTime['end'])) {
+                    $isAvailable = false;
+                    break;
+                }
+            }
+
+            if ($isAvailable) {
+                $availableTimes[] = $time->format('H:i');
+            }
+        }
+
+        return $availableTimes;
     }
 
     private function assignAttributes(Doctor $doctor, array $data): ?Doctor

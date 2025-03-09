@@ -69,7 +69,7 @@ class User extends Authenticatable
 
     public function isPatient(): bool
     {
-        return $this->type === UserType::PATIENT && $this->doctor_id === null;
+        return $this->type === UserType::PATIENT && $this->patient_id !== null;
     }
 
     public function isDoctor(): bool

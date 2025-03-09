@@ -25,9 +25,10 @@ class StoreHospitalRequest extends FormRequest
         return [
             'province_id' => ['required', 'integer', Rule::exists('provinces', 'id')],
             'name' => ['required', 'string', 'max:255'],
-            'start_work' => ['required', 'integer', 'min:0', 'max:23'],
-            'end_work' => ['required', 'integer', 'min:0', 'max:23', 'gt:start_work'],
+            'start_work' => ['required', 'date_format:H:i',],
+            'end_work' => ['required', 'date_format:H:i', 'after:start_work'],
             'duration' => ['required', 'integer', 'min:0'],
+            'disabled_days' => ['nullable', 'array'],
             'title' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'image', 'max:1024'],
             'description' => ['nullable', 'string'],

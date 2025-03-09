@@ -16,9 +16,10 @@ return new class extends Migration {
                 ->constrained()
                 ->cascadeOnUpdate();
             $table->string('name');
-            $table->unsignedTinyInteger('start_work');
-            $table->unsignedTinyInteger('end_work');
+            $table->string('start_work');
+            $table->string('end_work');
             $table->unsignedTinyInteger('duration');
+            $table->json('disabled_days')->nullable();
             $table->string('title')->nullable();
             $table->string('logo')->nullable();
             $table->text('description')->nullable();

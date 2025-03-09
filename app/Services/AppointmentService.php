@@ -4,11 +4,13 @@ namespace App\Services;
 
 use App\Enums\AppointmentState;
 use App\Helpers\FilterHelper;
+use App\Helpers\OverlapHelper;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\PassiveDate;
 use App\Models\Patient;
 use App\Models\Treatment;
+use App\Models\User;
 use App\Traits\Service\HospitalQuery;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -205,6 +207,24 @@ class AppointmentService
         return $appointment;
     }
 
+    public function make(array $data): Appointment
+    {
+        $appointment = new Appointment();
+        $appointment->user_id = auth()->id();
+        $appointment->appointment_type_id = AppointmentTypeService::DEFAULT_TYPE_ID;
+        $appointment->doctor_id = $data['doctor_id'];
+        $appointment->hospital_id = $appointment->doctor->hospital_id;
+        $appointment->patient_id = auth()->user()->patient_id;
+        $appointment->state = AppointmentState::PENDING;
+        $appointment->start_date = Carbon::parse($data['date'])->setTimezone('Europe/Istanbul')->setSecond(0);
+        $appointment->due_date = $appointment->start_date->clone()->addMinutes($appointment->doctor->hospital->duration - 1)->setSecond(59);
+        $appointment->duration = $appointment->doctor->hospital->duration;
+
+        $appointment->save();
+
+        return $appointment;
+    }
+
     public function update(Appointment $appointment, array $data): Appointment
     {
         if ($appointment->isActive() && $data['start_date']) {
@@ -247,5 +267,19 @@ class AppointmentService
     {
         $appointment->state = AppointmentState::CANCELED;
         $appointment->save();
+    }
+
+    public function validateForMake(User $user, array $data): int
+    {
+        if ($this->getActiveByPatient($user->patient_id)->count() !== 0) {
+            return 1;
+        }
+
+        $doctor = Doctor::find($data['doctor_id']);
+        if (OverlapHelper::check($doctor->id, $data['date'], $doctor->id)->get() !== 0) {
+            return 2;
+        }
+
+        return 0;
     }
 }

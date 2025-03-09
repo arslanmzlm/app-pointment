@@ -70,6 +70,7 @@ class HospitalService
         $hospital->start_work = $data['start_work'] ?? $hospital->start_work;
         $hospital->end_work = $data['end_work'] ?? $hospital->end_work;
         $hospital->duration = $data['duration'] ?? $hospital->duration;
+        $hospital->disabled_days = $data['disabled_days'] ?? $hospital->disabled_days;
         $hospital->title = $data['title'] ?? $hospital->title;
         $hospital->description = $data['description'] ?? $hospital->description;
         $hospital->owner = $data['owner'] ?? $hospital->owner;

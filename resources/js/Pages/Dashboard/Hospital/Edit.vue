@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
+import dayjs from 'dayjs';
 import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import HospitalForm from '@/Forms/HospitalForm.vue';
+import {getInt} from '@/Utilities/parser';
 import {HospitalFormType} from '@/types/form';
 import {Hospital, Province} from '@/types/model';
 
@@ -15,12 +17,23 @@ const hospital = props.hospital;
 const pageTitle = computed(() => `Hastane Düzenle #${hospital.id}`);
 const breadcrumbs = [{label: 'Hastaneler', url: route('dashboard.hospital.list')}];
 
+const startWork = dayjs()
+    .set('hours', <number>getInt(props.hospital.start_work.split(':')[0]))
+    .set('minutes', <number>getInt(props.hospital.start_work.split(':')[1]))
+    .toDate();
+
+const endWork = dayjs()
+    .set('hours', <number>getInt(props.hospital.end_work.split(':')[0]))
+    .set('minutes', <number>getInt(props.hospital.end_work.split(':')[1]))
+    .toDate();
+
 const form = useForm<HospitalFormType>({
     province_id: hospital.province_id,
     name: hospital.name,
-    start_work: hospital.start_work,
-    end_work: hospital.end_work,
+    start_work: startWork,
+    end_work: endWork,
     duration: hospital.duration,
+    disabled_days: hospital.disabled_days,
     title: hospital.title,
     logo: null,
     description: hospital.description ?? '',
@@ -32,7 +45,11 @@ const form = useForm<HospitalFormType>({
 });
 
 function submit() {
-    form.post(route('dashboard.hospital.update', {id: hospital.id}));
+    form.transform((data) => ({
+        ...data,
+        start_work: data.start_work !== null ? dayjs(data.start_work).format('HH:mm') : null,
+        end_work: data.end_work !== null ? dayjs(data.end_work).format('HH:mm') : null,
+    })).post(route('dashboard.hospital.update', {id: hospital.id}));
 }
 </script>
 

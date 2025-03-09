@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->boolean('active')->default(false)->index();
             $table->string('category')->index();
-            $table->string('brand')->nullable()->index();
+            $table->string('brand')->index();
             $table->string('name');
             $table->string('slug')->nullable()->unique();
             $table->string('code')->nullable();
