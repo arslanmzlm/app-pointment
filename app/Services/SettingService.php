@@ -9,22 +9,23 @@ use Stevebauman\Purify\Facades\Purify;
 
 class SettingService
 {
-    public static function getValue(SettingKeys|string $key)
+    public static function getValue(SettingKeys|string $key, $default = null): mixed
     {
         if ($key instanceof SettingKeys) {
             $key = $key->value;
         }
 
-        return Setting::query()
+        $setting = Setting::query()
             ->where('key', $key)
-            ->first()
-            ->value;
+            ->first();
+
+        return $setting ? $setting->value : $default;
     }
 
-    public static function getPurifyValue(SettingKeys|string $key): null
+    public static function getPurifyValue(SettingKeys|string $key, ?string $default = null): ?string
     {
         $value = self::getValue($key);
-        return is_string($value) && !empty($value) ? Purify::clean($value) : null;
+        return is_string($value) && !empty($value) ? Purify::clean($value) : $default;
     }
 
     public function getAllByKey(): Collection
