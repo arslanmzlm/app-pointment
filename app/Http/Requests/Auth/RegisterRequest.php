@@ -28,8 +28,7 @@ class RegisterRequest extends FormRequest
             'surname' => ['required', 'string', 'max:255'],
             'phone' => ['required', Rule::phone()->country('TR'), Rule::unique('patients', 'phone'), Rule::unique('users', 'phone')],
             'password' => ['required', 'confirmed', new Password(5)],
-            'agreement' => ['accepted'],
-            'privacy' => ['accepted'],
+            'agreement_and_privacy' => ['accepted'],
         ];
     }
 }

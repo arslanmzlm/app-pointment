@@ -24,7 +24,7 @@ class SettingController extends Controller
     {
         $this->settingService->update($request->validated());
 
-        session()->flash('toast.success', trans('messages.setting.created'));
+        session()->flash('toast.success', trans('messages.setting.updated'));
 
         return to_route('dashboard.setting.index');
     }

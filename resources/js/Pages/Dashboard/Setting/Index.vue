@@ -2,6 +2,7 @@
 import {useForm} from '@inertiajs/vue3';
 import {Button, Card} from 'primevue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
+import EditorField from '@/Components/Form/EditorField.vue';
 import MaskField from '@/Components/Form/MaskField.vue';
 import {SettingFormType} from '@/types/form';
 import {SettingsResponse} from '@/types/response';
@@ -12,6 +13,8 @@ const props = defineProps<{
 
 const form = useForm<SettingFormType>({
     contact_phone: props.settings.contact_phone ?? '',
+    agreement_policy: props.settings.agreement_policy ?? '',
+    privacy_policy: props.settings.privacy_policy ?? '',
 });
 
 function submit() {
@@ -36,6 +39,20 @@ function submit() {
                             <p>Uygulamada kullanıcıların yönlendirildiği telefon numarası.</p>
                         </template>
                     </MaskField>
+
+                    <EditorField
+                        v-model="form.agreement_policy"
+                        :error="form.errors.agreement_policy"
+                        label="Kullanım Şartları ve Koşulları"
+                        name="agreement_policy"
+                    />
+
+                    <EditorField
+                        v-model="form.privacy_policy"
+                        :error="form.errors.privacy_policy"
+                        label="Gizlilik Politikası"
+                        name="privacy_policy"
+                    />
                 </template>
             </Card>
 

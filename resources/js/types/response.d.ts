@@ -134,5 +134,7 @@ export interface AppointmentReportResponse {
 }
 
 export interface SettingsResponse {
-    contact_phone: string | null;
+    contact_phone: string;
+    agreement_policy: string;
+    privacy_policy: string;
 }

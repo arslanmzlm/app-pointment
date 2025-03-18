@@ -1,5 +1,4 @@
 import {FieldInput, Gender, PaymentMethod, TransactionType} from '@/types/enums';
-import {SettingsResponse} from '@/types/response';
 
 interface FormDataType {
     [key: string]: any;
@@ -191,4 +190,8 @@ export interface ContentFormType extends FormDataType {
     body: string;
 }
 
-export interface SettingFormType extends FormDataType, SettingsResponse {}
+export interface SettingFormType extends FormDataType {
+    contact_phone: string;
+    agreement_policy: string;
+    privacy_policy: string;
+}
