@@ -131,6 +131,19 @@ class AppointmentService
             ->get();
     }
 
+    public function getByPatient(Patient|int $patient): Collection
+    {
+        if ($patient instanceof Patient) {
+            $patient = $patient->id;
+        }
+
+        return Appointment::query()
+            ->with(['hospital', 'doctor'])
+            ->where('patient_id', $patient)
+            ->orderBy('start_date')
+            ->get();
+    }
+
     public function filter(): LengthAwarePaginator
     {
         $query = Appointment::query()->with('patient');

@@ -28,9 +28,9 @@ onClickOutside(target, () => {
         class="absolute left-0 top-0 z-50 flex h-screen w-80 flex-col overflow-y-hidden bg-slate-800 duration-300 ease-linear lg:static lg:translate-x-0"
     >
         <!-- SIDEBAR HEADER -->
-        <div class="flex items-center justify-between gap-2 px-6 py-5 lg:py-6">
+        <div class="flex items-center justify-between gap-2 px-6 py-5 lg:justify-center lg:py-6">
             <Link :href="route('login')">
-                <img alt="Logo" src="../../../images/logo/dark.png" />
+                <img alt="Logo" class="h-14" src="@/Images/logo/default.png" />
             </Link>
 
             <button class="block text-white lg:hidden" @click="sidebarStore.open = false">
@@ -41,7 +41,7 @@ onClickOutside(target, () => {
 
         <div class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
             <!-- Sidebar Menu -->
-            <nav class="mt-5 px-4 py-4 lg:mt-9 lg:px-6">
+            <nav class="mt-5 px-4 py-4 lg:mt-6 lg:px-6">
                 <template v-for="row in menu" :key="row.name">
                     <div>
                         <div class="mb-4 ml-4 text-sm font-medium text-surface-400">

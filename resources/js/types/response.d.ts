@@ -132,3 +132,7 @@ export interface AppointmentReportResponse {
         }[];
     };
 }
+
+export interface SettingsResponse {
+    contact_phone: string | null;
+}

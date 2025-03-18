@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\MakeAppointmentRequest;
+use App\Http\Resources\AppointmentResource;
 use App\Services\AppointmentService;
 use Illuminate\Http\JsonResponse;
 
@@ -45,7 +46,13 @@ class AppointmentController extends Controller
             ];
         }
 
-
         return response()->json($response);
+    }
+
+    public function get(): JsonResponse
+    {
+        return response()->json([
+            'appointments' => AppointmentResource::collection($this->appointmentService->getByPatient(auth()->user()->patient_id)),
+        ]);
     }
 }

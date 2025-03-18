@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('surname');
             $table->string('full_name');
+            $table->string('slug')->nullable()->unique();
             $table->string('branch');
             $table->string('avatar')->nullable();
             $table->string('title')->nullable();

@@ -16,6 +16,7 @@ return new class extends Migration {
                 ->constrained()
                 ->cascadeOnUpdate();
             $table->string('name');
+            $table->string('slug')->nullable()->unique();
             $table->string('start_work');
             $table->string('end_work');
             $table->unsignedTinyInteger('duration');

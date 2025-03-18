@@ -138,6 +138,7 @@ class ProductService
         $product->code = $data['code'] ?? $product->code;
         $product->price = $data['price'] ?? $product->price ?? null;
         $product->description = $data['description'] ?? $product->description;
+        $product->excerpt = $data['excerpt'] ?? $product->excerpt;
 
         $product->save();
 

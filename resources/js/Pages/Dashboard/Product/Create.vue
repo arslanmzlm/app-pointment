@@ -22,6 +22,7 @@ const form = useForm<ProductFormType>({
     code: '',
     price: null,
     description: '',
+    excerpt: null,
     stocks: [],
     images: [],
 });

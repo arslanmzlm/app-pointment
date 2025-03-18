@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('code')->nullable();
             $table->decimal('price', 10)->nullable();
             $table->text('description')->nullable();
+            $table->text('excerpt')->nullable();
             $table->timestamps();
         });
 

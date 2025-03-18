@@ -11,6 +11,8 @@ import CalendarDayIcon from '@/Icons/CalendarDayIcon.vue';
 import CalendarIcon from '@/Icons/CalendarIcon.vue';
 import CashRegisterIcon from '@/Icons/CashRegisterIcon.vue';
 import ClipboardAttachmentIcon from '@/Icons/ClipboardAttachmentIcon.vue';
+import FileInfoIcon from '@/Icons/FileInfoIcon.vue';
+import FileWiredIcon from '@/Icons/FileWiredIcon.vue';
 import HospitalIcon from '@/Icons/HospitalIcon.vue';
 import HospitalUserIcon from '@/Icons/HospitalUserIcon.vue';
 import IdCardIcon from '@/Icons/IdCardIcon.vue';
@@ -140,6 +142,16 @@ if (page.props.auth.user.type === UserType.ADMIN) {
                     icon: CalendarDayIcon,
                     label: 'Randevu Tipleri',
                     url: route('dashboard.appointment.type.list'),
+                },
+                {
+                    icon: FileInfoIcon,
+                    label: 'Uygulama İçeriği',
+                    url: route('dashboard.content.list'),
+                },
+                {
+                    icon: FileWiredIcon,
+                    label: 'Ayarlar',
+                    url: route('dashboard.setting.index'),
                 },
             ],
         },

@@ -4,7 +4,7 @@
             <a href="/">
                 <img
                     alt="Logo"
-                    class="h-20 w-20 fill-current text-gray-500"
+                    class="h-40 w-40 fill-current text-gray-500"
                     src="@/Images/logo/icon.png"
                 />
             </a>

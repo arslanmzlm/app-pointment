@@ -1,4 +1,5 @@
 import {FieldInput, Gender, PaymentMethod, TransactionType} from '@/types/enums';
+import {SettingsResponse} from '@/types/response';
 
 interface FormDataType {
     [key: string]: any;
@@ -86,6 +87,7 @@ export interface ProductFormType extends FormDataType {
     code: string | null;
     price: number | null;
     description: string;
+    excerpt: string | null;
     stocks: {
         id?: number | null;
         hospital_id: number;
@@ -169,3 +171,24 @@ export interface AppointmentMultipleFormType extends FormDataType {
     patient_id: number;
     appointments: AppointmentItemFormType[];
 }
+
+export interface ContentFormType extends FormDataType {
+    section: string;
+    active: boolean;
+    title: string;
+    slug: string | null;
+    subtitle: string | null;
+    top_title: string | null;
+    alt_title: string | null;
+    link: string | null;
+    link_label: string | null;
+    image: File | null;
+    mobile_image: File | null;
+    image_alt: string | null;
+    icon: File | null;
+    order: number | null;
+    description: string | null;
+    body: string;
+}
+
+export interface SettingFormType extends FormDataType, SettingsResponse {}

@@ -19,7 +19,7 @@ import {PatientFieldResponse} from '@/types/response';
 
 const props = defineProps<{
     patient: Patient;
-    province: Province;
+    province: Province | null;
     fields: PatientFieldResponse[];
     treatments: Treatment[];
     appointments: Appointment[];
@@ -51,7 +51,7 @@ const collapseAll = () => {
                 <template #content>
                     <div class="space-y-2">
                         <div class="flex flex-col items-start gap-2">
-                            <ProvinceTag :value="province.name" />
+                            <ProvinceTag v-if="province" :value="province.name" />
                             <PhoneTag :value="patient.phone" />
                             <EmailTag v-if="patient.email" :value="patient.email" />
                             <GenderTag :label="patient.gender_label" :value="patient.gender" />

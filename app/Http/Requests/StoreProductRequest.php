@@ -31,6 +31,7 @@ class StoreProductRequest extends FormRequest
             'code' => ['nullable', 'string', 'max:255'],
             'price' => ['nullable', 'numeric'],
             'description' => ['nullable', 'string'],
+            'excerpt' => ['nullable', 'string'],
             'stocks' => ['array'],
             'stocks.*.hospital_id' => ['required', 'integer', Rule::exists('hospitals', 'id')],
             'stocks.*.stock' => ['required', 'integer'],

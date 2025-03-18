@@ -27,6 +27,7 @@ const form = useForm<ProductFormType>({
     code: product.code,
     price: product.price,
     description: product.description,
+    excerpt: product.excerpt,
     stocks: props.stocks,
 });
 

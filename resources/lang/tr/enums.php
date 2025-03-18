@@ -39,7 +39,7 @@ return [
     'appointment' => [
         'state' => [
             'PENDING' => 'Onay bekliyor',
-            'CONFIRMED' => 'Beklemede',
+            'CONFIRMED' => 'Onaylandı',
             'COMPLETED' => 'Tamamlandı',
             'RESCHEDULED' => 'Ertelendi',
             'CANCELED' => 'İptal edildi',

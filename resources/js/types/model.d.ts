@@ -118,6 +118,7 @@ export interface Product extends Model {
     code: string | null;
     price: number | null;
     description: string;
+    excerpt: string | null;
 
     stocks: ProductStock[];
     images: ProductImage[];
@@ -215,4 +216,27 @@ export interface PassiveDate extends Model {
     start_date: string;
     due_date: string;
     description: string | null;
+}
+
+export interface Content extends Model {
+    section: string;
+    active: boolean;
+    title: string;
+    slug: string | null;
+    subtitle: string | null;
+    top_title: string | null;
+    alt_title: string | null;
+    link: string | null;
+    link_label: string | null;
+    image: string | null;
+    mobile_image: string | null;
+    image_alt: string | null;
+    icon: string | null;
+    order: number | null;
+    description: string | null;
+    body: string | null;
+
+    image_src: string | null;
+    mobile_image_src: string | null;
+    icon_src: string | null;
 }

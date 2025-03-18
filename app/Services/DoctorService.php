@@ -83,7 +83,7 @@ class DoctorService
                 $duration = $hospital->duration;
                 $timePeriod = CarbonPeriod::create(
                     $date->copy()->setTime($startHour, $startMinute),
-                    $date->copy()->setTime($endHour, $endMinute),
+                    $date->copy()->setTime($endHour, $endMinute)->subMinutes($duration),
                     "{$duration} minutes"
                 );
 
@@ -136,6 +136,7 @@ class DoctorService
 
     private function filterAvailableTimes(Doctor $doctor, \Carbon\Carbon $date, CarbonPeriod $timePeriod): array
     {
+        $now = now();
         $availableTimes = [];
 
         $appointments = Appointment::query()
@@ -153,6 +154,10 @@ class DoctorService
         });
 
         foreach ($timePeriod as $time) {
+            if ($date->isToday() && $time->lt($now)) {
+                continue;
+            }
+
             $isAvailable = true;
 
             foreach ($bookedTimes as $bookedTime) {

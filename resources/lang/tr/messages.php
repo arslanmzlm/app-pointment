@@ -77,4 +77,12 @@ return [
     'errors' => [
         '500' => 'Sistemsel bir hata oluştu. Lütfen tekrar deneyin.',
     ],
+    'content' => [
+        'created' => 'İçerik oluşturuldu.',
+        'updated' => 'İçerik düzenlendi.',
+        'deleted' => 'İçerik silindi.',
+    ],
+    'setting' => [
+        'updated' => 'Ayarlar düzenlendi.',
+    ],
 ];

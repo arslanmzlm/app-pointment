@@ -8,6 +8,7 @@ import InputField from '@/Components/Form/InputField.vue';
 import NumberField from '@/Components/Form/NumberField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
 import SlugField from '@/Components/Form/SlugField.vue';
+import TextareaField from '@/Components/Form/TextareaField.vue';
 import {ProductFormType} from '@/types/form';
 
 defineProps<{
@@ -84,6 +85,12 @@ defineProps<{
                     :error="form.errors.description"
                     label="Açıklama"
                     name="description"
+                />
+
+                <TextareaField
+                    v-model="form.excerpt"
+                    label="Özet"
+                    placeholder="Boş bırakılırsa açıklama kısmı yazdırılır."
                 />
 
                 <ActivityCheckbox v-model="form.active" />

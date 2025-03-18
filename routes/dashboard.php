@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Dashboard\AppointmentController;
 use App\Http\Controllers\Dashboard\AppointmentTypeController;
+use App\Http\Controllers\Dashboard\ContentController;
 use App\Http\Controllers\Dashboard\DefaultController;
 use App\Http\Controllers\Dashboard\DoctorController;
 use App\Http\Controllers\Dashboard\FieldController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Dashboard\PatientController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\ReportController;
 use App\Http\Controllers\Dashboard\ServiceController;
+use App\Http\Controllers\Dashboard\SettingController;
 use App\Http\Controllers\Dashboard\TransactionController;
 use App\Http\Controllers\Dashboard\TreatmentController;
 use App\Http\Controllers\Dashboard\UserController;
@@ -115,4 +117,14 @@ Route::middleware('auth')
         Route::get('report/patient', [ReportController::class, 'patient'])->name('report.patient');
         Route::get('report/treatment', [ReportController::class, 'treatment'])->name('report.treatment');
         Route::get('report/appointment', [ReportController::class, 'appointment'])->name('report.appointment');
+
+        Route::get('contents', [ContentController::class, 'list'])->name('content.list');
+        Route::get('content/create', [ContentController::class, 'create'])->name('content.create');
+        Route::post('content/store', [ContentController::class, 'store'])->name('content.store');
+        Route::get('content/edit/{content}', [ContentController::class, 'edit'])->name('content.edit');
+        Route::post('content/update/{content}', [ContentController::class, 'update'])->name('content.update');
+        Route::post('content/delete/{content}', [ContentController::class, 'destroy'])->name('content.destroy');
+
+        Route::get('settings', [SettingController::class, 'index'])->name('setting.index');
+        Route::post('settings/update', [SettingController::class, 'update'])->name('setting.update');
     });
