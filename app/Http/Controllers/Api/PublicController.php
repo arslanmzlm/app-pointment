@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\Gender;
+use App\Enums\SettingKeys;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ContentResource;
 use App\Http\Resources\DoctorResource;
@@ -14,7 +15,6 @@ use App\Services\HospitalService;
 use App\Services\ProductService;
 use App\Services\ProvinceService;
 use App\Services\SettingService;
-use Stevebauman\Purify\Facades\Purify;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class PublicController extends Controller
@@ -39,19 +39,23 @@ class PublicController extends Controller
         ]);
     }
 
-    public function contents()
+    public function contents(): JsonResponse
     {
         return response()->json(['contents' => $this->contentService->getGrouped()]);
     }
 
     public function agreement(): JsonResponse
     {
-        return response()->json(['agreement' => Purify::clean(fake()->randomHtml(10))]);
+        return response()->json([
+            'agreement' => SettingService::getPurifyValue(SettingKeys::AGREEMENT_POLICY),
+        ]);
     }
 
     public function privacy(): JsonResponse
     {
-        return response()->json(['privacy' => Purify::clean(fake()->randomHtml(10))]);
+        return response()->json([
+            'privacy' => SettingService::getPurifyValue(SettingKeys::PRIVACY_POLICY),
+        ]);
     }
 
     public function provinces(): JsonResponse
@@ -59,7 +63,7 @@ class PublicController extends Controller
         return response()->json(['provinces' => $this->provinceService->getAll()]);
     }
 
-    public function genders()
+    public function genders(): JsonResponse
     {
         return response()->json(['genders' => Gender::getAll()]);
     }

@@ -43,7 +43,7 @@ function submit() {
                     <EditorField
                         v-model="form.agreement_policy"
                         :error="form.errors.agreement_policy"
-                        label="Kullanım Şartları ve Koşulları"
+                        label="Kullanım Şartları ve Koşullar"
                         name="agreement_policy"
                     />
 
