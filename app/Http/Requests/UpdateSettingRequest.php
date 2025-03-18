@@ -23,6 +23,8 @@ class UpdateSettingRequest extends FormRequest
     {
         return [
             'contact_phone' => ['required', 'phone:TR', 'max:255'],
+            'agreement_policy' => ['required', 'string'],
+            'privacy_policy' => ['required', 'string'],
         ];
     }
 }
