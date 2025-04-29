@@ -4,11 +4,12 @@ import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import AppointmentForm from '@/Forms/AppointmentForm.vue';
 import {AppointmentFormType} from '@/types/form';
-import {Appointment, AppointmentType} from '@/types/model';
+import {Appointment, AppointmentType, Service} from '@/types/model';
 
 const props = defineProps<{
     appointment: Appointment;
     appointmentTypes: AppointmentType[];
+    services: Service[];
     passiveDates: string[];
     appointments?: Appointment[];
 }>();
@@ -21,8 +22,8 @@ const form = useForm<AppointmentFormType>({
     start_date: new Date(appointment.start_date),
     appointment_type_id: appointment.appointment_type_id,
     duration: appointment.duration,
-    title: appointment.title,
     note: appointment.note,
+    service_id: appointment.service_id,
 });
 
 function submit() {
@@ -39,6 +40,7 @@ function submit() {
             :form
             :passive-dates
             :patient="appointment.patient"
+            :services
             @submit.prevent="submit"
         />
     </DashboardLayout>

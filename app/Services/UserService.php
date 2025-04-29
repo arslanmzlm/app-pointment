@@ -29,7 +29,7 @@ class UserService
         $user = new User();
         $user->type = $userType;
 
-        if (auth()->user() && auth()->user()->hospital_id !== null) {
+        if (auth()->user()->hospital_id !== null) {
             $user->hospital_id = auth()->user()->hospital_id;
         }
 
@@ -60,14 +60,31 @@ class UserService
         return false;
     }
 
-    public function storeOrUpdateDoctor(Doctor $doctor): ?User
+    public function storeDoctor(Doctor $doctor, array $data): User
     {
-        $data = $this->getDataForRelatedCreate($doctor);
+        $create = [
+            'doctor_id' => $doctor->id,
+            'hospital_id' => $doctor->hospital_id,
+            'username' => $data['username'],
+            'password' => $data['password'],
+            'name' => $doctor->full_name,
+            'phone' => $doctor->phone,
+            'email' => $doctor->email,
+        ];
 
+        return $this->store($create, UserType::DOCTOR);
+    }
+
+    public function updateDoctor(Doctor $doctor): ?User
+    {
         if ($doctor->user) {
+            $data = [
+                'name' => $doctor->full_name,
+                'phone' => $doctor->phone,
+                'email' => $doctor->email,
+            ];
+
             return $this->update($doctor->user, $data);
-        } else if (!User::query()->where('username', $data['username'])->withTrashed()->exists()) {
-            return $this->store($data, UserType::DOCTOR);
         }
 
         return null;
@@ -75,7 +92,19 @@ class UserService
 
     public function storeOrUpdatePatient(Patient $patient, ?string $password = null): ?User
     {
-        $data = $this->getDataForRelatedCreate($patient, $password);
+        $phoneClean = preg_replace('/^(?:\+90|90|0)\s*/', '', $patient->phone->getRawNumber());
+
+        $data = [
+            'username' => $phoneClean,
+            'name' => $patient->full_name,
+            'phone' => $patient->phone,
+            'email' => $patient->email,
+        ];
+
+        if (!$patient->user) {
+            $data['patient_id'] = $patient->id;
+            $data['password'] = $password ?? substr($phoneClean, -6);
+        }
 
         if ($patient->user) {
             return $this->update($patient->user, $data);
@@ -103,27 +132,5 @@ class UserService
         $user->save();
 
         return $user;
-    }
-
-    private function getDataForRelatedCreate(Patient|Doctor $model, ?string $password = null): array
-    {
-        $phoneClean = preg_replace('/^(?:\+90|90|0)\s*/', '', $model->phone->getRawNumber());
-
-        if (!$model->user) {
-            if ($model instanceof Patient) {
-                $data['patient_id'] = $model->id;
-            } else {
-                $data['doctor_id'] = $model->id;
-                $data['hospital_id'] = $model->hospital_id;
-            }
-            $data['password'] = $password ?? substr($phoneClean, -6);
-        }
-
-        $data['username'] = $phoneClean;
-        $data['name'] = $model->full_name;
-        $data['phone'] = $model->phone;
-        $data['email'] = $model->email;
-
-        return $data;
     }
 }

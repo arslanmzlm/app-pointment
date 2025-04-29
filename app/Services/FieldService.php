@@ -44,11 +44,17 @@ class FieldService
         return $data;
     }
 
-    public function getValuesForView(Patient $patient): \Illuminate\Support\Collection
+    public function getValuesForView(Patient $patient, bool $printable = false): \Illuminate\Support\Collection
     {
         $data = collect();
 
-        $fields = Field::query()->orderBy('order')->get()->load('values');
+        $fields = Field::query();
+
+        if ($printable) {
+            $fields->where('printable', true);
+        }
+
+        $fields = $fields->orderBy('order')->get()->load('values');
 
         $patient->fields->each(function ($row) use ($fields, $data) {
             $field = $fields->find($row->field_id);
@@ -69,7 +75,7 @@ class FieldService
             ]);
         });
 
-        return $data->sortBy('order');
+        return $data->sortBy('order')->values();
     }
 
     public function store(array $data): ?Field
@@ -110,6 +116,7 @@ class FieldService
         $field->name = $data['name'] ?? $field->name;
         $field->description = $data['description'] ?? $field->description ?? null;
         $field->order = isset($data['order']) && is_numeric($data['order']) ? intval($data['order']) : ($field->order ?? null);
+        $field->printable = $data['printable'] ?? $field->printable;
 
         $field->save();
 

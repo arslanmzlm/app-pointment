@@ -6,6 +6,7 @@ use App\Enums\UserType;
 use App\Models\AppointmentType;
 use App\Models\Province;
 use App\Models\User;
+use App\Services\AppointmentTypeService;
 use Illuminate\Database\Seeder;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -114,11 +115,36 @@ class DatabaseSeeder extends Seeder
         }
 
         if (AppointmentType::count() === 0) {
-            AppointmentType::create(['name' => 'Kullanıcı Randevusu']);
-            AppointmentType::create(['name' => 'İlk Randevu']);
-            AppointmentType::create(['name' => 'Muayene']);
-            AppointmentType::create(['name' => 'Ameliyat']);
-            AppointmentType::create(['name' => 'Kontrol']);
+            $now = now();
+
+            $appointmentTypes = [
+                [
+                    'id' => AppointmentTypeService::DEFAULT_TYPE_ID,
+                    'name' => 'Kullanıcı Randevusu',
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'id' => null,
+                    'name' => 'Muayene',
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'id' => null,
+                    'name' => 'Ameliyat',
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+                [
+                    'id' => null,
+                    'name' => 'Kontrol',
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ],
+            ];
+
+            AppointmentType::insert($appointmentTypes);
         }
     }
 }

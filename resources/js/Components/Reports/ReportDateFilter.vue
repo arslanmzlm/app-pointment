@@ -8,6 +8,10 @@ import DateField from '@/Components/Form/DateField.vue';
 import {dateFormat} from '@/Utilities/formatters';
 import {getBool} from '@/Utilities/parser';
 
+const props = defineProps<{
+    cacheKey?: string;
+}>();
+
 const urlParams = new URLSearchParams(window.location.search);
 
 const dateRange = ref<Array<Date | null>>([
@@ -152,6 +156,14 @@ const items = ref([
 function toggle(event: any) {
     menu.value.toggle(event);
 }
+
+function clearCache() {
+    if (props.cacheKey) {
+        router.post(route('dashboard.report.clear'), {key: props.cacheKey});
+
+        router.reload();
+    }
+}
 </script>
 
 <template>
@@ -159,6 +171,14 @@ function toggle(event: any) {
         <h2 class="max-lg:text-xl">{{ title }}</h2>
 
         <div class="flex gap-2">
+            <Button
+                v-if="cacheKey"
+                icon="pi pi-refresh"
+                severity="info"
+                type="button"
+                @click="clearCache"
+            />
+
             <DateField
                 v-model="dateRange"
                 class="min-w-72 shrink-0"

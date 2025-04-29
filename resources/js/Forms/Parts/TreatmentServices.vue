@@ -72,6 +72,9 @@ function remove(index: number) {
                         <FloatLabel class="lg:col-span-1" variant="on">
                             <InputNumber
                                 v-model.number="service.price"
+                                :invalid="
+                                    errors !== undefined && !!errors[`services.${index}.price`]
+                                "
                                 currency="TRY"
                                 fluid
                                 locale="tr"

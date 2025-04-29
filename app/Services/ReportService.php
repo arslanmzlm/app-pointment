@@ -47,6 +47,22 @@ class ReportService
         }
     }
 
+    public function clearCache(): void
+    {
+        $caches = [
+            'transaction',
+            'patient',
+            'treatment',
+            'appointment',
+        ];
+
+        $key = request('key');
+
+        if (in_array($key, $caches)) {
+            Cache::forget($this->getCacheKey("report:{$key}"));
+        }
+    }
+
     public function transactionReport(): array
     {
         $cacheKey = $this->getCacheKey('report:transaction');

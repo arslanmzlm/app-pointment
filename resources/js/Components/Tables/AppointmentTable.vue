@@ -25,7 +25,7 @@ defineProps<{
                 row-hover
             >
                 <Column field="id" header="ID" />
-                <Column field="doctor.full_name" header="Doktor" />
+                <Column field="doctor.full_name" header="Podolog" />
                 <Column field="type_name" header="Randevu Tipi" />
                 <Column field="state" header="Durum">
                     <template #body="slotProps">

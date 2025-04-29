@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class FilterHelper
 {
@@ -208,6 +209,12 @@ class FilterHelper
     {
         if (auth()->user() && auth()->user()->isDoctor()) {
             $this->query->where('doctor_id', auth()->user()->doctor_id);
+        } else {
+            $value = request('doctor');
+
+            if (!empty($value) && is_numeric($value)) {
+                $this->query->where('doctor_id', $value);
+            }
         }
 
         return $this;
@@ -239,5 +246,10 @@ class FilterHelper
         $perPage = request()->integer('per_page', $defaultPerPage);
 
         return $this->query->paginate($perPage);
+    }
+
+    public function get(): Collection
+    {
+        return $this->query->get();
     }
 }

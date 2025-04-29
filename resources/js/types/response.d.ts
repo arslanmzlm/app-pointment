@@ -137,4 +137,5 @@ export interface SettingsResponse {
     contact_phone: string;
     agreement_policy: string;
     privacy_policy: string;
+    consent_form_description: string;
 }

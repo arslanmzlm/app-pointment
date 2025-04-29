@@ -153,6 +153,19 @@ const filters = ref<DataTableFilter>({
                     <div class="table-actions">
                         <EditLink :url="route('dashboard.patient.edit', {id: slotProps.data.id})" />
 
+                        <a
+                            :href="route('dashboard.patient.print', {id: slotProps.data.id})"
+                            target="_blank"
+                            title="Hasta Kayıt Çıktısı"
+                        >
+                            <Button
+                                class="size-12"
+                                icon="pi pi-print"
+                                severity="warn"
+                                title="Görüntüle"
+                            />
+                        </a>
+
                         <Button
                             :href="route('dashboard.patient.show', {id: slotProps.data.id})"
                             as="Link"

@@ -28,7 +28,7 @@ const hospitalNames = computed(() => {
 
 <template>
     <DashboardLayout title="Kasa Raporu">
-        <ReportDateFilter />
+        <ReportDateFilter cache-key="transaction" />
 
         <div v-if="reports" class="space-y-6">
             <TransactionReportCard

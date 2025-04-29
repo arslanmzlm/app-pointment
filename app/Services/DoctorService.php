@@ -111,7 +111,10 @@ class DoctorService
 
         $doctor = $this->assignAttributes($doctor, $data);
 
-        (new UserService())->storeOrUpdateDoctor($doctor);
+        (new UserService())->storeDoctor($doctor, [
+            'username' => $data['username'],
+            'password' => $data['password'],
+        ]);
 
         return $doctor;
     }
@@ -120,7 +123,7 @@ class DoctorService
     {
         $doctor = $this->assignAttributes($doctor, $data);
 
-        (new UserService())->storeOrUpdateDoctor($doctor);
+        (new UserService())->updateDoctor($doctor);
 
         return $doctor;
     }

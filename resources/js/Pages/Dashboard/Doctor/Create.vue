@@ -10,7 +10,7 @@ defineProps<{
     branches: string[];
 }>();
 
-const breadcrumbs = [{label: 'Doktorlar', url: route('dashboard.doctor.list')}];
+const breadcrumbs = [{label: 'Podologlar', url: route('dashboard.doctor.list')}];
 
 const form = useForm<DoctorFormType>({
     hospital_id: 0,
@@ -23,6 +23,8 @@ const form = useForm<DoctorFormType>({
     email: '',
     resume: '',
     certificate: '',
+    username: '',
+    password: '',
 });
 
 function submit() {
@@ -31,7 +33,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs title="Doktor Oluştur">
+    <DashboardLayout :breadcrumbs title="Podolog Oluştur">
         <DoctorForm :branches :form :hospitals @submit.prevent="submit" />
     </DashboardLayout>
 </template>

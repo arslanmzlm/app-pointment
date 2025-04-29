@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {router} from '@inertiajs/vue3';
+import {Link, router} from '@inertiajs/vue3';
 import {Button, Column, Tag, useConfirm} from 'primevue';
 import {computed, ref, watch} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
@@ -14,6 +14,7 @@ import SelectField from '@/Components/Form/SelectField.vue';
 import {appointmentState} from '@/Utilities/enumHelper';
 import {dateFormat, dateTimeFormat, timeFormat} from '@/Utilities/formatters';
 import {DataTableFilter} from '@/types/component';
+import {AppointmentState} from '@/types/enums';
 import {Appointment, Doctor, Hospital} from '@/types/model';
 import {EnumResponse, PaginateResponse} from '@/types/response';
 
@@ -108,6 +109,13 @@ function showConfirm(event: Event, url: string) {
         },
     });
 }
+
+const appointmentActive = (appointment: Appointment) => {
+    return (
+        appointment.state !== AppointmentState.COMPLETED &&
+        appointment.state !== AppointmentState.CANCELED
+    );
+};
 </script>
 
 <template>
@@ -155,10 +163,12 @@ function showConfirm(event: Event, url: string) {
                     v-if="filters.doctor && doctors && doctors.length > 0"
                     v-model.number="filters.doctor.value"
                     :options="doctorOptions"
+                    :placeholder="
+                        hospitals && hospitals.length > 0 ? 'Önce hastane seçiniz' : undefined
+                    "
                     class="col-span-1"
-                    label="Doktor"
+                    label="Podolog"
                     option-label="full_name"
-                    placeholder="Önce hastane seçiniz"
                     show-clear
                     size="small"
                 />
@@ -189,13 +199,27 @@ function showConfirm(event: Event, url: string) {
                     {{ hospitalNames[slotProps.data.hospital_id] }}
                 </template>
             </Column>
-            <Column v-if="doctors" field="doctor" header="Doktor">
+            <Column v-if="doctors" field="doctor" header="Podolog">
                 <template #body="slotProps">
                     {{ doctorNames[slotProps.data.doctor_id] }}
                 </template>
             </Column>
-            <Column field="patient.full_name" header="Hasta" />
-            <Column field="type_name" header="Randevu Tipi" />
+            <Column field="patient.full_name" header="Hasta">
+                <template #body="slotProps">
+                    <Link
+                        :href="route('dashboard.patient.show', {id: slotProps.data.patient_id})"
+                        class="text-primary underline hover:text-primary-700"
+                    >
+                        {{ slotProps.data.patient.full_name }}
+                    </Link>
+                </template>
+            </Column>
+            <Column field="type_name" header="Randevu Tipi">
+                <template #body="slotProps">
+                    <div>{{ slotProps.data.type_name }}</div>
+                    <div v-if="slotProps.data.service">{{ slotProps.data.service.name }}</div>
+                </template>
+            </Column>
             <Column field="state" header="Durum">
                 <template #body="slotProps">
                     <Tag
@@ -230,10 +254,11 @@ function showConfirm(event: Event, url: string) {
                         />
 
                         <Button
+                            v-if="appointmentActive(slotProps.data)"
                             class="size-12"
                             icon="pi pi-times"
                             severity="warn"
-                            title="Sil"
+                            title="İptal"
                             @click="
                                 showConfirm(
                                     $event,
@@ -244,6 +269,16 @@ function showConfirm(event: Event, url: string) {
 
                         <EditLink
                             :url="route('dashboard.appointment.edit', {id: slotProps.data.id})"
+                        />
+
+                        <Button
+                            v-if="appointmentActive(slotProps.data)"
+                            :href="route('dashboard.appointment.process', {id: slotProps.data.id})"
+                            as="Link"
+                            class="size-12"
+                            icon="pi pi-play"
+                            severity="info"
+                            title="İşleme Al"
                         />
                     </div>
                 </template>

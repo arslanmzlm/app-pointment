@@ -2,15 +2,17 @@
 import {InertiaForm} from '@inertiajs/vue3';
 import {clone} from 'lodash';
 import {Button, Card, DatePicker, FloatLabel, InputNumber, InputText, Select} from 'primevue';
-import {computed} from 'vue';
+import {computed, watch} from 'vue';
 import PreviewDates from '@/Forms/Parts/PreviewDates.vue';
 import {AppointmentMultipleFormType, TreatmentFormType} from '@/types/form';
-import {AppointmentType} from '@/types/model';
+import {AppointmentType, Service} from '@/types/model';
 
 const props = defineProps<{
     form: InertiaForm<AppointmentMultipleFormType | TreatmentFormType>;
     passiveDates?: string[];
     appointmentTypes: AppointmentType[];
+    hospitalId?: number | null;
+    services: Service[];
 }>();
 
 function add() {
@@ -19,7 +21,8 @@ function add() {
             start_date: null,
             duration: 60,
             appointment_type_id: null,
-            title: `${props.form.appointments.length + 1}. randevu`,
+            service_id: null,
+            note: '',
         });
     }
 }
@@ -75,6 +78,31 @@ const disabledDates = computed(() => {
 
     return undefined;
 });
+
+const serviceOptions = computed(() => {
+    if (props.services) {
+        if (props.hospitalId === undefined) {
+            return props.services;
+        }
+
+        return props.services.filter((service) => {
+            return service.hospital_id === props.hospitalId;
+        });
+    }
+
+    return [];
+});
+
+watch(
+    () => props.hospitalId,
+    () => {
+        if (props.form.appointments) {
+            props.form.appointments.forEach((appointment) => {
+                appointment.service_id = null;
+            });
+        }
+    },
+);
 </script>
 
 <template>
@@ -83,12 +111,14 @@ const disabledDates = computed(() => {
         <template #content>
             <div v-if="form" class="space-y-4">
                 <div
-                    v-if="form && form.length"
-                    class="hidden lg:grid lg:grid-cols-5 lg:gap-3 lg:pr-10"
+                    v-if="form && form.appointments && form.appointments.length > 0"
+                    class="hidden lg:grid lg:grid-cols-7 lg:gap-3 lg:pr-10"
                 >
                     <div class="col-span-1 font-bold">Tarih</div>
                     <div class="col-span-1 font-bold">Randevu süresi (dakika)</div>
-                    <div class="col-span-3 font-bold">Başlık</div>
+                    <div class="col-span-1 font-bold">Randevu Tipi</div>
+                    <div class="col-span-1 font-bold">Hizmet</div>
+                    <div class="col-span-3 font-bold">Not</div>
                 </div>
 
                 <div
@@ -158,10 +188,25 @@ const disabledDates = computed(() => {
                             <label class="block lg:hidden">Randevu Tipi</label>
                         </FloatLabel>
 
-                        <FloatLabel class="lg:col-span-4" variant="on">
-                            <InputText v-model="appointment.title" fluid size="small" />
+                        <FloatLabel class="lg:col-span-1" variant="on">
+                            <Select
+                                v-model="appointment.service_id"
+                                :invalid="!!form.errors[`appointments.${index}.service_id`]"
+                                :options="serviceOptions"
+                                fluid
+                                option-label="name"
+                                option-value="id"
+                                show-clear
+                                size="small"
+                            />
 
-                            <label class="block lg:hidden">Başlık</label>
+                            <label class="block lg:hidden">Hizmet</label>
+                        </FloatLabel>
+
+                        <FloatLabel class="lg:col-span-3" variant="on">
+                            <InputText v-model="appointment.note" fluid size="small" />
+
+                            <label class="block lg:hidden">Not</label>
                         </FloatLabel>
 
                         <div

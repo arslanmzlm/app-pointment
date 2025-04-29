@@ -9,16 +9,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Field extends Model
 {
     protected $fillable = [
-        'active',
         'name',
         'input',
         'description',
         'order',
+        'printable',
     ];
 
     protected $casts = [
-        'active' => 'boolean',
         'input' => FieldInput::class,
+        'printable' => 'boolean',
     ];
     protected $appends = ['input_label'];
 

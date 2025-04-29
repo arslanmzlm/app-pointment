@@ -38,10 +38,12 @@ export interface DoctorFormType extends FormDataType {
     branch: string;
     avatar: File | null;
     title: string | null;
-    phone: string;
+    phone: string | null;
     email: string | null;
     resume: string;
     certificate: string;
+    username?: string;
+    password?: string;
 }
 
 export interface PatientFormType extends FormDataType {
@@ -66,6 +68,7 @@ export interface FieldFormType extends FormDataType {
     input: FieldInput;
     description: string | null;
     order: number | null;
+    printable: boolean;
     values: {id: number | null; field_id?: number; value: string}[];
 }
 
@@ -107,7 +110,7 @@ export interface TreatmentServiceFormType {
     id?: number;
     service_id: number;
     label?: string;
-    price: number;
+    price: number | null;
 }
 
 export interface TreatmentProductFormType {
@@ -123,7 +126,8 @@ export interface AppointmentItemFormType extends FormDataType {
     start_date: Date | null;
     duration: number;
     appointment_type_id: number | null;
-    title: string | null;
+    service_id: number | null;
+    note: string | null;
 }
 
 export interface TreatmentFormType extends FormDataType {
@@ -161,8 +165,8 @@ export interface AppointmentFormType extends FormDataType {
     appointment_type_id: number;
     start_date: Date | null;
     duration: number;
-    title: string | null;
     note: string | null;
+    service_id?: number | null;
 }
 
 export interface AppointmentMultipleFormType extends FormDataType {
@@ -194,4 +198,5 @@ export interface SettingFormType extends FormDataType {
     contact_phone: string;
     agreement_policy: string;
     privacy_policy: string;
+    consent_form_description: string;
 }

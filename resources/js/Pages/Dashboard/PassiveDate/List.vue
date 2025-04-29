@@ -121,7 +121,7 @@ if (props.doctors) {
                     v-model.number="filters.doctor.value"
                     :options="doctorOptions"
                     class="col-span-1"
-                    label="Doktor"
+                    label="Podolog"
                     option-label="full_name"
                     show-clear
                     size="small"
@@ -134,7 +134,7 @@ if (props.doctors) {
                     {{ hospitalNames[slotProps.data.hospital_id] }}
                 </template>
             </Column>
-            <Column v-if="doctors" field="doctor" header="Doktor">
+            <Column v-if="doctors" field="doctor" header="Podolog">
                 <template #body="slotProps">
                     {{ doctorNames[slotProps.data.doctor_id] }}
                 </template>

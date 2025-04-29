@@ -146,24 +146,31 @@ class AppointmentService
 
     public function filter(): LengthAwarePaginator
     {
-        $query = Appointment::query()->with('patient');
+        $query = Appointment::query()->with(['patient', 'service']);
 
         return FilterHelper::filter($query)
-            ->search('title', 'note')
+            ->search('note')
             ->sort('start_date', 'due_date', 'duration')
             ->idFilter('hospital', 'doctor', 'patient')
             ->enumMultiple(['state' => AppointmentState::class])
-            ->dateRange()
             ->paginate();
     }
 
-    public function dateRange(): Collection
+    public function dateRange(bool $isAdmin = false): ?Collection
     {
+        if ($isAdmin) {
+            $doctor = request('doctor');
+
+            if (empty($doctor) || !is_numeric($doctor)) {
+                return null;
+            }
+        }
+
         $query = Appointment::query()->with('patient');
 
         return FilterHelper::filter($query)
             ->dateRange(default: 0)
-            ->query()
+            ->hasDoctor()
             ->get();
     }
 
@@ -212,8 +219,8 @@ class AppointmentService
         $appointment->start_date = Carbon::parse($data['start_date'])->setTimezone('Europe/Istanbul')->setSecond(0);
         $appointment->due_date = $appointment->start_date->clone()->addMinutes($data['duration'] - 1)->setSecond(59);
         $appointment->duration = $data['duration'];
-        $appointment->title = $data['title'] ?? null;
-        $appointment->note = $data['note'] ?? null;
+        $appointment->note = $data['note'];
+        $appointment->service_id = $data['service_id'];
 
         $appointment->save();
 
@@ -228,7 +235,7 @@ class AppointmentService
         $appointment->doctor_id = $data['doctor_id'];
         $appointment->hospital_id = $appointment->doctor->hospital_id;
         $appointment->patient_id = auth()->user()->patient_id;
-        $appointment->state = AppointmentState::PENDING;
+        $appointment->state = AppointmentState::CONFIRMED;
         $appointment->start_date = Carbon::parse($data['date'])->setTimezone('Europe/Istanbul')->setSecond(0);
         $appointment->due_date = $appointment->start_date->clone()->addMinutes($appointment->doctor->hospital->duration - 1)->setSecond(59);
         $appointment->duration = $appointment->doctor->hospital->duration;
@@ -252,8 +259,8 @@ class AppointmentService
         }
 
         $appointment->appointment_type_id = $data['appointment_type_id'];
-        $appointment->title = $data['title'] ?? $appointment->title;
-        $appointment->note = $data['note'] ?? $appointment->note;
+        $appointment->note = $data['note'];
+        $appointment->service_id = $data['service_id'];
 
         $appointment->save();
 

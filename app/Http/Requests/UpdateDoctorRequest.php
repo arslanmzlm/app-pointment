@@ -32,7 +32,7 @@ class UpdateDoctorRequest extends FormRequest
             'branch' => ['required', 'string', 'max:255'],
             'avatar' => ['nullable', 'image', 'max:5120'],
             'title' => ['nullable', 'string', 'max:255'],
-            'phone' => ['required', Rule::phone()->country('TR'), Rule::unique('doctors', 'phone')->ignore($doctor->id)],
+            'phone' => ['nullable', Rule::phone()->country('TR'), Rule::unique('doctors', 'phone')->ignore($doctor->id)],
             'email' => ['nullable', 'email', 'max:255'],
             'resume' => ['nullable', 'string'],
             'certificate' => ['nullable', 'string'],

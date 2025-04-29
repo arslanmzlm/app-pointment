@@ -64,4 +64,11 @@ class ReportController extends Controller
 
         return Inertia::render('Dashboard/Report/Appointment', $data);
     }
+
+    public function clear()
+    {
+        $this->reportService->clearCache();
+
+        session()->flash('toast.success', trans('messages.generic.cache_cleared'));
+    }
 }

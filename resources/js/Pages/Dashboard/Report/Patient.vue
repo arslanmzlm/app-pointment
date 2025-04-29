@@ -27,7 +27,7 @@ const provinceNames = computed(() => {
 
 <template>
     <DashboardLayout title="Hasta Raporu">
-        <ReportDateFilter />
+        <ReportDateFilter cache-key="patient" />
 
         <PatientReportCard :genders :province-names :reports />
     </DashboardLayout>

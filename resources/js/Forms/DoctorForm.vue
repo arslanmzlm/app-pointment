@@ -48,15 +48,6 @@ defineProps<{
                     />
                 </div>
 
-                <MaskField
-                    v-model="form.phone"
-                    :error="form.errors.phone"
-                    label="Telefon"
-                    mask="phone"
-                    name="phone"
-                    required
-                />
-
                 <SelectField
                     v-model="form.branch"
                     :error="form.errors.branch"
@@ -70,6 +61,25 @@ defineProps<{
                 />
 
                 <InputField
+                    v-if="form.username !== undefined"
+                    v-model="form.username"
+                    :error="form.errors.username"
+                    label="Kullanıcı Adı"
+                    name="username"
+                    required
+                />
+
+                <InputField
+                    v-if="form.password !== undefined"
+                    v-model="form.password"
+                    :error="form.errors.password"
+                    label="Şifre"
+                    name="password"
+                    required
+                    type="password"
+                />
+
+                <InputField
                     v-model="form.title"
                     :error="form.errors.title"
                     label="Ünvan"
@@ -77,8 +87,9 @@ defineProps<{
                 >
                     <template #message>
                         <p>
-                            Doktorun isminin göründüğü randevu alma gibi alanlarda, doktorun ünvanı
-                            tanımlanmışsa ünvanı görünecektir eğer yoksa doktorun adı görünecektir.
+                            Podoloğun isminin göründüğü randevu alma gibi alanlarda, podoloğun
+                            ünvanı tanımlanmışsa ünvanı görünecektir eğer yoksa podoloğun adı
+                            görünecektir.
                         </p>
                     </template>
                 </InputField>
@@ -90,6 +101,14 @@ defineProps<{
                     :max-file-size="5"
                     label="Avatar"
                     name="avatar"
+                />
+
+                <MaskField
+                    v-model="form.phone"
+                    :error="form.errors.phone"
+                    label="Telefon"
+                    mask="phone"
+                    name="phone"
                 />
 
                 <InputField

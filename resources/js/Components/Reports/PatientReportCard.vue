@@ -73,7 +73,7 @@ const perGender = computed(() => {
                     severity="primary"
                     title="Yeni Hasta Olarak İşaretlenenler"
                     type-icon="pi pi-user"
-                    type-label="Eski Hasta"
+                    type-label="Yeni Hasta"
                     type-severity="danger"
                 />
 

@@ -21,6 +21,7 @@ const form = useForm<FieldFormType>({
     input: field.input,
     description: field.description,
     order: field.order,
+    printable: field.printable,
     values: field?.values ?? [],
 });
 

@@ -91,6 +91,7 @@ export interface Field extends Model {
     input: FieldInput;
     description: string | null;
     order: number | null;
+    printable: boolean;
 
     values?: FieldValue[];
     input_label: string;
@@ -200,15 +201,16 @@ export interface Appointment extends Model {
     start_date: string;
     due_date: string;
     duration: number;
-    title: string | null;
     note: string | null;
     treatment_id: number | null;
+    service_id: number | null;
 
     type_name: string;
     state_label: string;
     hospital?: Hospital;
     doctor?: Doctor;
     patient?: Patient;
+    service?: Service;
 }
 
 export interface PassiveDate extends Model {

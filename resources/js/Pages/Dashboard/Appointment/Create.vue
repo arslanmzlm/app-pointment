@@ -7,13 +7,14 @@ import AppointmentMultipleForm from '@/Forms/AppointmentMultipleForm.vue';
 import PatientSelector from '@/Forms/Parts/PatientSelector.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
 import {AppointmentMultipleFormType} from '@/types/form';
-import {AppointmentType, Doctor, Hospital} from '@/types/model';
+import {AppointmentType, Doctor, Hospital, Service} from '@/types/model';
 
 const props = defineProps<{
     appointmentTypes: AppointmentType[];
     passiveDates?: string[];
     hospitals?: Hospital[];
     doctors?: Doctor[];
+    services: Service[];
 }>();
 
 const breadcrumbs = [{label: 'Randevular', url: route('dashboard.appointment.list')}];
@@ -50,7 +51,7 @@ watch(
     },
 );
 
-if (props.hospitals && props.doctors) {
+if (props.hospitals || props.doctors) {
     form.doctor_id = 0;
 }
 
@@ -78,7 +79,7 @@ function submit() {
                         v-model.number="form.doctor_id"
                         :options="doctorOptions"
                         filter
-                        label="Doktor"
+                        label="Podolog"
                         option-label="full_name"
                         placeholder="Önce hastane seçiniz."
                         required
@@ -92,7 +93,9 @@ function submit() {
                 v-if="form.appointments"
                 :appointment-types
                 :form
+                :hospital-id="hospitals && hospitals.length > 0 ? hospital : undefined"
                 :passive-dates
+                :services
             />
 
             <Button :loading="form.processing" class="btn-block" label="Kaydet" type="submit" />

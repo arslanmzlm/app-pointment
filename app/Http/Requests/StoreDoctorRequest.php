@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class StoreDoctorRequest extends FormRequest
 {
@@ -28,10 +29,12 @@ class StoreDoctorRequest extends FormRequest
             'branch' => ['required', 'string', 'max:255'],
             'avatar' => ['nullable', 'image', 'max:5120'],
             'title' => ['nullable', 'string', 'max:255'],
-            'phone' => ['required', Rule::phone()->country('TR'), Rule::unique('doctors', 'phone')],
+            'phone' => ['nullable', Rule::phone()->country('TR'), Rule::unique('doctors', 'phone')],
             'email' => ['nullable', 'email', 'max:255'],
             'resume' => ['nullable', 'string'],
             'certificate' => ['nullable', 'string'],
+            'username' => ['required', 'alpha_dash:ascii', 'max:255', Rule::unique('users', 'username')],
+            'password' => ['required', new Password(5)],
         ];
 
         if (auth()->user() && !auth()->user()->hasHospital()) {

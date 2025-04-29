@@ -12,8 +12,8 @@ const props = defineProps<{
 }>();
 
 const doctor = props.doctor;
-const pageTitle = computed(() => `Doktor Düzenle #${doctor.id}`);
-const breadcrumbs = [{label: 'Doktorlar', url: route('dashboard.doctor.list')}];
+const pageTitle = computed(() => `Podolog Düzenle #${doctor.id}`);
+const breadcrumbs = [{label: 'Podologlar', url: route('dashboard.doctor.list')}];
 
 const form = useForm<DoctorFormType>({
     name: doctor.name,

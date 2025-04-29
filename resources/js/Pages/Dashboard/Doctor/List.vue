@@ -41,12 +41,12 @@ if (props.hospitals) {
 </script>
 
 <template>
-    <DashboardLayout title="Doktorlar">
+    <DashboardLayout title="Podologlar">
         <BaseDataTable
             :create-url="route('dashboard.doctor.create')"
             :filters
             :paginate="doctors"
-            create-label="Doktor Ekle"
+            create-label="Podolog Ekle"
             only="doctors"
         >
             <template #filters>
@@ -95,7 +95,7 @@ if (props.hospitals) {
             </template>
 
             <Column field="id" header="ID" sortable />
-            <Column field="full_name" header="Doktor" sortable />
+            <Column field="full_name" header="Podolog" sortable />
             <Column v-if="hospitals" field="hospital" header="Hastane">
                 <template #body="slotProps">
                     {{ hospitalNames[slotProps.data.hospital_id] }}

@@ -63,7 +63,7 @@ defineProps<{
 
             <div class="grid items-start gap-4 xl:grid-cols-6">
                 <Card v-if="patients && patients.length > 0" class="col-span-2">
-                    <template #title>Yeni Hastalar</template>
+                    <template #title>Son Kaydolan Hastalar</template>
                     <template #content>
                         <div class="timeline-box">
                             <Timeline :value="patients">
@@ -167,7 +167,7 @@ defineProps<{
                     class="col-span-1 py-8 text-center"
                     icon="pi pi-user-plus"
                     icon-pos="top"
-                    label="Doktor Oluştur"
+                    label="Podolog Oluştur"
                     severity="warn"
                     size="large"
                 />
@@ -228,7 +228,7 @@ defineProps<{
                                 field="hospital.name"
                                 header="Hastane"
                             />
-                            <Column field="doctor.full_name" header="Doktor" />
+                            <Column field="doctor.full_name" header="Podolog" />
                             <Column field="patient.full_name" header="Hasta">
                                 <template #body="slotProps">
                                     <Button

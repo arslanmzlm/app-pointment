@@ -8,7 +8,6 @@ import DeletePopup from '@/Components/DeletePopup.vue';
 import EditLink from '@/Components/EditLink.vue';
 import InputField from '@/Components/Form/InputField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
-import {isDoctor} from '@/Utilities/auth';
 import {currencyFormat, dateTimeFormat} from '@/Utilities/formatters';
 import {DataTableFilter} from '@/types/component';
 import {Doctor, Hospital, Treatment} from '@/types/model';
@@ -83,10 +82,10 @@ if (props.doctors) {
 <template>
     <DashboardLayout title="İşlemler">
         <BaseDataTable
-            :create-label="isDoctor() ? 'İşlem Ekle' : undefined"
-            :create-url="isDoctor() ? route('dashboard.treatment.create') : undefined"
+            :create-url="route('dashboard.treatment.create')"
             :filters
             :paginate="treatments"
+            create-label="İşlem Ekle"
             only="treatments"
         >
             <template #filters>
@@ -118,8 +117,11 @@ if (props.doctors) {
                     v-if="filters.doctor && doctors && doctors.length > 0"
                     v-model.number="filters.doctor.value"
                     :options="doctorOptions"
+                    :placeholder="
+                        hospitals && hospitals.length > 0 ? 'Önce hastane seçiniz' : undefined
+                    "
                     class="col-span-1"
-                    label="Doktor"
+                    label="Podolog"
                     option-label="full_name"
                     show-clear
                     size="small"
@@ -133,7 +135,7 @@ if (props.doctors) {
                     {{ hospitalNames[slotProps.data.hospital_id] }}
                 </template>
             </Column>
-            <Column v-if="doctors" field="doctor" header="Doktor">
+            <Column v-if="doctors" field="doctor" header="Podolog">
                 <template #body="slotProps">
                     {{ doctorNames[slotProps.data.doctor_id] }}
                 </template>
@@ -166,7 +168,6 @@ if (props.doctors) {
                         />
 
                         <EditLink
-                            v-if="isDoctor()"
                             :url="route('dashboard.treatment.edit', {id: slotProps.data.id})"
                         />
                     </div>

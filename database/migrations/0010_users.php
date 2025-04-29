@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->unsignedTinyInteger('type')->index();
             $table->string('username')->unique();
             $table->string('name');
-            $table->string('phone')->unique();
+            $table->string('phone')->nullable()->unique();
             $table->string('email')->nullable()->unique();
             $table->string('password');
             $table->rememberToken();

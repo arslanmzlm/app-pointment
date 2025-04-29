@@ -28,7 +28,7 @@ const hospitalNames = computed(() => {
 
 <template>
     <DashboardLayout title="İşlem Raporu">
-        <ReportDateFilter />
+        <ReportDateFilter cache-key="treatment" />
 
         <Card v-for="(report, hospitalId) in reports" :key="hospitalId">
             <template #title>{{ hospitalNames[hospitalId] }}</template>
@@ -39,10 +39,10 @@ const hospitalNames = computed(() => {
                     row-hover
                 >
                     <template #header>
-                        <h4>Doktora Göre Kayıtlar</h4>
+                        <h4>Podoloğa Göre Kayıtlar</h4>
                     </template>
 
-                    <Column field="full_name" header="Doktor" sortable />
+                    <Column field="full_name" header="Podolog" sortable />
                     <Column field="branch" header="Alan" sortable />
                     <Column field="count" header="İşlem Sayısı" sortable />
                     <Column field="total" header="Toplam Tutar" sortable>

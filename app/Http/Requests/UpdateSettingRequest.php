@@ -25,6 +25,7 @@ class UpdateSettingRequest extends FormRequest
             'contact_phone' => ['required', 'phone:TR', 'max:255'],
             'agreement_policy' => ['required', 'string'],
             'privacy_policy' => ['required', 'string'],
+            'consent_form_description' => ['required', 'string'],
         ];
     }
 }

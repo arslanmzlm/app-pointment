@@ -16,15 +16,18 @@ import {useHospitalStore} from '@/Stores/hospital';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import DateField from '@/Components/Form/DateField.vue';
 import MultiSelectField from '@/Components/Form/MultiSelectField.vue';
+import SelectField from '@/Components/Form/SelectField.vue';
 import {appointmentState} from '@/Utilities/enumHelper';
 import {getInt} from '@/Utilities/parser';
 import {AppointmentState} from '@/types/enums';
-import {Appointment} from '@/types/model';
+import {Appointment, Doctor, Hospital} from '@/types/model';
 import {EnumResponse} from '@/types/response';
 
 const props = defineProps<{
-    appointments: Appointment[];
+    appointments: Appointment[] | null;
     appointmentStates: EnumResponse[];
+    hospitals?: Hospital[];
+    doctors?: Doctor[];
 }>();
 
 const hospitalStore = useHospitalStore();
@@ -53,30 +56,63 @@ function eventTitle(appointment: Appointment) {
     if (appointment.patient) {
         title += appointment.patient.full_name;
     }
-    if (appointment.title) {
-        title += ' - ' + appointment.title;
-    }
     return title;
 }
 
 function updateEvents() {
-    calendarOptions.events = props.appointments.map((appointment) => {
-        return {
-            id: appointment.id.toString(),
-            title: eventTitle(appointment),
-            start: appointment.start_date,
-            end: appointment.due_date,
-            color: appointmentState(appointment.state).color,
-        };
-    });
+    if (props.appointments) {
+        calendarOptions.events = props.appointments.map((appointment) => {
+            return {
+                id: appointment.id.toString(),
+                title: eventTitle(appointment),
+                start: appointment.start_date,
+                end: appointment.due_date,
+                color: appointmentState(appointment.state).color,
+            };
+        });
+    } else {
+        calendarOptions.events = [];
+    }
 }
 
 const filters = ref<{
+    hospital?: number | null;
+    doctor?: number | null;
     dateRange: (Date | null)[] | null;
     states: AppointmentState[] | null;
 }>({
     dateRange: null,
     states: null,
+});
+
+if (props.hospitals) {
+    filters.value.hospital = null;
+
+    watch(
+        () => filters.value.hospital,
+        () => {
+            filters.value.doctor = null;
+        },
+    );
+}
+
+if (props.doctors) {
+    filters.value.doctor = null;
+}
+
+const doctorOptions = computed(() => {
+    if (props.doctors) {
+        if (props.hospitals === undefined) {
+            return props.doctors;
+        }
+
+        const hospitalId = filters.value.hospital;
+        return props.doctors.filter((doctor) => {
+            return doctor.hospital_id === hospitalId;
+        });
+    }
+
+    return [];
 });
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -105,10 +141,15 @@ if (urlParams.has('states')) {
 
 function reloadData() {
     let query: {
+        doctor?: number;
         start_date?: string;
         due_date?: string;
         states?: AppointmentState | AppointmentState[] | string;
     } = {};
+
+    if (filters.value.doctor !== null) {
+        query.doctor = filters.value.doctor;
+    }
 
     if (isArray(filters.value.dateRange)) {
         if (filters.value.dateRange[0] !== null) {
@@ -141,7 +182,7 @@ function reloadData() {
 watch(filters, reloadData, {deep: true});
 
 const appointment = computed(() => {
-    if (eventId.value) {
+    if (props.appointments && eventId.value) {
         const id = getInt(eventId.value);
         return props.appointments.find((appointment) => {
             return appointment.id === id;
@@ -228,6 +269,28 @@ const openContextMenu = (event: EventClickArg) => {
         <Card>
             <template #content>
                 <div class="grid grid-cols-4 gap-4">
+                    <SelectField
+                        v-if="filters.hospital !== undefined && hospitals && hospitals.length > 0"
+                        v-model.number="filters.hospital"
+                        :options="hospitals"
+                        class="col-span-1"
+                        label="Hastane"
+                        show-clear
+                    />
+
+                    <SelectField
+                        v-if="filters.doctor !== undefined && doctors && doctors.length > 0"
+                        v-model.number="filters.doctor"
+                        :options="doctorOptions"
+                        :placeholder="
+                            hospitals && hospitals.length > 0 ? 'Önce hastane seçiniz' : undefined
+                        "
+                        class="col-span-1"
+                        label="Podolog"
+                        option-label="full_name"
+                        show-clear
+                    />
+
                     <DateField
                         v-model="filters.dateRange"
                         fluid

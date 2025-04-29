@@ -8,10 +8,9 @@ import DateField from '@/Components/Form/DateField.vue';
 import InputField from '@/Components/Form/InputField.vue';
 import NumberField from '@/Components/Form/NumberField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
-import TextareaField from '@/Components/Form/TextareaField.vue';
 import AppointmentTable from '@/Components/Tables/AppointmentTable.vue';
 import {AppointmentFormType} from '@/types/form';
-import {Appointment, AppointmentType, Patient} from '@/types/model';
+import {Appointment, AppointmentType, Patient, Service} from '@/types/model';
 
 const props = defineProps<{
     form: InertiaForm<AppointmentFormType>;
@@ -20,6 +19,7 @@ const props = defineProps<{
     patient?: Patient;
     appointments?: Appointment[];
     doctorId?: number;
+    services?: Service[];
 }>();
 
 const disabledDates = computed(() => {
@@ -69,18 +69,15 @@ const disabledDates = computed(() => {
                     show-buttons
                 />
 
-                <InputField
-                    v-model="form.title"
-                    :error="form.errors.title"
-                    label="Başlık"
-                    name="title"
-                />
+                <InputField v-model="form.note" :error="form.errors.note" label="Not" name="note" />
 
-                <TextareaField
-                    v-model="form.note"
-                    :error="form.errors.note"
-                    label="Not"
-                    name="note"
+                <SelectField
+                    v-if="services && form.service_id !== undefined"
+                    v-model="form.service_id"
+                    :error="form.errors.service_id"
+                    :options="services"
+                    label="Hizmet"
+                    required
                 />
             </template>
         </Card>

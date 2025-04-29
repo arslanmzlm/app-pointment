@@ -54,6 +54,7 @@ Route::middleware('auth')
 
         Route::get('patients', [PatientController::class, 'list'])->name('patient.list');
         Route::get('patient/show/{patient}', [PatientController::class, 'show'])->name('patient.show');
+        Route::get('patient/print/{patient}', [PatientController::class, 'print'])->name('patient.print');
         Route::get('patient/create', [PatientController::class, 'create'])->name('patient.create');
         Route::post('patient/store', [PatientController::class, 'store'])->name('patient.store');
         Route::get('patient/edit/{patient}', [PatientController::class, 'edit'])->name('patient.edit');
@@ -90,8 +91,8 @@ Route::middleware('auth')
         Route::get('appointment/types', [AppointmentTypeController::class, 'list'])->name('appointment.type.list');
         Route::get('appointment/type/create', [AppointmentTypeController::class, 'create'])->name('appointment.type.create');
         Route::post('appointment/type/store', [AppointmentTypeController::class, 'store'])->name('appointment.type.store');
-        Route::get('appointment/type/edit/{appointment}', [AppointmentTypeController::class, 'edit'])->name('appointment.type.edit');
-        Route::post('appointment/type/update/{appointment}', [AppointmentTypeController::class, 'update'])->name('appointment.type.update');
+        Route::get('appointment/type/edit/{appointmentType}', [AppointmentTypeController::class, 'edit'])->name('appointment.type.edit');
+        Route::post('appointment/type/update/{appointmentType}', [AppointmentTypeController::class, 'update'])->name('appointment.type.update');
 
         Route::get('appointments', [AppointmentController::class, 'list'])->name('appointment.list');
         Route::get('appointment/calendar', [AppointmentController::class, 'calendar'])->name('appointment.calendar');
@@ -117,6 +118,7 @@ Route::middleware('auth')
         Route::get('report/patient', [ReportController::class, 'patient'])->name('report.patient');
         Route::get('report/treatment', [ReportController::class, 'treatment'])->name('report.treatment');
         Route::get('report/appointment', [ReportController::class, 'appointment'])->name('report.appointment');
+        Route::post('report/clear', [ReportController::class, 'clear'])->name('report.clear');
 
         Route::get('contents', [ContentController::class, 'list'])->name('content.list');
         Route::get('content/create', [ContentController::class, 'create'])->name('content.create');

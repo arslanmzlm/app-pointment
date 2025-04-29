@@ -28,6 +28,7 @@ class UpdateFieldRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:255'],
             'order' => ['nullable', 'integer', 'max:65535'],
+            'printable' => ['boolean'],
             'values' => ['nullable', 'array'],
             'values.*.id' => ['nullable', Rule::exists('field_values', 'id')],
             'values.*.value' => ['required', 'string', 'max:255'],

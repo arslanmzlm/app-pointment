@@ -3,6 +3,8 @@
 return [
     'generic' => [
         'updated' => 'Bilgileriniz güncellendi.',
+        'cache_cleared' => 'Önbellek temizlendi.',
+        'cant_do_this' => 'Bu işlemi gerçekleştiremezsiniz.',
     ],
     'appointment' => [
         'type' => [
@@ -17,13 +19,13 @@ return [
         'canceled' => 'Randevu iptal edildi.',
         'finalized' => 'Randevu zaten tamamlanmış.',
         'has_appointment' => 'Aktif randevunuz bulunmakta. Yeni randevu almak için yetkililerle iletişime geçin.',
-        'overlap' => 'Bu tarihte doktorun randevusu bulunmakta.',
+        'overlap' => 'Bu tarihte podoloğun randevusu bulunmakta.',
         'made' => 'Randevunuz oluşturuldu. Sağlıklı günler dileriz.',
     ],
     'doctor' => [
-        'created' => 'Doktor oluşturuldu.',
-        'updated' => 'Doktor düzenlendi.',
-        'deleted' => 'Doktor silindi.',
+        'created' => 'Podolog oluşturuldu.',
+        'updated' => 'Podolog düzenlendi.',
+        'deleted' => 'Podolog silindi.',
     ],
     'field' => [
         'created' => 'Alan oluşturuldu.',

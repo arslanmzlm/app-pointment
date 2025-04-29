@@ -40,6 +40,7 @@ return new class extends Migration {
             $table->unsignedTinyInteger('input');
             $table->string('description')->nullable();
             $table->unsignedSmallInteger('order')->nullable();
+            $table->boolean('printable')->default(false);
             $table->timestamps();
         });
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\PaymentMethod;
+use App\Models\Appointment;
 use App\Rules\CheckAppointmentOverlap;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -24,13 +25,14 @@ class CompleteAppointmentRequest extends FormRequest
      */
     public function rules(): array
     {
-        $doctor = auth()->user()->doctor;
+        /** @var Appointment $appointment */
+        $appointment = $this->route('appointment');
 
         return [
             'note' => ['nullable', 'string'],
             'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
             'services' => ['array'],
-            'services.*.service_id' => ['required', Rule::exists('services', 'id')->where('hospital_id', $doctor->hospital_id)],
+            'services.*.service_id' => ['required', Rule::exists('services', 'id')->where('hospital_id', $appointment->hospital_id)],
             'services.*.price' => ['required', 'numeric'],
             'products' => ['array'],
             'products.*.product_id' => ['required', Rule::exists('products', 'id')],
@@ -40,7 +42,8 @@ class CompleteAppointmentRequest extends FormRequest
             'appointments.*.appointment_type_id' => ['required', Rule::exists('appointment_types', 'id')],
             'appointments.*.start_date' => ['required', 'date'],
             'appointments.*.duration' => ['required', 'integer', 'min:1'],
-            'appointments.*.title' => ['nullable', 'string', 'max:255'],
+            'appointments.*.note' => ['nullable', 'string', 'max:255'],
+            'appointments.*.service_id' => ['nullable', Rule::exists('services', 'id')->where('hospital_id', $appointment->hospital_id)],
             'appointments.*' => ['array', new CheckAppointmentOverlap()],
         ];
     }

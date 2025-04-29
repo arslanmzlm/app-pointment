@@ -29,6 +29,7 @@ class StoreFieldRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:255'],
             'order' => ['nullable', 'integer', 'max:65535'],
             'values' => ['nullable', 'array'],
+            'printable' => ['boolean'],
             'values.*.id' => ['nullable', Rule::exists('field_values', 'id')],
             'values.*.value' => ['required', 'string', 'max:255'],
         ];

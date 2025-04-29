@@ -23,8 +23,8 @@ class Appointment extends Model
         'start_date',
         'due_date',
         'duration',
-        'title',
         'note',
+        'service_id',
     ];
 
     protected $casts = [
@@ -63,6 +63,11 @@ class Appointment extends Model
     public function treatment(): BelongsTo
     {
         return $this->belongsTo(Treatment::class);
+    }
+
+    public function service(): BelongsTo
+    {
+        return $this->belongsTo(Service::class);
     }
 
     public function isActive(): bool

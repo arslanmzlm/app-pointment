@@ -28,7 +28,7 @@ const hospitalNames = computed(() => {
 
 <template>
     <DashboardLayout title="İşlem Raporu">
-        <ReportDateFilter />
+        <ReportDateFilter cache-key="appointment" />
 
         <Card>
             <template #title>Genel Rapor</template>
@@ -67,7 +67,7 @@ const hospitalNames = computed(() => {
                     row-group-mode="rowspan"
                     row-hover
                 >
-                    <Column field="full_name" header="Doktor" />
+                    <Column field="full_name" header="Podolog" />
                     <Column field="state_label" header="Randevu Durumu">
                         <template #body="slotProps">
                             <Tag

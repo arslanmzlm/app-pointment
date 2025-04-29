@@ -59,7 +59,7 @@ watch(
                     v-model.number="form.doctor_id"
                     :options="doctorOptions"
                     filter
-                    label="Doktor"
+                    label="Podolog"
                     option-label="full_name"
                     placeholder="Önce hastane seçiniz."
                     required

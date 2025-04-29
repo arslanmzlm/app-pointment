@@ -2,6 +2,7 @@
 import {Column, Message} from 'primevue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import BaseDataTable from '@/Components/BaseDataTable.vue';
+import DeletePopup from '@/Components/DeletePopup.vue';
 import EditLink from '@/Components/EditLink.vue';
 import {Field} from '@/types/model';
 import {PaginateResponse} from '@/types/response';
@@ -29,7 +30,13 @@ defineProps<{
             <Column field="order" header="Sıra" sortable />
             <Column header="İşlemler">
                 <template #body="slotProps">
-                    <EditLink :url="route('dashboard.field.edit', {id: slotProps.data.id})" />
+                    <div class="table-actions">
+                        <DeletePopup
+                            :url="route('dashboard.field.destroy', {id: slotProps.data.id})"
+                        />
+
+                        <EditLink :url="route('dashboard.field.edit', {id: slotProps.data.id})" />
+                    </div>
                 </template>
             </Column>
         </BaseDataTable>

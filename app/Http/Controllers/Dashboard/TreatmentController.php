@@ -59,13 +59,21 @@ class TreatmentController extends Controller
             'appointmentTypes' => $this->appointmentTypeService->getAll(),
         ];
 
+        if (!auth()->user()->hasHospital()) {
+            $data['hospitals'] = $this->hospitalService->getAll();
+        }
+
+        if (!auth()->user()->isDoctor()) {
+            $data['doctors'] = $this->doctorService->getAll();
+        }
+
         return Inertia::render('Dashboard/Treatment/Create', $data);
     }
 
     public function store(StoreTreatmentRequest $request)
     {
         $data = $request->validated();
-        $data['doctor_id'] = auth()->user()->doctor_id;
+        $data['doctor_id'] = auth()->user()->isDoctor() ? auth()->user()->doctor_id : $request->input('doctor_id');
 
         $this->treatmentService->store($data);
 

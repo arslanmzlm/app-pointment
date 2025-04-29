@@ -9,7 +9,7 @@ defineProps<{
 <template>
     <Tag
         :severity="value ? 'warn' : 'danger'"
-        :value="value ? 'Kullanıcı Kaydı' : 'Sistem Kaydı'"
+        :value="value ? 'Sistem Kaydı' : 'Kullanıcı Kaydı'"
         icon="pi pi-user-plus"
         title="Kayıt tipi"
     />

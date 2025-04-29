@@ -3,12 +3,16 @@
 namespace App\Http\Requests;
 
 use App\Enums\PaymentMethod;
+use App\Models\Doctor;
 use App\Rules\CheckAppointmentOverlap;
+use App\Traits\Request\SharedRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreTreatmentRequest extends FormRequest
 {
+    use SharedRequest;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -24,14 +28,17 @@ class StoreTreatmentRequest extends FormRequest
      */
     public function rules(): array
     {
-        $doctor = auth()->user()->doctor;
+        if (auth()->user()->isDoctor()) {
+            $doctor = auth()->user()->doctor;
+        } else {
+            $doctor = Doctor::find($this->input('doctor_id'));
+        }
 
-        return [
+        $rules = [
             'patient_id' => ['required', Rule::exists('patients', 'id')],
             'note' => ['nullable', 'string'],
             'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
             'services' => ['array'],
-            'services.*.service_id' => ['required', Rule::exists('services', 'id')->where('hospital_id', $doctor->hospital_id)],
             'services.*.price' => ['required', 'numeric'],
             'products' => ['array'],
             'products.*.product_id' => ['required', Rule::exists('products', 'id')],
@@ -41,8 +48,15 @@ class StoreTreatmentRequest extends FormRequest
             'appointments.*.appointment_type_id' => ['required', Rule::exists('appointment_types', 'id')],
             'appointments.*.start_date' => ['required', 'date'],
             'appointments.*.duration' => ['required', 'integer', 'min:1'],
-            'appointments.*.title' => ['nullable', 'string', 'max:255'],
+            'appointments.*.note' => ['nullable', 'string', 'max:255'],
             'appointments.*' => ['array', new CheckAppointmentOverlap()],
         ];
+
+        if ($doctor !== null) {
+            $rules['services.*.service_id'] = ['required', Rule::exists('services', 'id')->where('hospital_id', $doctor->hospital_id)];
+            $rules['appointments.*.service_id'] = ['required', Rule::exists('services', 'id')->where('hospital_id', $doctor->hospital_id)];
+        }
+
+        return $this->checkForDoctor($rules);
     }
 }

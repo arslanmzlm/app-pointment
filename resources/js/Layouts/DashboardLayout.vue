@@ -64,7 +64,7 @@ if (page.props.auth.user.type === UserType.ADMIN) {
             name: 'HASTANE',
             items: [
                 {icon: HospitalIcon, label: 'Hastaneler', url: route('dashboard.hospital.list')},
-                {icon: IdCardIcon, label: 'Doktorlar', url: route('dashboard.doctor.list')},
+                {icon: IdCardIcon, label: 'Podologlar', url: route('dashboard.doctor.list')},
                 {icon: SuitcaseMedical, label: 'Hizmetler', url: route('dashboard.service.list')},
                 {
                     icon: PrescriptionBottleMedicalIcon,
@@ -81,6 +81,11 @@ if (page.props.auth.user.type === UserType.ADMIN) {
                     icon: CalendarIcon,
                     label: 'Randevular',
                     url: route('dashboard.appointment.list'),
+                },
+                {
+                    icon: CalendarIcon,
+                    label: 'Takvim',
+                    url: route('dashboard.appointment.calendar'),
                 },
                 {
                     icon: NoteMedicalIcon,

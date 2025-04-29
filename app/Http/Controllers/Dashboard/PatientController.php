@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Enums\Gender;
+use App\Enums\SettingKeys;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
@@ -10,6 +11,7 @@ use App\Models\Patient;
 use App\Services\FieldService;
 use App\Services\PatientService;
 use App\Services\ProvinceService;
+use App\Services\SettingService;
 use Inertia\Inertia;
 
 class PatientController extends Controller
@@ -35,6 +37,16 @@ class PatientController extends Controller
             'fields' => $this->fieldService->getValuesForView($patient),
             'treatments' => $patient->treatments->load(['doctor', 'services.service', 'products.product']),
             'appointments' => $patient->appointments->load(['doctor']),
+        ]);
+    }
+
+    public function print(Patient $patient)
+    {
+        return Inertia::render('Dashboard/Patient/Print', [
+            'patient' => $patient->withoutRelations(),
+            'province' => $patient->province,
+            'fields' => $this->fieldService->getValuesForView($patient, true),
+            'description' => SettingService::getPurifyValue(SettingKeys::CONSENT_FORM_DESCRIPTION),
         ]);
     }
 

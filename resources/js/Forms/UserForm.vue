@@ -17,8 +17,8 @@ defineProps<{
     <form class="space-y-6">
         <Message severity="warn">
             Bu alanda oluşturulan kullanıcıların yönetim alanına erişimleri olacaktır, bundan dolayı
-            burada oluşturulan kullanıcıları hastalarla vs. paylaşmayınız. Doktor/hasta için
-            kullanıcı oluşturmak istiyorsanız yeni doktor/hasta kaydedildiğinde otomatik olarak
+            burada oluşturulan kullanıcıları hastalarla vs. paylaşmayınız. Podolog/hasta için
+            kullanıcı oluşturmak istiyorsanız yeni podolog/hasta kaydedildiğinde otomatik olarak
             kullanıcı oluşturulmakta. Otomatik oluşturulan kullanıcıların, kullanıcı adı olarak
             telefon numarası, şifre olarak telefon numarasının son 6 hanesi tanımlanır.
         </Message>

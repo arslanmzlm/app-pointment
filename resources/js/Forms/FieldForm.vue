@@ -2,6 +2,8 @@
 import {InertiaForm} from '@inertiajs/vue3';
 import {Button, Card} from 'primevue';
 import {computed, watch} from 'vue';
+import CheckboxField from '@/Components/Form/CheckboxField.vue';
+import FormField from '@/Components/Form/FormField.vue';
 import InputField from '@/Components/Form/InputField.vue';
 import NumberField from '@/Components/Form/NumberField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
@@ -104,6 +106,22 @@ watch(
                     name="order"
                     type="number"
                 />
+
+                <FormField>
+                    <CheckboxField
+                        v-model="form.printable"
+                        :value="true"
+                        label="Yazdırılabilir"
+                        name="printable"
+                    />
+
+                    <template #message>
+                        <p>
+                            Yazdırılabilir alanı seçili olduğu durumlarda, bu alan hasta kayıt
+                            çıktısında görünecektir.
+                        </p>
+                    </template>
+                </FormField>
             </template>
         </Card>
 

@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->string('branch');
             $table->string('avatar')->nullable();
             $table->string('title')->nullable();
-            $table->string('phone')->unique();
+            $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->text('resume')->nullable();
             $table->text('certificate')->nullable();

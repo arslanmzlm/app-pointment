@@ -44,11 +44,15 @@ return new class extends Migration {
                 ->constrained()
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
+            $table->foreignId('service_id')
+                ->nullable()
+                ->constrained()
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->unsignedTinyInteger('state');
             $table->dateTime('start_date');
             $table->dateTime('due_date');
             $table->unsignedTinyInteger('duration');
-            $table->string('title')->nullable();
             $table->text('note')->nullable();
             $table->timestamps();
         });

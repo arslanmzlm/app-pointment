@@ -59,7 +59,6 @@ class AppointmentController extends Controller
     public function calendar()
     {
         $data = [
-            'appointments' => $this->appointmentService->dateRange(),
             'appointmentTypes' => $this->appointmentTypeService->getAll(),
             'appointmentStates' => AppointmentState::getAll(),
         ];
@@ -72,6 +71,8 @@ class AppointmentController extends Controller
             $data['doctors'] = $this->doctorService->getAll();
         }
 
+        $data['appointments'] = $this->appointmentService->dateRange(auth()->user()->isAdmin());
+
         return Inertia::render('Dashboard/Appointment/Calendar', $data);
     }
 
@@ -79,6 +80,7 @@ class AppointmentController extends Controller
     {
         $data = [
             'appointmentTypes' => $this->appointmentTypeService->getAll(),
+            'services' => $this->serviceService->getAll(),
         ];
 
         if (!auth()->user()->hasHospital()) {
@@ -109,6 +111,7 @@ class AppointmentController extends Controller
         return Inertia::render('Dashboard/Appointment/Edit', [
             'appointment' => $appointment->load(['patient']),
             'appointmentTypes' => $this->appointmentTypeService->getAll(),
+            'services' => $this->serviceService->getAll($appointment->hospital_id),
             'passiveDates' => $this->passiveDateService->getPassiveDays($appointment->doctor_id),
             'appointments' => $this->appointmentService->getActiveByPatient($appointment->patient_id),
         ]);
@@ -144,12 +147,12 @@ class AppointmentController extends Controller
         }
 
         return Inertia::render('Dashboard/Appointment/Process', [
-            'appointment' => $appointment->load('patient'),
+            'appointment' => $appointment->load(['patient', 'service']),
             'appointmentTypes' => $this->appointmentTypeService->getAll(),
-            'services' => $this->serviceService->getAll(auth()->user()->hospital_id),
+            'services' => $this->serviceService->getAll($appointment->hospital_id),
             'products' => $this->productService->getAll(),
             'paymentMethods' => PaymentMethod::getAll(),
-            'passiveDates' => $this->passiveDateService->getPassiveDays(auth()->user()->doctor_id),
+            'passiveDates' => $this->passiveDateService->getPassiveDays($appointment->doctor_id),
             'appointments' => $this->appointmentService->getActiveByPatient($appointment->patient_id),
         ]);
     }
@@ -163,7 +166,7 @@ class AppointmentController extends Controller
         }
 
         $data = $request->validated();
-        $data['doctor_id'] = auth()->user()->doctor_id;
+        $data['doctor_id'] = $appointment->doctor_id;;
         $data['patient_id'] = $appointment->patient_id;
 
         $treatment = $this->treatmentService->store($data);

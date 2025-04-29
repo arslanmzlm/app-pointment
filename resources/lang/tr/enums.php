@@ -19,7 +19,7 @@ return [
     'user' => [
         'type' => [
             'PATIENT' => 'Hasta',
-            'DOCTOR' => 'Doktor',
+            'DOCTOR' => 'Podolog',
             'ADMIN' => 'Yönetici',
         ],
     ],

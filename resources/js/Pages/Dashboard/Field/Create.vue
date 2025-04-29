@@ -17,6 +17,7 @@ const form = useForm<FieldFormType>({
     input: FieldInput.TEXT,
     description: null,
     order: null,
+    printable: false,
     values: [],
 });
 

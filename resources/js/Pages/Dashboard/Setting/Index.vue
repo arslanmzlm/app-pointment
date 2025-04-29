@@ -15,6 +15,7 @@ const form = useForm<SettingFormType>({
     contact_phone: props.settings.contact_phone ?? '',
     agreement_policy: props.settings.agreement_policy ?? '',
     privacy_policy: props.settings.privacy_policy ?? '',
+    consent_form_description: props.settings.consent_form_description ?? '',
 });
 
 function submit() {
@@ -52,6 +53,13 @@ function submit() {
                         :error="form.errors.privacy_policy"
                         label="Gizlilik Politikası"
                         name="privacy_policy"
+                    />
+
+                    <EditorField
+                        v-model="form.consent_form_description"
+                        :error="form.errors.consent_form_description"
+                        label="Onam Formu Açıklaması"
+                        name="consent_form_description"
                     />
                 </template>
             </Card>

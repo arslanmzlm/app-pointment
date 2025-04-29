@@ -46,6 +46,24 @@ const collapseAll = () => {
 <template>
     <DashboardLayout :breadcrumbs title="Hasta Detayları">
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div class="col-span-full flex flex-wrap justify-end gap-2">
+                <Button
+                    :href="route('dashboard.patient.edit', {id: patient.id})"
+                    as="Link"
+                    icon="pi pi-pen-to-square"
+                    label="Hasta Bilgilerini Düzenle"
+                    title="Düzenle"
+                />
+
+                <a :href="route('dashboard.patient.print', {id: patient.id})" target="_blank">
+                    <Button
+                        icon="pi pi-print"
+                        label="Hasta Kayıt Çıktısı"
+                        severity="warn"
+                        title="Görüntüle"
+                    />
+                </a>
+            </div>
             <Card class="col-span-1">
                 <template #title>{{ patient.full_name }}</template>
                 <template #content>
@@ -122,7 +140,7 @@ const collapseAll = () => {
                 >
                     <Column expander style="width: 3rem" />
                     <Column field="id" header="ID" />
-                    <Column field="doctor.full_name" header="Doktor" />
+                    <Column field="doctor.full_name" header="Podolog" />
                     <Column field="total" header="Tutar">
                         <template #body="slotProps">
                             <span class="font-medium">{{

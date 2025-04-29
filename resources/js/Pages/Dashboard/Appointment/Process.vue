@@ -9,6 +9,7 @@ import TreatmentProducts from '@/Forms/Parts/TreatmentProducts.vue';
 import TreatmentServices from '@/Forms/Parts/TreatmentServices.vue';
 import TextareaField from '@/Components/Form/TextareaField.vue';
 import AppointmentTable from '@/Components/Tables/AppointmentTable.vue';
+import {serviceLabel} from '@/Utilities/labels';
 import {PaymentMethod} from '@/types/enums';
 import {TreatmentFormType} from '@/types/form';
 import {Appointment, AppointmentType, Product, Service} from '@/types/model';
@@ -36,6 +37,14 @@ const form = useForm<TreatmentFormType>({
     payment_method: PaymentMethod.CASH,
 });
 
+if (props.appointment.service_id !== null && props.appointment.service) {
+    form.services.push({
+        service_id: props.appointment.service_id,
+        label: serviceLabel(props.appointment.service),
+        price: props.appointment.service.price,
+    });
+}
+
 function submit() {
     form.post(route('dashboard.appointment.complete', {id: appointment.id}));
 }
@@ -59,6 +68,7 @@ function submit() {
                 :appointment-types
                 :form
                 :passive-dates
+                :services
             />
 
             <AppointmentTable :appointments title="Hastanın Aktif Randevuları" />

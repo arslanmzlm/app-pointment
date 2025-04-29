@@ -86,14 +86,14 @@ class TreatmentService
         return $treatment->delete();
     }
 
-    private function calculateTotalFromData(array $data)
+    private function calculateTotalFromData(array $data): float|int
     {
         $total = 0;
 
         if (isset($data['services']) && is_array($data['services'])) {
             foreach ($data['services'] as $item) {
                 if (!empty($item['price'])) {
-                    $total += $item['price'];
+                    $total += floatval($item['price']);
                 }
             }
         }
@@ -101,7 +101,7 @@ class TreatmentService
         if (isset($data['products']) && is_array($data['products'])) {
             foreach ($data['products'] as $item) {
                 if (!empty($item['count']) && !empty($item['price'])) {
-                    $total += $item['count'] * $item['price'];
+                    $total += intval($item['count']) * floatval($item['price']);
                 }
             }
         }
