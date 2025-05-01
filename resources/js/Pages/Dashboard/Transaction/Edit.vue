@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
-import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import TransactionForm from '@/Forms/TransactionForm.vue';
 import {TransactionFormType} from '@/types/form';
@@ -14,8 +13,7 @@ const props = defineProps<{
 }>();
 
 const transaction = props.transaction;
-const pageTitle = computed(() => `İşlemi Düzenle #${transaction.id}`);
-const breadcrumbs = [{label: 'İşlemler', url: route('dashboard.transaction.list')}];
+const breadcrumbs = [{label: 'Kasa İşlemleri', url: route('dashboard.transaction.list')}];
 
 const form = useForm<TransactionFormType>({
     type: transaction.type,
@@ -31,7 +29,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs :title="pageTitle">
+    <DashboardLayout :breadcrumbs title="Kasa İşlemi Düzenle">
         <TransactionForm :form :payment-methods :transaction-types @submit.prevent="submit" />
     </DashboardLayout>
 </template>

@@ -50,12 +50,12 @@ if (props.hospitals) {
 </script>
 
 <template>
-    <DashboardLayout title="İşlemler">
+    <DashboardLayout title="Kasa İşlemleri">
         <BaseDataTable
             :create-url="route('dashboard.transaction.create')"
             :filters
             :paginate="transactions"
-            create-label="İşlem Ekle"
+            create-label="Kasa İşlemi Oluştur"
             only="transactions"
         >
             <template #filters>

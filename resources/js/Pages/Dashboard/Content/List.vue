@@ -30,7 +30,7 @@ const filters = ref<DataTableFilter>({
             :create-url="route('dashboard.content.create')"
             :filters
             :paginate="contents"
-            create-label="İçerik Ekle"
+            create-label="İçerik Oluştur"
             only="contents"
         >
             <template #filters>

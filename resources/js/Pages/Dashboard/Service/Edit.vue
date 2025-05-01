@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
-import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import ServiceForm from '@/Forms/ServiceForm.vue';
 import {ServiceFormType} from '@/types/form';
@@ -11,7 +10,6 @@ const props = defineProps<{
 }>();
 
 const service = props.service;
-const pageTitle = computed(() => `Hizmeti Düzenle #${service.id}`);
 const breadcrumbs = [{label: 'Hizmetler', url: route('dashboard.service.list')}];
 
 const form = useForm<ServiceFormType>({
@@ -27,7 +25,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs :title="pageTitle">
+    <DashboardLayout :breadcrumbs title="Hizmet Düzenle">
         <ServiceForm :form @submit.prevent="submit" />
     </DashboardLayout>
 </template>

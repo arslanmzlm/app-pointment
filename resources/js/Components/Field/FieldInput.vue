@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {isObject} from 'lodash';
+import {has, isObject} from 'lodash';
 import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primevue';
 import CheckboxField from '@/Components/Form/CheckboxField.vue';
 import DateField from '@/Components/Form/DateField.vue';
@@ -33,7 +33,7 @@ if (props.field.input === FieldInput.RADIO_TEXT) {
         };
     }
 
-    if (!model.value.selection) {
+    if (has(model.value, 'selection') && !model.value.selection) {
         model.value.selection = 0;
     }
 }

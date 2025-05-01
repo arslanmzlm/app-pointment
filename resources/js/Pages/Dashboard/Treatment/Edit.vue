@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
 import {Button, Card} from 'primevue';
-import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import TreatmentPayment from '@/Forms/Parts/TreatmentPayment.vue';
 import TreatmentProducts from '@/Forms/Parts/TreatmentProducts.vue';
@@ -22,7 +21,6 @@ const props = defineProps<{
 }>();
 
 const treatment = props.treatment;
-const pageTitle = computed(() => `İşlemi Düzenle #${treatment.id}`);
 const breadcrumbs = [{label: 'İşlemler', url: route('dashboard.treatment.list')}];
 
 const form = useForm<TreatmentFormType>({
@@ -57,7 +55,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs :title="pageTitle">
+    <DashboardLayout :breadcrumbs title="İşlem Düzenle">
         <form class="space-y-6" @submit.prevent="submit">
             <Card>
                 <template #content>

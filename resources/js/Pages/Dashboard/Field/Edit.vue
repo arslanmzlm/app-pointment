@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
-import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import FieldForm from '@/Forms/FieldForm.vue';
 import {FieldFormType} from '@/types/form';
@@ -13,7 +12,6 @@ const props = defineProps<{
 }>();
 
 const field = props.field;
-const pageTitle = computed(() => `Alanı Düzenle #${field.id}`);
 const breadcrumbs = [{label: 'Alanlar', url: route('dashboard.field.list')}];
 
 const form = useForm<FieldFormType>({
@@ -31,7 +29,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs :title="pageTitle">
+    <DashboardLayout :breadcrumbs title="Alan Düzenle">
         <FieldForm :form :inputs @submit.prevent="submit" />
     </DashboardLayout>
 </template>

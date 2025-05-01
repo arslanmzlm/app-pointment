@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
 import dayjs from 'dayjs';
-import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import HospitalForm from '@/Forms/HospitalForm.vue';
 import {getInt} from '@/Utilities/parser';
@@ -14,7 +13,6 @@ const props = defineProps<{
 }>();
 
 const hospital = props.hospital;
-const pageTitle = computed(() => `Hastane Düzenle #${hospital.id}`);
 const breadcrumbs = [{label: 'Hastaneler', url: route('dashboard.hospital.list')}];
 
 const startWork = dayjs()
@@ -54,7 +52,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs :title="pageTitle">
+    <DashboardLayout :breadcrumbs title="Hastane Düzenle">
         <HospitalForm :form :logo-src="hospital.logo_src" :provinces @submit.prevent="submit" />
     </DashboardLayout>
 </template>

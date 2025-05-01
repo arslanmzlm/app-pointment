@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
 import {Button, Card} from 'primevue';
-import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import AppointmentMultipleForm from '@/Forms/AppointmentMultipleForm.vue';
 import TreatmentPayment from '@/Forms/Parts/TreatmentPayment.vue';
@@ -26,7 +25,6 @@ const props = defineProps<{
 }>();
 
 const appointment = props.appointment;
-const pageTitle = computed(() => `Randevuyu Tamamla #${appointment.id}`);
 const breadcrumbs = [{label: 'Randevular', url: route('dashboard.appointment.calendar')}];
 
 const form = useForm<TreatmentFormType>({
@@ -51,7 +49,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs :title="pageTitle">
+    <DashboardLayout :breadcrumbs title="Randevu Tamamla">
         <form class="space-y-6" @submit.prevent="submit">
             <Card>
                 <template #content>

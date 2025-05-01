@@ -88,7 +88,7 @@ if (props.doctors) {
             :create-url="route('dashboard.passive.date.create')"
             :filters
             :paginate="passiveDates"
-            create-label="İzin Ekle"
+            create-label="İzin Oluştur"
             only="passiveDates"
         >
             <template #filters>

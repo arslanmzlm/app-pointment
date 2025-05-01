@@ -22,7 +22,7 @@ defineProps<{
         <BaseDataTable
             :create-url="route('dashboard.field.create')"
             :paginate="fields"
-            create-label="Alan Ekle"
+            create-label="Alan Oluştur"
             only="fields"
         >
             <Column field="id" header="ID" sortable />

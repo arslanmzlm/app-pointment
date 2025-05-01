@@ -24,7 +24,7 @@ const filters = ref<DataTableFilter>({
             :create-url="route('dashboard.appointment.type.create')"
             :filters
             :paginate="appointmentTypes"
-            create-label="Randevu Tipi Ekle"
+            create-label="Randevu Tipi Oluştur"
             only="appointmentTypes"
         >
             <template #filters>

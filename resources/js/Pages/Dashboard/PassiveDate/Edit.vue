@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
-import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import PassiveDateForm from '@/Forms/PassiveDateForm.vue';
 import {PassiveDateFromType} from '@/types/form';
@@ -11,7 +10,6 @@ const props = defineProps<{
 }>();
 
 const passiveDate = props.passiveDate;
-const pageTitle = computed(() => `İzni Düzenle #${passiveDate.id}`);
 const breadcrumbs = [{label: 'İzinler', url: route('dashboard.passive.date.list')}];
 
 const form = useForm<PassiveDateFromType>({
@@ -26,7 +24,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs :title="pageTitle">
+    <DashboardLayout :breadcrumbs title="İzin Düzenle">
         <PassiveDateForm :form @submit.prevent="submit" />
     </DashboardLayout>
 </template>

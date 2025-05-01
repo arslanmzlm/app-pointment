@@ -51,7 +51,7 @@ const filters = ref<DataTableFilter>({
             :create-url="route('dashboard.patient.create')"
             :filters
             :paginate="patients"
-            create-label="Hasta Ekle"
+            create-label="Hasta Oluştur"
             only="patients"
         >
             <template #filters>

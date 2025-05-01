@@ -30,7 +30,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs title="İşlem Oluştur">
+    <DashboardLayout :breadcrumbs title="Kasa İşlemi Oluştur">
         <TransactionForm
             :form
             :hospitals

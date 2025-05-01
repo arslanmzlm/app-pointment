@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
-import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import AppointmentForm from '@/Forms/AppointmentForm.vue';
 import {AppointmentFormType} from '@/types/form';
@@ -15,7 +14,6 @@ const props = defineProps<{
 }>();
 
 const appointment = props.appointment;
-const pageTitle = computed(() => `Randevuyu Düzenle #${appointment.id}`);
 const breadcrumbs = [{label: 'Randevular', url: route('dashboard.appointment.list')}];
 
 const form = useForm<AppointmentFormType>({
@@ -32,7 +30,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs :title="pageTitle">
+    <DashboardLayout :breadcrumbs title="Randevu Düzenle">
         <AppointmentForm
             :appointment-types
             :appointments

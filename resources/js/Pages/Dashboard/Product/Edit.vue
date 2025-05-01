@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
-import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import ProductForm from '@/Forms/ProductForm.vue';
 import {ProductFormType} from '@/types/form';
@@ -15,7 +14,6 @@ const props = defineProps<{
 }>();
 
 const product = props.product;
-const pageTitle = computed(() => `Ürün Düzenle #${product.id}`);
 const breadcrumbs = [{label: 'Ürünler', url: route('dashboard.product.list')}];
 
 const form = useForm<ProductFormType>({
@@ -37,7 +35,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs :title="pageTitle">
+    <DashboardLayout :breadcrumbs title="Ürün Düzenle">
         <ProductForm :brands :categories :form @submit.prevent="submit" />
     </DashboardLayout>
 </template>

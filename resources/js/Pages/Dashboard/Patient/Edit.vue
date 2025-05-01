@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
-import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import PatientForm from '@/Forms/PatientForm.vue';
 import {PatientFormType} from '@/types/form';
@@ -16,7 +15,6 @@ const props = defineProps<{
 }>();
 
 const patient = props.patient;
-const pageTitle = computed(() => `Hastayı Düzenle #${patient.id}`);
 const breadcrumbs = [{label: 'Hastalar', url: route('dashboard.patient.list')}];
 
 const form = useForm<PatientFormType>({
@@ -38,7 +36,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs :title="pageTitle">
+    <DashboardLayout :breadcrumbs title="Hasta Düzenle">
         <PatientForm :fields :form :genders :provinces @submit.prevent="submit" />
     </DashboardLayout>
 </template>

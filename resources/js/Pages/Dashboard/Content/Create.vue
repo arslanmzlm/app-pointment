@@ -26,7 +26,7 @@ const form = useForm<ContentFormType>({
     link: null,
     link_label: null,
     description: '',
-    body: null,
+    body: '',
 });
 
 function submit() {

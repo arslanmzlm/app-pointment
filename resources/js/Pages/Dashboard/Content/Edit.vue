@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
-import {computed} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import ContentForm from '@/Forms/ContentForm.vue';
 import {ContentFormType} from '@/types/form';
@@ -12,7 +11,6 @@ const props = defineProps<{
 }>();
 
 const content = props.content;
-const pageTitle = computed(() => `İçerik Düzenle #${content.id}`);
 const breadcrumbs = [{label: 'İçerikler', url: route('dashboard.content.list')}];
 
 const form = useForm<ContentFormType>({
@@ -40,7 +38,7 @@ function submit() {
 </script>
 
 <template>
-    <DashboardLayout :breadcrumbs :title="pageTitle">
+    <DashboardLayout :breadcrumbs title="İçerik Düzenle">
         <ContentForm
             :form
             :icon-src="content.icon_src"

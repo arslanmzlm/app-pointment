@@ -37,7 +37,7 @@ if (props.hospitals) {
             :create-url="route('dashboard.user.create')"
             :filters
             :paginate="users"
-            create-label="Kullanıcı Ekle"
+            create-label="Kullanıcı Oluştur"
             only="users"
         >
             <template #filters>

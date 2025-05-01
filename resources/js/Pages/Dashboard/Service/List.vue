@@ -44,7 +44,7 @@ if (props.hospitals) {
             :create-url="route('dashboard.service.create')"
             :filters
             :paginate="services"
-            create-label="Hizmet Ekle"
+            create-label="Hizmet Oluştur"
             only="services"
         >
             <template #filters>

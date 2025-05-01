@@ -85,7 +85,7 @@ if (props.doctors) {
             :create-url="route('dashboard.treatment.create')"
             :filters
             :paginate="treatments"
-            create-label="İşlem Ekle"
+            create-label="İşlem Oluştur"
             only="treatments"
         >
             <template #filters>

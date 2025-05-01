@@ -124,7 +124,7 @@ const appointmentActive = (appointment: Appointment) => {
             :create-url="route('dashboard.appointment.create')"
             :filters
             :paginate="appointments"
-            create-label="Randevu Ekle"
+            create-label="Randevu Oluştur"
             only="appointments"
         >
             <template #filters>
