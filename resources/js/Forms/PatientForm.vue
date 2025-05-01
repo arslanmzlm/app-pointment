@@ -95,6 +95,7 @@ function getFieldError(field_id: number) {
 
                 <SelectField
                     v-model="form.gender"
+                    :error="form.errors.gender"
                     :options="genders"
                     label="Cinsiyet"
                     option-label="label"

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {Head, usePage} from '@inertiajs/vue3';
+import {isEmpty} from 'lodash';
 import {ConfirmDialog, ConfirmPopup, Toast, useToast} from 'primevue';
 import {MenuItem} from 'primevue/menuitem';
 import {computed, onMounted, reactive, watch} from 'vue';
@@ -31,7 +32,23 @@ defineProps<{
 
 const page = usePage();
 const toastHelper = useToast();
+const errors = computed(() => page.props.errors);
 const toasts = computed(() => page.props.toasts);
+
+watch(
+    errors,
+    () => {
+        if (!isEmpty(errors.value)) {
+            toastHelper.add({
+                severity: 'error',
+                summary: 'Bildirim',
+                detail: 'Formda eksik veya yanlış alan(lar) bulunmakta. Lütfen formu kontrol ediniz.',
+                life: 5000,
+            });
+        }
+    },
+    {deep: true},
+);
 
 watch(
     toasts,
