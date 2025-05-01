@@ -34,7 +34,7 @@ class FieldService
         $fields->each(function ($field) use ($patient, $patientFields, $data) {
             $fieldValue = $patientFields->where('field_id', $field->id)->first();
 
-            if ($field->input === FieldInput::RADIO_TEXT) {
+            if ($field->input === FieldInput::RADIO_TEXT && $fieldValue) {
                 $value = [
                     'selection' => $fieldValue->field_value_id,
                     'description' => $fieldValue->value,
