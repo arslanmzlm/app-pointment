@@ -16,6 +16,7 @@ export enum FieldInput {
     SELECT = 4,
     RADIO = 5,
     CHECKBOX = 6,
+    RADIO_TEXT = 7,
 }
 
 export enum PaymentMethod {

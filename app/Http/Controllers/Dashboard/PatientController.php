@@ -45,7 +45,7 @@ class PatientController extends Controller
         return Inertia::render('Dashboard/Patient/Print', [
             'patient' => $patient->withoutRelations(),
             'province' => $patient->province,
-            'fields' => $this->fieldService->getValuesForView($patient, true),
+            'fields' => $this->fieldService->getValuesForPrint($patient),
             'description' => SettingService::getPurifyValue(SettingKeys::CONSENT_FORM_DESCRIPTION),
         ]);
     }

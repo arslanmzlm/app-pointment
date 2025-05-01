@@ -142,7 +142,14 @@ class PatientService
                     'field_id' => $field->id
                 ];
 
-                if ($field->hasValues() && !is_array($value) && $fieldValue = $field->values->find($value)) {
+                if ($field->input === FieldInput::RADIO_TEXT) {
+                    $data['value'] = $value['description'];
+                    if (!empty($value['selection']) && $fieldValue = $field->values->find($value['selection'])) {
+                        $data['field_value_id'] = $fieldValue->id;
+                    } else {
+                        $data['field_value_id'] = null;
+                    }
+                } else if ($field->hasValues() && !is_array($value) && $fieldValue = $field->values->find($value)) {
                     $data['field_value_id'] = $fieldValue->id;
                 } else if ($field->input === FieldInput::NUMBER) {
                     $data['value'] = intval($value);

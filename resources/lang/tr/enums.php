@@ -14,6 +14,7 @@ return [
             'SELECT' => 'Seçenek Kutusu',
             'RADIO' => 'Seçenekler',
             'CHECKBOX' => 'Çoklu Seçenek',
+            'RADIO_TEXT' => 'Seçenekler ve Yazı',
         ]
     ],
     'user' => [

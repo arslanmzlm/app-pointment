@@ -34,10 +34,19 @@ class FieldService
         $fields->each(function ($field) use ($patient, $patientFields, $data) {
             $fieldValue = $patientFields->where('field_id', $field->id)->first();
 
+            if ($field->input === FieldInput::RADIO_TEXT) {
+                $value = [
+                    'selection' => $fieldValue->field_value_id,
+                    'description' => $fieldValue->value,
+                ];
+            } else {
+                $value = $fieldValue?->field_value_id ?? $fieldValue?->value ?? null;
+            }
+
             $data->push([
                 'id' => $fieldValue?->id ?? null,
                 'field_id' => $field->id,
-                'value' => $fieldValue?->field_value_id ?? $fieldValue?->value ?? null,
+                'value' => $value,
             ]);
         });
 
@@ -59,12 +68,61 @@ class FieldService
         $patient->fields->each(function ($row) use ($fields, $data) {
             $field = $fields->find($row->field_id);
 
-            if ($row->field_value_id && $fieldValue = $field->values->find($row->field_value_id)) {
+            if ($field->input === FieldInput::RADIO_TEXT && $row->field_value_id && $fieldValue = $field->values->find($row->field_value_id)) {
+                $value = [
+                    'selection' => $fieldValue->value,
+                    'description' => $row->value,
+                ];
+            } else if ($row->field_value_id && $fieldValue = $field->values->find($row->field_value_id)) {
                 $value = $fieldValue->value;
             } else if ($field->input === FieldInput::CHECKBOX) {
                 $value = $field->values->whereIn('id', $row->value)->pluck('value');
             } else {
                 $value = $row->value;
+            }
+
+            $data->push([
+                'name' => $field->name,
+                'input' => $field->input,
+                'value' => $value,
+                'order' => $field->order,
+            ]);
+        });
+
+        return $data->sortBy('order')->values();
+    }
+
+    public function getValuesForPrint(Patient $patient): \Illuminate\Support\Collection
+    {
+        $data = collect();
+
+        $fields = Field::query()
+            ->where('printable', true)
+            ->orderBy('order')
+            ->get()
+            ->load('values');
+
+        $patientFields = $patient->fields;
+
+        $fields->each(function ($field) use ($patientFields, $data) {
+            $patientField = $patientFields->where('field_id', $field->id)->first();
+
+            $value = null;
+
+            if ($patientField) {
+                if ($field->input === FieldInput::RADIO_TEXT) {
+                    $value = [
+                        'selection' => $patientField->field_value_id,
+                        'description' => $patientField->value,
+                        'options' => $field->values()->get(['id', 'value']),
+                    ];
+                } else if ($patientField->field_value_id && $fieldValue = $field->values->find($patientField->field_value_id)) {
+                    $value = $fieldValue->value;
+                } else if ($field->input === FieldInput::CHECKBOX) {
+                    $value = $field->values->whereIn('id', $patientField->value)->pluck('value');
+                } else {
+                    $value = $patientField->value;
+                }
             }
 
             $data->push([

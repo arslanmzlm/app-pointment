@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import {isObject} from 'lodash';
 import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primevue';
 import CheckboxField from '@/Components/Form/CheckboxField.vue';
 import DateField from '@/Components/Form/DateField.vue';
@@ -18,6 +19,23 @@ const model = defineModel<any>();
 
 if (props.field.input === FieldInput.CHECKBOX && !Array.isArray(model.value)) {
     model.value = [];
+}
+
+if (props.field.input === FieldInput.RADIO && model.value === null) {
+    model.value = 0;
+}
+
+if (props.field.input === FieldInput.RADIO_TEXT) {
+    if (!isObject(model.value)) {
+        model.value = {
+            selection: 0,
+            description: '',
+        };
+    }
+
+    if (!model.value.selection) {
+        model.value.selection = 0;
+    }
 }
 
 if (props.field.input === FieldInput.DATE && model.value) {
@@ -91,6 +109,25 @@ function generateName(attribute_id: number | string, value_id: number | string =
                 :name="generateName(field.id, value.id)"
                 :value="value.id"
             />
+        </div>
+        <div
+            v-else-if="field.input === FieldInput.RADIO_TEXT && model"
+            class="border-stroke dark:border-form-strokedark dark:bg-form-input flex w-full flex-col flex-wrap gap-4 rounded border-[1.5px] bg-transparent p-3 font-normal outline-none transition dark:text-white"
+        >
+            <RadioField
+                v-model="model.selection"
+                :name="generateName(field.id)"
+                :value="0"
+                label="Belirtilmemiş"
+            />
+            <RadioField
+                v-for="value in field.values"
+                v-model="model.selection"
+                :label="value.value"
+                :name="generateName(field.id, value.id)"
+                :value="value.id"
+            />
+            <InputField v-model="model.description" :error placeholder="Açıklama" />
         </div>
     </div>
 </template>

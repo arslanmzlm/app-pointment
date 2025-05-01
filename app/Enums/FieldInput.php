@@ -10,6 +10,7 @@ enum FieldInput: int
     case SELECT = 4;
     case RADIO = 5;
     case CHECKBOX = 6;
+    case RADIO_TEXT = 7;
 
     public static function getAll(): array
     {
@@ -28,7 +29,8 @@ enum FieldInput: int
         return [
             self::SELECT,
             self::RADIO,
-            self::CHECKBOX
+            self::CHECKBOX,
+            self::RADIO_TEXT,
         ];
     }
 }
