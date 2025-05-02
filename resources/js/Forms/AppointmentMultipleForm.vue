@@ -12,6 +12,7 @@ const props = defineProps<{
     passiveDates?: string[];
     appointmentTypes: AppointmentType[];
     hospitalId?: number | null;
+    doctorId?: number | null;
     services: Service[];
 }>();
 
@@ -238,5 +239,5 @@ watch(
         </template>
     </Card>
 
-    <PreviewDates :form />
+    <PreviewDates :doctor-id :form />
 </template>

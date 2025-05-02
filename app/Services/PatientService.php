@@ -49,6 +49,7 @@ class PatientService
     public function today(): Collection
     {
         return Patient::query()
+            ->whereNull('created_by')
             ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
             ->orderBy('created_at')
             ->get();
@@ -98,11 +99,7 @@ class PatientService
 
     public function delete(Patient $patient): bool
     {
-        if ($patient->user) {
-            $patient->user->delete();
-        }
-
-        return $patient->delete();
+        return $patient->forceDelete();
     }
 
     private function assignAttributes(Patient $patient, array $data): ?Patient

@@ -28,6 +28,8 @@ class CompleteAppointmentRequest extends FormRequest
         /** @var Appointment $appointment */
         $appointment = $this->route('appointment');
 
+        $this->merge(['doctor_id' => $appointment->doctor_id]);
+
         return [
             'note' => ['nullable', 'string'],
             'payment_method' => ['required', Rule::enum(PaymentMethod::class)],

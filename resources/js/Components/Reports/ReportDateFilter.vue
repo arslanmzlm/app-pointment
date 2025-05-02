@@ -159,7 +159,27 @@ function toggle(event: any) {
 
 function clearCache() {
     if (props.cacheKey) {
-        router.post(route('dashboard.report.clear'), {key: props.cacheKey});
+        const data: {
+            key: string;
+            start_date?: string;
+            due_date?: string;
+            entire?: boolean;
+        } = {
+            key: props.cacheKey,
+        };
+
+        if (
+            isArray(dateRange.value) &&
+            dateRange.value[0] !== null &&
+            dateRange.value[1] !== null
+        ) {
+            data.start_date = dayjs(dateRange.value[0]).format('YYYY-MM-DD');
+            data.due_date = dayjs(dateRange.value[1]).format('YYYY-MM-DD');
+        } else if (entire.value === true) {
+            data.entire = true;
+        }
+
+        router.post(route('dashboard.report.clear'), data);
 
         router.reload();
     }

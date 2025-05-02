@@ -9,7 +9,7 @@ import {AppointmentFormType, AppointmentMultipleFormType, TreatmentFormType} fro
 
 const props = defineProps<{
     form: InertiaForm<AppointmentFormType | AppointmentMultipleFormType | TreatmentFormType>;
-    doctorId?: number;
+    doctorId?: number | null;
 }>();
 
 watch(() => props.form.data(), getPreviewDates, {deep: true});

@@ -3,6 +3,7 @@ import {Button, Column} from 'primevue';
 import {computed, ref} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import BaseDataTable from '@/Components/BaseDataTable.vue';
+import DeletePopup from '@/Components/DeletePopup.vue';
 import EditLink from '@/Components/EditLink.vue';
 import DateField from '@/Components/Form/DateField.vue';
 import InputField from '@/Components/Form/InputField.vue';
@@ -151,6 +152,10 @@ const filters = ref<DataTableFilter>({
             <Column header="İşlemler">
                 <template #body="slotProps">
                     <div class="table-actions">
+                        <DeletePopup
+                            :url="route('dashboard.patient.destroy', {id: slotProps.data.id})"
+                        />
+
                         <EditLink :url="route('dashboard.patient.edit', {id: slotProps.data.id})" />
 
                         <a

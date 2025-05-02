@@ -17,6 +17,13 @@ use Illuminate\Support\Facades\DB;
 
 class ReportService
 {
+    const BAGS = [
+        'transaction',
+        'patient',
+        'treatment',
+        'appointment',
+    ];
+
     private ?int $hospitalId;
     private ?Carbon $start = null;
     private ?Carbon $due = null;
@@ -49,21 +56,14 @@ class ReportService
 
     public function clearCache(): void
     {
-        $caches = [
-            'transaction',
-            'patient',
-            'treatment',
-            'appointment',
-        ];
-
         $key = request('key');
 
-        if (in_array($key, $caches)) {
+        if (in_array($key, self::BAGS)) {
             Cache::forget($this->getCacheKey("report:{$key}"));
         }
     }
 
-    public function transactionReport(): array
+    public function transactionReport(): ?array
     {
         $cacheKey = $this->getCacheKey('report:transaction');
 
@@ -164,7 +164,7 @@ class ReportService
         return $data;
     }
 
-    public function patientReport(): array
+    public function patientReport(): ?array
     {
         $cacheKey = $this->getCacheKey('report:patient', true);
 
@@ -197,7 +197,7 @@ class ReportService
         return $data;
     }
 
-    public function treatmentReport(): array
+    public function treatmentReport(): ?array
     {
         $cacheKey = $this->getCacheKey('report:treatment');
 
@@ -266,7 +266,7 @@ class ReportService
         return $response;
     }
 
-    public function appointmentReport(): array
+    public function appointmentReport(): ?array
     {
         $cacheKey = $this->getCacheKey('report:appointment');
 

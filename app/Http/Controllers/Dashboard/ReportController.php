@@ -6,6 +6,7 @@ use App\Enums\Gender;
 use App\Enums\PaymentMethod;
 use App\Enums\TransactionType;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ClearReportCacheRequest;
 use App\Services\HospitalService;
 use App\Services\ProvinceService;
 use App\Services\ReportService;
@@ -65,7 +66,7 @@ class ReportController extends Controller
         return Inertia::render('Dashboard/Report/Appointment', $data);
     }
 
-    public function clear()
+    public function clear(ClearReportCacheRequest $request)
     {
         $this->reportService->clearCache();
 

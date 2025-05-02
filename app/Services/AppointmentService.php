@@ -158,18 +158,11 @@ class AppointmentService
 
     public function dateRange(bool $isAdmin = false): ?Collection
     {
-        if ($isAdmin) {
-            $doctor = request('doctor');
-
-            if (empty($doctor) || !is_numeric($doctor)) {
-                return null;
-            }
-        }
-
         $query = Appointment::query()->with('patient');
 
         return FilterHelper::filter($query)
             ->dateRange(default: 0)
+            ->hasHospital()
             ->hasDoctor()
             ->get();
     }

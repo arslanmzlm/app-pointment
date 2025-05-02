@@ -64,6 +64,7 @@ function submit() {
             <AppointmentMultipleForm
                 v-if="form.appointments"
                 :appointment-types
+                :doctor-id="appointment.doctor_id"
                 :form
                 :passive-dates
                 :services
