@@ -29,7 +29,7 @@ class UserService
         $user = new User();
         $user->type = $userType;
 
-        if (auth()->user()->hospital_id !== null) {
+        if (auth()->user() && auth()->user()->hospital_id !== null) {
             $user->hospital_id = auth()->user()->hospital_id;
         }
 
