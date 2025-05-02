@@ -46,6 +46,11 @@ class UserService
         return $user->delete();
     }
 
+    public function forceDelete(User $user): bool
+    {
+        return $user->forceDelete();
+    }
+
     public function updatePassword(array $data): bool
     {
         $user = auth()->user();

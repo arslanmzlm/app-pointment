@@ -99,6 +99,10 @@ class PatientService
 
     public function delete(Patient $patient): bool
     {
+        if ($patient->user()->exists()) {
+            (new UserService())->forceDelete($patient->user);
+        }
+
         return $patient->forceDelete();
     }
 
