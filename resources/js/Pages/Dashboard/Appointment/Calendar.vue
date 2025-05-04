@@ -14,7 +14,6 @@ import {MenuItem} from 'primevue/menuitem';
 import {computed, reactive, ref, watch} from 'vue';
 import {useHospitalStore} from '@/Stores/hospital';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
-import DateField from '@/Components/Form/DateField.vue';
 import MultiSelectField from '@/Components/Form/MultiSelectField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
 import {appointmentState} from '@/Utilities/enumHelper';
@@ -34,7 +33,7 @@ const hospitalStore = useHospitalStore();
 
 const calendarOptions = reactive<CalendarOptions>({
     plugins: [dayGridPlugin, listPlugin, timeGridPlugin, interactionPlugin],
-    initialView: 'timeGridWeek',
+    initialView: 'dayGridMonth',
     locale: trLocale,
     expandRows: true,
     slotMinTime: `${hospitalStore.start_work}:00:00`,
@@ -47,6 +46,9 @@ const calendarOptions = reactive<CalendarOptions>({
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
+    datesSet: (evt) => {
+        filters.value.dateRange = [evt.start, evt.end];
+    },
 });
 
 updateEvents();
@@ -55,6 +57,12 @@ function eventTitle(appointment: Appointment) {
     let title = '';
     if (appointment.patient) {
         title += appointment.patient.full_name;
+    }
+    if (appointment.type_name) {
+        title += ` - ${appointment.type_name}`;
+    }
+    if (appointment.doctor) {
+        title += ` - ${appointment.doctor.full_name}`;
     }
     return title;
 }
@@ -289,13 +297,6 @@ const openContextMenu = (event: EventClickArg) => {
                         label="Podolog"
                         option-label="full_name"
                         show-clear
-                    />
-
-                    <DateField
-                        v-model="filters.dateRange"
-                        fluid
-                        label="Tarih Aralığı"
-                        selection-mode="range"
                     />
 
                     <MultiSelectField

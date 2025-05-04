@@ -156,9 +156,9 @@ class AppointmentService
             ->paginate();
     }
 
-    public function dateRange(bool $isAdmin = false): ?Collection
+    public function dateRange(): ?Collection
     {
-        $query = Appointment::query()->with('patient');
+        $query = Appointment::query()->with(['patient', 'doctor']);
 
         return FilterHelper::filter($query)
             ->dateRange(default: 0)
