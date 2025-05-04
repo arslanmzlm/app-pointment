@@ -12,6 +12,7 @@ import CalendarDayIcon from '@/Icons/CalendarDayIcon.vue';
 import CalendarIcon from '@/Icons/CalendarIcon.vue';
 import CashRegisterIcon from '@/Icons/CashRegisterIcon.vue';
 import ClipboardAttachmentIcon from '@/Icons/ClipboardAttachmentIcon.vue';
+import CogIcon from '@/Icons/CogIcon.vue';
 import FileInfoIcon from '@/Icons/FileInfoIcon.vue';
 import FileWiredIcon from '@/Icons/FileWiredIcon.vue';
 import HospitalIcon from '@/Icons/HospitalIcon.vue';
@@ -78,20 +79,7 @@ let menu = reactive<SidebarMenuRow[]>([]);
 if (page.props.auth.user.type === UserType.ADMIN) {
     menu = [
         {
-            name: 'HASTANE',
-            items: [
-                {icon: HospitalIcon, label: 'Hastaneler', url: route('dashboard.hospital.list')},
-                {icon: IdCardIcon, label: 'Podologlar', url: route('dashboard.doctor.list')},
-                {icon: SuitcaseMedical, label: 'Hizmetler', url: route('dashboard.service.list')},
-                {
-                    icon: PrescriptionBottleMedicalIcon,
-                    label: 'Ürünler',
-                    url: route('dashboard.product.list'),
-                },
-            ],
-        },
-        {
-            name: 'HASTA',
+            name: 'GENEL',
             items: [
                 {icon: HospitalUserIcon, label: 'Hastalar', url: route('dashboard.patient.list')},
                 {
@@ -109,71 +97,99 @@ if (page.props.auth.user.type === UserType.ADMIN) {
                     label: 'İşlemler',
                     url: route('dashboard.treatment.list'),
                 },
-            ],
-        },
-        {
-            name: 'İDARİ',
-            items: [
                 {
                     icon: CashRegisterIcon,
                     label: 'Kasa',
                     url: route('dashboard.transaction.list'),
                 },
-                {
-                    icon: CalendarCircleExclamationIcon,
-                    label: 'İzinler',
-                    url: route('dashboard.passive.date.list'),
-                },
             ],
         },
         {
-            name: 'RAPORLAR',
+            name: 'DİĞER İŞLEMLER',
             items: [
                 {
-                    icon: PresentationChartIcon,
-                    label: 'Kasa Raporu',
-                    url: route('dashboard.report.transaction'),
+                    icon: HospitalIcon,
+                    label: 'Hastane',
+                    children: [
+                        {
+                            icon: HospitalIcon,
+                            label: 'Hastaneler',
+                            url: route('dashboard.hospital.list'),
+                        },
+                        {
+                            icon: IdCardIcon,
+                            label: 'Podologlar',
+                            url: route('dashboard.doctor.list'),
+                        },
+                        {
+                            icon: SuitcaseMedical,
+                            label: 'Hizmetler',
+                            url: route('dashboard.service.list'),
+                        },
+                        {
+                            icon: PrescriptionBottleMedicalIcon,
+                            label: 'Ürünler',
+                            url: route('dashboard.product.list'),
+                        },
+                    ],
                 },
                 {
                     icon: PresentationChartIcon,
-                    label: 'Hasta Raporu',
-                    url: route('dashboard.report.patient'),
+                    label: 'Raporlar',
+                    children: [
+                        {
+                            icon: PresentationChartIcon,
+                            label: 'Kasa Raporu',
+                            url: route('dashboard.report.transaction'),
+                        },
+                        {
+                            icon: PresentationChartIcon,
+                            label: 'Hasta Raporu',
+                            url: route('dashboard.report.patient'),
+                        },
+                        {
+                            icon: PresentationChartIcon,
+                            label: 'İşlem Raporu',
+                            url: route('dashboard.report.treatment'),
+                        },
+                        {
+                            icon: PresentationChartIcon,
+                            label: 'Randevu Raporu',
+                            url: route('dashboard.report.appointment'),
+                        },
+                    ],
                 },
                 {
-                    icon: PresentationChartIcon,
-                    label: 'İşlem Raporu',
-                    url: route('dashboard.report.treatment'),
-                },
-                {
-                    icon: PresentationChartIcon,
-                    label: 'Randevu Raporu',
-                    url: route('dashboard.report.appointment'),
-                },
-            ],
-        },
-        {
-            name: 'SİSTEM',
-            items: [
-                {icon: UsersIcon, label: 'Kullanıcılar', url: route('dashboard.user.list')},
-                {
-                    icon: ClipboardAttachmentIcon,
-                    label: 'Hasta Kayıt Ek Alanlar',
-                    url: route('dashboard.field.list'),
-                },
-                {
-                    icon: CalendarDayIcon,
-                    label: 'Randevu Tipleri',
-                    url: route('dashboard.appointment.type.list'),
-                },
-                {
-                    icon: FileInfoIcon,
-                    label: 'Uygulama İçeriği',
-                    url: route('dashboard.content.list'),
-                },
-                {
-                    icon: FileWiredIcon,
-                    label: 'Ayarlar',
-                    url: route('dashboard.setting.index'),
+                    icon: CogIcon,
+                    label: 'Sistem',
+                    children: [
+                        {icon: UsersIcon, label: 'Kullanıcılar', url: route('dashboard.user.list')},
+                        {
+                            icon: CalendarCircleExclamationIcon,
+                            label: 'İzinler',
+                            url: route('dashboard.passive.date.list'),
+                        },
+                        {
+                            icon: ClipboardAttachmentIcon,
+                            label: 'Hasta Kayıt Ek Alanlar',
+                            url: route('dashboard.field.list'),
+                        },
+                        {
+                            icon: CalendarDayIcon,
+                            label: 'Randevu Tipleri',
+                            url: route('dashboard.appointment.type.list'),
+                        },
+                        {
+                            icon: FileInfoIcon,
+                            label: 'Uygulama İçeriği',
+                            url: route('dashboard.content.list'),
+                        },
+                        {
+                            icon: FileWiredIcon,
+                            label: 'Ayarlar',
+                            url: route('dashboard.setting.index'),
+                        },
+                    ],
                 },
             ],
         },

@@ -151,8 +151,10 @@ class AppointmentService
         return FilterHelper::filter($query)
             ->search('note')
             ->sort('start_date', 'due_date', 'duration')
-            ->idFilter('hospital', 'doctor', 'patient')
+            ->idFilter('hospital', 'patient')
             ->enumMultiple(['state' => AppointmentState::class])
+            ->hasHospital()
+            ->hasDoctor()
             ->paginate();
     }
 

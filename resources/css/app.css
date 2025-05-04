@@ -9,6 +9,10 @@
     @tailwind utilities;
 }
 
+html {
+    font-size: 15px;
+}
+
 body {
     @apply bg-surface-200 text-surface-600 dark:bg-surface-900 dark:text-surface-200;
 }

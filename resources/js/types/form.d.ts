@@ -38,7 +38,7 @@ export interface DoctorFormType extends FormDataType {
     branch: string;
     avatar: File | null;
     title: string | null;
-    phone: string | null;
+    phone: string;
     email: string | null;
     resume: string;
     certificate: string;

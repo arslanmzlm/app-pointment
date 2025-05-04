@@ -19,7 +19,7 @@ const form = useForm<DoctorFormType>({
     branch: doctor.branch,
     avatar: null,
     title: doctor.title,
-    phone: doctor.phone,
+    phone: doctor.phone ?? '',
     email: doctor.email,
     resume: doctor.resume ?? '',
     certificate: doctor.certificate ?? '',
