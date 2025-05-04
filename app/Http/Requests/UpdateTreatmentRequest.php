@@ -29,7 +29,6 @@ class UpdateTreatmentRequest extends FormRequest
 
         return [
             'note' => ['nullable', 'string'],
-            'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
             'services' => ['array'],
             'services.*.id' => ['nullable', Rule::exists('treatment_services', 'id')],
             'services.*.service_id' => ['required', Rule::exists('services', 'id')->where('hospital_id', $treatment->doctor->hospital_id)],
@@ -39,6 +38,10 @@ class UpdateTreatmentRequest extends FormRequest
             'products.*.product_id' => ['required', Rule::exists('products', 'id')->where('hospital_id', $treatment->doctor->hospital_id)],
             'products.*.count' => ['required', 'integer', 'min:1'],
             'products.*.price' => ['required', 'numeric'],
+            'payments' => ['array'],
+            'payments.*' => ['array'],
+            'payments.*.method' => ['required', Rule::enum(PaymentMethod::class)],
+            'payments.*.amount' => ['nullable', 'numeric', 'min:0'],
         ];
     }
 }

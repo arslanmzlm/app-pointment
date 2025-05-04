@@ -9,7 +9,6 @@ import TreatmentServices from '@/Forms/Parts/TreatmentServices.vue';
 import TextareaField from '@/Components/Form/TextareaField.vue';
 import AppointmentTable from '@/Components/Tables/AppointmentTable.vue';
 import {serviceLabel} from '@/Utilities/labels';
-import {PaymentMethod} from '@/types/enums';
 import {TreatmentFormType} from '@/types/form';
 import {Appointment, AppointmentType, Product, Service} from '@/types/model';
 import {EnumResponse} from '@/types/response';
@@ -32,7 +31,15 @@ const form = useForm<TreatmentFormType>({
     services: [],
     products: [],
     appointments: [],
-    payment_method: PaymentMethod.CASH,
+    payments: [],
+});
+
+props.paymentMethods.forEach((method) => {
+    form.payments.push({
+        method: method.value,
+        amount: 0,
+        label: method.label,
+    });
 });
 
 if (props.appointment.service_id !== null && props.appointment.service) {

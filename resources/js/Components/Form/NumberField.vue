@@ -19,6 +19,7 @@ const props = defineProps<{
     readonly?: boolean;
     min?: number;
     max?: number;
+    size?: 'small' | 'large';
 }>();
 
 const model = defineModel<number | null>({required: true});
@@ -44,6 +45,7 @@ const id = computed(() => {
             :placeholder
             :readonly
             :show-buttons
+            :size
             :step
             fluid
         >

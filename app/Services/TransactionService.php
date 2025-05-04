@@ -11,35 +11,65 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class TransactionService
 {
-    public static function storeByTreatment(Treatment $treatment, PaymentMethod $method, int $hospitalId): Transaction
+    public static function storeByTreatment(Treatment $treatment, array $data): array
     {
-        $transaction = new Transaction();
-        $transaction->type = TransactionType::INCOME;
-        $transaction->method = $method;
-        $transaction->user_id = $treatment->user_id;
-        $transaction->hospital_id = $hospitalId;
-        $transaction->doctor_id = $treatment->doctor_id;
-        $transaction->patient_id = $treatment->patient_id;
-        $transaction->treatment_id = $treatment->id;
-        $transaction->total = $treatment->total;
+        $transactions = [];
 
-        $transaction->save();
+        foreach ($data as $row) {
+            if (!empty($row['amount']) && $row['amount'] > 0) {
+                $transaction = new Transaction();
+                $transaction->type = TransactionType::INCOME;
+                $transaction->method = $row['method'];
+                $transaction->user_id = $treatment->user_id;
+                $transaction->hospital_id = $treatment->hospital_id;
+                $transaction->doctor_id = $treatment->doctor_id;
+                $transaction->patient_id = $treatment->patient_id;
+                $transaction->treatment_id = $treatment->id;
+                $transaction->total = $row['amount'];
 
-        return $transaction;
-    }
+                $transaction->save();
 
-    public static function updateByTreatment(Treatment $treatment, PaymentMethod $method): ?Transaction
-    {
-        if ($transaction = $treatment->transaction) {
-            $transaction->total = $treatment->total;
-            $transaction->method = $method;
-
-            $transaction->save();
-
-            return $transaction;
+                $transactions[] = $transaction;
+            }
         }
 
-        return null;
+        return $transactions;
+    }
+
+    public static function updateByTreatment(Treatment $treatment, array $data): array
+    {
+        $transactions = [];
+
+        foreach ($data as $row) {
+            $method = $row['method'];
+            $amount = $row['amount'];
+
+            $transaction = $treatment->transactions()->where('method', $method)->first();
+
+            if (!empty($amount) && $amount > 0) {
+                if (!$transaction) {
+                    $transaction = new Transaction();
+                    $transaction->type = TransactionType::INCOME;
+                    $transaction->method = $method;
+                    $transaction->user_id = $treatment->user_id;
+                    $transaction->hospital_id = $treatment->hospital_id;
+                    $transaction->doctor_id = $treatment->doctor_id;
+                    $transaction->patient_id = $treatment->patient_id;
+                    $transaction->treatment_id = $treatment->id;
+                }
+                $transaction->total = $amount;
+
+                $transaction->save();
+
+                $transactions[] = $transaction;
+            } else {
+                if ($transaction) {
+                    $transaction->delete();
+                }
+            }
+        }
+
+        return $transactions;
     }
 
     public function filter(): LengthAwarePaginator

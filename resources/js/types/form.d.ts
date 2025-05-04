@@ -137,7 +137,13 @@ export interface TreatmentFormType extends FormDataType {
     services: TreatmentServiceFormType[];
     products: TreatmentProductFormType[];
     appointments?: AppointmentItemFormType[];
-    payment_method: PaymentMethod;
+    payments: TreatmentPaymentFormType[];
+}
+
+export interface TreatmentPaymentFormType extends FormDataType {
+    method: PaymentMethod;
+    amount: number | null;
+    label?: string;
 }
 
 export interface TransactionFormType extends FormDataType {

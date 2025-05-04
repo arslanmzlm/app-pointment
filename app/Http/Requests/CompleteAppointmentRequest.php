@@ -32,7 +32,6 @@ class CompleteAppointmentRequest extends FormRequest
 
         return [
             'note' => ['nullable', 'string'],
-            'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
             'services' => ['array'],
             'services.*.service_id' => ['required', Rule::exists('services', 'id')->where('hospital_id', $appointment->hospital_id)],
             'services.*.price' => ['required', 'numeric'],
@@ -47,6 +46,10 @@ class CompleteAppointmentRequest extends FormRequest
             'appointments.*.note' => ['nullable', 'string', 'max:255'],
             'appointments.*.service_id' => ['nullable', Rule::exists('services', 'id')->where('hospital_id', $appointment->hospital_id)],
             'appointments.*' => ['array', new CheckAppointmentOverlap()],
+            'payments' => ['array'],
+            'payments.*' => ['array'],
+            'payments.*.method' => ['required', Rule::enum(PaymentMethod::class)],
+            'payments.*.amount' => ['nullable', 'numeric', 'min:0'],
         ];
     }
 }

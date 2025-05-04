@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Treatment extends Model
 {
@@ -55,9 +54,9 @@ class Treatment extends Model
         return $this->hasMany(TreatmentProduct::class, 'treatment_id');
     }
 
-    public function transaction(): HasOne
+    public function transactions(): HasMany
     {
-        return $this->hasOne(Transaction::class, 'treatment_id');
+        return $this->hasMany(Transaction::class, 'treatment_id');
     }
 
     public function calculateTotal(): float

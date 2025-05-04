@@ -92,7 +92,7 @@ class TreatmentController extends Controller
             'treatment' => $treatment->load(['doctor', 'patient', 'services.service', 'products.product']),
             'services' => $this->serviceService->getAll($treatment->doctor->hospital_id),
             'products' => $this->productService->getAll(),
-            'paymentMethod' => $treatment->transaction->method,
+            'transactions' => $treatment->transactions,
             'paymentMethods' => PaymentMethod::getAll(),
         ]);
     }

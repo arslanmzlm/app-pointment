@@ -37,7 +37,6 @@ class StoreTreatmentRequest extends FormRequest
         $rules = [
             'patient_id' => ['required', Rule::exists('patients', 'id')],
             'note' => ['nullable', 'string'],
-            'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
             'services' => ['array'],
             'services.*.price' => ['required', 'numeric'],
             'products' => ['array'],
@@ -50,6 +49,10 @@ class StoreTreatmentRequest extends FormRequest
             'appointments.*.duration' => ['required', 'integer', 'min:1'],
             'appointments.*.note' => ['nullable', 'string', 'max:255'],
             'appointments.*' => ['array', new CheckAppointmentOverlap()],
+            'payments' => ['array'],
+            'payments.*' => ['array'],
+            'payments.*.method' => ['required', Rule::enum(PaymentMethod::class)],
+            'payments.*.amount' => ['nullable', 'numeric', 'min:0'],
         ];
 
         if ($doctor !== null) {

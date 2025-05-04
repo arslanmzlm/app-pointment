@@ -10,7 +10,6 @@ import TreatmentProducts from '@/Forms/Parts/TreatmentProducts.vue';
 import TreatmentServices from '@/Forms/Parts/TreatmentServices.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
 import TextareaField from '@/Components/Form/TextareaField.vue';
-import {PaymentMethod} from '@/types/enums';
 import {TreatmentFormType} from '@/types/form';
 import {AppointmentType, Doctor, Hospital, Product, Service} from '@/types/model';
 import {EnumResponse} from '@/types/response';
@@ -34,7 +33,15 @@ const form = useForm<TreatmentFormType>({
     services: [],
     products: [],
     appointments: [],
-    payment_method: PaymentMethod.CASH,
+    payments: [],
+});
+
+props.paymentMethods.forEach((method) => {
+    form.payments.push({
+        method: method.value,
+        amount: 0,
+        label: method.label,
+    });
 });
 
 const hospital = ref<number | null>(null);

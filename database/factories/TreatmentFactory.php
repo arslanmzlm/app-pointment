@@ -94,8 +94,12 @@ class TreatmentFactory extends Factory
             $treatment->total = $total;
             $treatment->save();
 
-            $method = $this->faker->randomElement(PaymentMethod::cases());
-            TransactionService::storeByTreatment($treatment, $method, $treatment->hospital_id);
+            $payments = [
+                'method' => $this->faker->randomElement(PaymentMethod::cases()),
+                'amount' => $treatment->total
+            ];
+
+            TransactionService::storeByTreatment($treatment, $payments);
         });
     }
 }

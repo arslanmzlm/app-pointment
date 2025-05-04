@@ -7,16 +7,15 @@ import TreatmentProducts from '@/Forms/Parts/TreatmentProducts.vue';
 import TreatmentServices from '@/Forms/Parts/TreatmentServices.vue';
 import TextareaField from '@/Components/Form/TextareaField.vue';
 import {productLabel, serviceLabel} from '@/Utilities/labels';
-import {PaymentMethod} from '@/types/enums';
 import {TreatmentFormType} from '@/types/form';
-import {Product, Service, Treatment} from '@/types/model';
+import {Product, Service, Transaction, Treatment} from '@/types/model';
 import {EnumResponse} from '@/types/response';
 
 const props = defineProps<{
     treatment: Treatment;
     services: Service[];
     products: Product[];
-    paymentMethod: PaymentMethod;
+    transactions: Transaction[];
     paymentMethods: EnumResponse[];
 }>();
 
@@ -27,7 +26,7 @@ const form = useForm<TreatmentFormType>({
     note: treatment.note,
     services: [],
     products: [],
-    payment_method: props.paymentMethod,
+    payments: [],
 });
 
 props.treatment.services.forEach((item) => {
@@ -46,6 +45,18 @@ props.treatment.products.forEach((item) => {
         label: productLabel(<Product>item.product),
         count: item.count,
         price: item.price,
+    });
+});
+
+props.paymentMethods.forEach((method) => {
+    const transaction = props.transactions.find((transaction) => {
+        return transaction.method === method.value;
+    });
+
+    form.payments.push({
+        method: method.value,
+        amount: transaction ? transaction.total : 0,
+        label: method.label,
     });
 });
 

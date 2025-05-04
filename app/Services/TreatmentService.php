@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enums\PaymentMethod;
 use App\Helpers\FilterHelper;
 use App\Models\Treatment;
 use App\Traits\Service\HospitalQuery;
@@ -60,7 +59,7 @@ class TreatmentService
 
         if (isset($data['products']) && is_array($data['products'])) $this->storeProducts($treatment, $data['products']);
 
-        TransactionService::storeByTreatment($treatment, PaymentMethod::from($data['payment_method']), $treatment->doctor->hospital_id);
+        TransactionService::storeByTreatment($treatment, $data['payments']);
 
         return $treatment;
     }
@@ -76,7 +75,7 @@ class TreatmentService
 
         if (isset($data['products']) && is_array($data['products'])) $this->updateProducts($treatment, $data['products']);
 
-        TransactionService::updateByTreatment($treatment, PaymentMethod::from($data['payment_method']));
+        TransactionService::updateByTreatment($treatment, $data['payments']);
 
         return $treatment;
     }
@@ -130,7 +129,7 @@ class TreatmentService
             $treatment->services()->whereNotIn('id', $ids)->delete();
 
             foreach ($values as $item) {
-                if ($service = $services->find($item['id'])) {
+                if (!empty($item['id']) && $service = $services->find($item['id'])) {
                     $service->price = $item['price'];
 
                     $service->save();
