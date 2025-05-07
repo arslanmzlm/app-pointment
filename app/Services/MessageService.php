@@ -29,9 +29,10 @@ class MessageService
 
         if (self::checkPatient($patient)) {
             $date = $appointment->start_date->format('d.m.Y H:i');
+            $hospitalPhone = $appointment->hospital->phone_normalized;
 
             $phone = $patient->phone->getRawNumber();
-            $message = "Sn. {$patient->full_name}, {$date} tarihinde kliniğimizde randevunuz oluşturulmuştur. BTM Ayak Sağlığı Merkezi sağlıklı günler dinler.";
+            $message = "Sn. {$patient->full_name}, {$date} tarihinde kliniğimizde randevunuz oluşturulmuştur. Kliniğimizi {$hospitalPhone} numarasından arayarak iptal edebilirsiniz. BTM Ayak Sağlığı Merkezi sağlıklı günler diler.";
 
             $jobId = SmsService::send($phone, $message);
 
@@ -54,11 +55,12 @@ class MessageService
 
                 if (self::checkPatient($patient)) {
                     $date = $appointment->start_date->format('d.m.Y H:i');
+                    $hospitalPhone = $appointment->hospital->phone_normalized;
 
                     $messages[] = [
                         'patient_id' => $patient->id,
                         'phone' => $patient->phone->getRawNumber(),
-                        'message' => "Sn. {$patient->full_name}, yarın ({$date}) kliniğimizde randevunuz vardır. BTM Ayak Sağlığı Merkezi sağlıklı günler dinler."
+                        'message' => "Sn. {$patient->full_name}, yarın ({$date}) kliniğimizde randevunuz vardır. Kliniğimizi {$hospitalPhone} numarasından arayarak iptal edebilirsiniz. BTM Ayak Sağlığı Merkezi sağlıklı günler diler."
                     ];
                 }
             }

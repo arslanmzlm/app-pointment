@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Hospital extends Model
 {
@@ -65,5 +66,10 @@ class Hospital extends Model
     public function getLogoUrlAttribute(): ?string
     {
         return $this->logo ? url($this->logo_src) : null;
+    }
+
+    public function getPhoneNormalizedAttribute(): ?string
+    {
+        return $this->phone ? Str::replace(['(', ')'], '', $this->phone->formatNational()) : null;
     }
 }
