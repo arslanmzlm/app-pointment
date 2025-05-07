@@ -118,6 +118,17 @@ class AppointmentService
             ->first();
     }
 
+    public static function getForReminder(): Collection
+    {
+        $tomorrow = now()->addDay()->startOfDay();
+
+        return Appointment::query()
+            ->with('patient')
+            ->whereIn('state', self::ACTIVE_STATES)
+            ->whereBetween('start_date', [$tomorrow, $tomorrow->clone()->endOfDay()])
+            ->get();
+    }
+
     public function getActiveByPatient(Patient|int $patient): Collection
     {
         if ($patient instanceof Patient) {
@@ -219,6 +230,8 @@ class AppointmentService
 
         $appointment->save();
 
+        MessageService::appoint($appointment);
+
         return $appointment;
     }
 
@@ -236,6 +249,8 @@ class AppointmentService
         $appointment->duration = $appointment->doctor->hospital->duration;
 
         $appointment->save();
+
+        MessageService::appoint($appointment);
 
         return $appointment;
     }

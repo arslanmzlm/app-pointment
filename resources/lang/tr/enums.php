@@ -46,4 +46,10 @@ return [
             'CANCELED' => 'İptal edildi',
         ],
     ],
+    'message' => [
+        'type' => [
+            'APPOINT' => 'Yeni Randevu',
+            'REMIND' => 'Hatırlatma',
+        ],
+    ],
 ];

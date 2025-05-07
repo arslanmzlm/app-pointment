@@ -111,7 +111,7 @@ class DatabaseSeeder extends Seeder
                 ['code' => 81, 'name' => 'Düzce'],
             ];
 
-            Province::insert($provinces);
+            Province::query()->insert($provinces);
         }
 
         if (AppointmentType::count() === 0) {
@@ -144,7 +144,7 @@ class DatabaseSeeder extends Seeder
                 ],
             ];
 
-            AppointmentType::insert($appointmentTypes);
+            AppointmentType::query()->insert($appointmentTypes);
         }
     }
 }
