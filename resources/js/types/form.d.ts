@@ -177,7 +177,10 @@ export interface AppointmentFormType extends FormDataType {
 
 export interface AppointmentMultipleFormType extends FormDataType {
     doctor_id?: number;
-    patient_id: number;
+    patient_id: number | null;
+    patient_name: string | null;
+    patient_surname: string | null;
+    patient_phone: string;
     appointments: AppointmentItemFormType[];
 }
 

@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import {useForm} from '@inertiajs/vue3';
-import {Button, Card} from 'primevue';
+import {Button, Card, Message} from 'primevue';
 import {computed, ref, watch} from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import AppointmentMultipleForm from '@/Forms/AppointmentMultipleForm.vue';
 import PatientSelector from '@/Forms/Parts/PatientSelector.vue';
+import InputField from '@/Components/Form/InputField.vue';
+import MaskField from '@/Components/Form/MaskField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
 import {AppointmentMultipleFormType} from '@/types/form';
 import {AppointmentType, Doctor, Hospital, Service} from '@/types/model';
@@ -21,7 +23,10 @@ const breadcrumbs = [{label: 'Randevular', url: route('dashboard.appointment.lis
 
 const form = useForm<AppointmentMultipleFormType>({
     doctor_id: 0,
-    patient_id: 0,
+    patient_id: null,
+    patient_name: null,
+    patient_surname: null,
+    patient_phone: '',
     appointments: [],
 });
 
@@ -85,7 +90,41 @@ function submit() {
                         required
                     />
 
-                    <PatientSelector v-model="form.patient_id" :error="form.errors.patient_id" />
+                    <PatientSelector
+                        v-if="!form.patient_name && !form.patient_surname && !form.patient_phone"
+                        v-model="form.patient_id"
+                        :error="form.errors.patient_id"
+                        show-clear
+                    />
+
+                    <div v-if="!form.patient_id" class="grid gap-6 lg:grid-cols-3">
+                        <InputField
+                            v-model="form.patient_name"
+                            :error="form.errors.patient_name"
+                            label="Hastanın Adı"
+                            name="patient_name"
+                        />
+
+                        <InputField
+                            v-model="form.patient_surname"
+                            :error="form.errors.patient_surname"
+                            label="Hastanın Soyadı"
+                            name="patient_surname"
+                        />
+
+                        <MaskField
+                            v-model="form.patient_phone"
+                            :error="form.errors.patient_phone"
+                            label="Hastanın Telefonu"
+                            mask="phone"
+                            name="patient_phone"
+                        />
+                    </div>
+
+                    <Message severity="info">
+                        Kayıtlı bir hasta seçebilirsiniz yada yeni hasta kaydı oluşturmak için
+                        gerekli alanları doldurabilirsiniz.
+                    </Message>
                 </template>
             </Card>
 

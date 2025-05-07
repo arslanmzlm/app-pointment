@@ -58,9 +58,19 @@ class PatientService
     public function store(array $data): ?Patient
     {
         $patient = new Patient();
+        $patient->old = $data['old'] ?? false;
+        $patient->province_id = $data['province_id'] ?? null;
+        $patient->name = $data['name'];
+        $patient->surname = $data['surname'];
+        $patient->full_name = "{$data['name']} {$data['surname']}";
+        $patient->phone = $data['phone'];
+        $patient->email = $data['email'] ?? null;
+        $patient->gender = $data['gender'] ?? null;
+        $patient->birthday = !empty($data['birthday']) ? Carbon::parse($data['birthday'])->setTimezone('Europe/Istanbul') : $patient->birthday;
+        $patient->notification = $data['notification'] ?? true;
         $patient->created_by = auth()->id();
 
-        $patient = $this->assignAttributes($patient, $data);
+        $patient->save();
 
         if (!empty($data['fields'])) $this->updateFields($patient, $data['fields']);
 
@@ -88,7 +98,18 @@ class PatientService
 
     public function update(Patient $patient, array $data): Patient
     {
-        $patient = $this->assignAttributes($patient, $data);
+        $patient->old = $data['old'] ?? $patient->old ?? false;
+        $patient->province_id = $data['province_id'] ?? $patient->province_id;
+        $patient->name = $data['name'] ?? $patient->name;
+        $patient->surname = $data['surname'] ?? $patient->surname;
+        $patient->full_name = !empty($data['name']) && !empty($data['surname']) ? "{$data['name']} {$data['surname']}" : $patient->full_name;
+        $patient->phone = $data['phone'] ?? $patient->phone;
+        $patient->email = $data['email'] ?? $patient->email;
+        $patient->gender = $data['gender'] ?? $patient->gender;
+        $patient->birthday = !empty($data['birthday']) ? Carbon::parse($data['birthday'])->setTimezone('Europe/Istanbul') : $patient->birthday;
+        $patient->notification = $data['notification'] ?? $patient->notification ?? true;
+
+        $patient->save();
 
         if (!empty($data['fields'])) $this->updateFields($patient, $data['fields']);
 
@@ -104,24 +125,6 @@ class PatientService
         }
 
         return $patient->forceDelete();
-    }
-
-    private function assignAttributes(Patient $patient, array $data): ?Patient
-    {
-        $patient->old = $data['old'] ?? $patient->old ?? false;
-        $patient->province_id = $data['province_id'] ?? $patient->province_id;
-        $patient->name = $data['name'] ?? $patient->name;
-        $patient->surname = $data['surname'] ?? $patient->surname;
-        $patient->full_name = !empty($data['name']) && !empty($data['surname']) ? "{$data['name']} {$data['surname']}" : $patient->full_name;
-        $patient->phone = $data['phone'] ?? $patient->phone;
-        $patient->email = $data['email'] ?? $patient->email;
-        $patient->gender = $data['gender'] ?? $patient->gender;
-        $patient->birthday = $data['birthday'] ? Carbon::parse($data['birthday'])->setTimezone('Europe/Istanbul') : $patient->birthday;
-        $patient->notification = $data['notification'] ?? $patient->notification ?? true;
-
-        $patient->save();
-
-        return $patient;
     }
 
     private function updateFields(Patient $patient, array $values): void

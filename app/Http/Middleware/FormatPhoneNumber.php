@@ -25,6 +25,15 @@ class FormatPhoneNumber
             }
         }
 
+        if (in_array($request->getMethod(), ['POST', 'PUT', 'PATCH', 'DELETE']) && $request->has('patient_phone')) {
+            try {
+                if ($phone = $request->input('patient_phone')) {
+                    $request->merge(['patient_phone' => phone($phone, 'TR', PhoneNumberFormat::E164)]);
+                }
+            } catch (\Throwable $th) {
+            }
+        }
+
         return $next($request);
     }
 }

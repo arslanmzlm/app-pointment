@@ -16,6 +16,7 @@ use App\Services\AppointmentTypeService;
 use App\Services\DoctorService;
 use App\Services\HospitalService;
 use App\Services\PassiveDateService;
+use App\Services\PatientService;
 use App\Services\ProductService;
 use App\Services\ServiceService;
 use App\Services\TreatmentService;
@@ -32,7 +33,8 @@ class AppointmentController extends Controller
         private DoctorService          $doctorService,
         private ServiceService         $serviceService,
         private ProductService         $productService,
-        private TreatmentService       $treatmentService
+        private TreatmentService       $treatmentService,
+        private PatientService         $patientService
     )
     {
     }
@@ -101,7 +103,18 @@ class AppointmentController extends Controller
     public function store(StoreAppointmentRequest $request)
     {
         $doctorId = auth()->user()->doctor_id ?? $request->input('doctor_id');
-        $this->appointmentService->storeMany($doctorId, $request->validated('patient_id'), $request->validated('appointments'));
+
+        $patientId = $request->validated('patient_id');
+        if (is_null($patientId)) {
+            $patient = $this->patientService->store([
+                'name' => $request->validated('patient_name'),
+                'surname' => $request->validated('patient_surname'),
+                'phone' => $request->validated('patient_phone'),
+            ]);
+            $patientId = $patient->id;
+        }
+
+        $this->appointmentService->storeMany($doctorId, $patientId, $request->validated('appointments'));
 
         session()->flash('toast.success', trans('messages.appointment.created'));
 

@@ -34,7 +34,10 @@ class StoreAppointmentRequest extends FormRequest
         }
 
         $rules = [
-            'patient_id' => ['required', Rule::exists('patients', 'id')],
+            'patient_id' => ['nullable', Rule::exists('patients', 'id')],
+            'patient_name' => ['required_without:patient_id', 'nullable', 'string', 'max:255'],
+            'patient_surname' => ['required_without:patient_id', 'nullable', 'string', 'max:255'],
+            'patient_phone' => ['required_without:patient_id', 'nullable', 'string', Rule::phone()->country('TR'), Rule::unique('patients', 'phone')],
             'appointments' => ['required', 'array'],
             'appointments.*.appointment_type_id' => ['required', Rule::exists('appointment_types', 'id')],
             'appointments.*.start_date' => ['required', 'date'],

@@ -254,6 +254,9 @@ return [
         'values' => 'Değerler',
         'values.*.id' => 'Değer',
         'values.*.value' => 'Değer',
+        'patient_name' => 'Hastanın adı',
+        'patient_surname' => 'Hastanın soyadı',
+        'patient_phone' => 'Hastanın telefonu',
     ],
 
 ];
