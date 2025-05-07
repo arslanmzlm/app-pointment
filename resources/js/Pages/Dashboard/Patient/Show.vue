@@ -163,8 +163,8 @@ const collapseAll = () => {
                                 show-gridlines
                                 size="small"
                             >
-                                <Column field="service.code" header="Kod" />
-                                <Column field="service.name" header="Hizmet" />
+                                <Column field="service.code" header="Kod" style="width: 20%" />
+                                <Column field="service.name" header="Hizmet" style="width: 40%" />
                                 <Column field="price" header="Tutar">
                                     <template #body="slotProps">
                                         <span class="font-medium">{{
@@ -181,8 +181,8 @@ const collapseAll = () => {
                                 show-gridlines
                                 size="small"
                             >
-                                <Column field="product.code" header="Kod" />
-                                <Column field="product.name" header="Ürün" />
+                                <Column field="product.code" header="Kod" style="width: 20%" />
+                                <Column field="product.name" header="Ürün" style="width: 40%" />
                                 <Column field="count" header="Adet" />
                                 <Column field="price" header="Fiyat">
                                     <template #body="slotProps">
@@ -208,6 +208,6 @@ const collapseAll = () => {
             </template>
         </Card>
 
-        <AppointmentTable :appointments size="small" title="Randevular" />
+        <AppointmentTable :appointments show-actions size="small" title="Randevular" />
     </DashboardLayout>
 </template>

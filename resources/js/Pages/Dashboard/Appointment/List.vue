@@ -13,8 +13,8 @@ import MultiSelectField from '@/Components/Form/MultiSelectField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
 import {appointmentState} from '@/Utilities/enumHelper';
 import {dateFormat, dateTimeFormat, timeFormat} from '@/Utilities/formatters';
+import {appointmentActive} from '@/Utilities/modelHelper';
 import {DataTableFilter} from '@/types/component';
-import {AppointmentState} from '@/types/enums';
 import {Appointment, Doctor, Hospital} from '@/types/model';
 import {EnumResponse, PaginateResponse} from '@/types/response';
 
@@ -109,13 +109,6 @@ function showConfirm(event: Event, url: string) {
         },
     });
 }
-
-const appointmentActive = (appointment: Appointment) => {
-    return (
-        appointment.state !== AppointmentState.COMPLETED &&
-        appointment.state !== AppointmentState.CANCELED
-    );
-};
 </script>
 
 <template>
@@ -194,14 +187,10 @@ const appointmentActive = (appointment: Appointment) => {
             </template>
 
             <Column field="id" header="ID" sortable />
-            <Column v-if="hospitals" field="hospital" header="Hastane">
+            <Column v-if="hospitals || doctors" header="Hastane / Podolog">
                 <template #body="slotProps">
-                    {{ hospitalNames[slotProps.data.hospital_id] }}
-                </template>
-            </Column>
-            <Column v-if="doctors" field="doctor" header="Podolog">
-                <template #body="slotProps">
-                    {{ doctorNames[slotProps.data.doctor_id] }}
+                    <div>{{ hospitalNames[slotProps.data.hospital_id] }}</div>
+                    <div class="font-semibold">{{ doctorNames[slotProps.data.doctor_id] }}</div>
                 </template>
             </Column>
             <Column field="patient.full_name" header="Hasta">
@@ -239,6 +228,21 @@ const appointmentActive = (appointment: Appointment) => {
                         </div>
                         <div>{{ slotProps.data.duration }} dk</div>
                     </div>
+                </template>
+            </Column>
+            <Column field="note" header="Not">
+                <template #body="slotProps">
+                    <span
+                        v-if="slotProps.data.note"
+                        v-tooltip.bottom="
+                            slotProps.data.note.length > 10 ? slotProps.data.note : undefined
+                        "
+                        >{{
+                            slotProps.data.note.length > 10
+                                ? slotProps.data.note.substring(0, 10) + '...'
+                                : slotProps.data.note
+                        }}</span
+                    >
                 </template>
             </Column>
             <Column field="updated_at" header="Son Düzenlenme Tarihi">

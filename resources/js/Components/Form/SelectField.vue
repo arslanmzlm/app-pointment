@@ -18,6 +18,7 @@ const props = withDefaults(
         showClear?: boolean;
         editable?: boolean;
         size?: 'small' | 'large';
+        autoFilterFocus?: boolean;
     }>(),
     {
         optionLabel: 'name',
@@ -43,6 +44,7 @@ const computedOptionValue = computed(() => {
     <FormField :error :label :required>
         <Select
             v-model="model"
+            :auto-filter-focus
             :editable
             :filter
             :invalid="!!error"

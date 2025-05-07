@@ -71,7 +71,9 @@ class AppointmentController extends Controller
             $data['doctors'] = $this->doctorService->getAll();
         }
 
-        $data['appointments'] = $this->appointmentService->dateRange();
+        $data['appointments'] = Inertia::optional(function () {
+            return $this->appointmentService->dateRange();
+        });
 
         return Inertia::render('Dashboard/Appointment/Calendar', $data);
     }

@@ -35,7 +35,7 @@ class UpdateTreatmentRequest extends FormRequest
             'services.*.price' => ['required', 'numeric'],
             'products' => ['array'],
             'products.*.id' => ['nullable', Rule::exists('treatment_products', 'id')],
-            'products.*.product_id' => ['required', Rule::exists('products', 'id')->where('hospital_id', $treatment->doctor->hospital_id)],
+            'products.*.product_id' => ['required', Rule::exists('products', 'id')],
             'products.*.count' => ['required', 'integer', 'min:1'],
             'products.*.price' => ['required', 'numeric'],
             'payments' => ['array'],

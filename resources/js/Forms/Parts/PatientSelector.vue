@@ -57,6 +57,7 @@ function getPatients(event: SelectFilterEvent) {
         :options="patients"
         :show-clear
         :size
+        auto-filter-focus
         filter
         label="Hasta"
         placeholder="Arama yapmak için en az 3 harf girin"

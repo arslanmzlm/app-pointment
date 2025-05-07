@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import {InertiaForm} from '@inertiajs/vue3';
 import {clone} from 'lodash';
-import {Button, Card, DatePicker, FloatLabel, InputNumber, InputText, Select} from 'primevue';
+import {Button, Card, DatePicker, FloatLabel, InputNumber, Select} from 'primevue';
 import {computed, watch} from 'vue';
 import PreviewDates from '@/Forms/Parts/PreviewDates.vue';
+import TextareaField from '@/Components/Form/TextareaField.vue';
 import {AppointmentMultipleFormType, TreatmentFormType} from '@/types/form';
 import {AppointmentType, Service} from '@/types/model';
 
@@ -113,13 +114,12 @@ watch(
             <div v-if="form" class="space-y-4">
                 <div
                     v-if="form && form.appointments && form.appointments.length > 0"
-                    class="hidden lg:grid lg:grid-cols-7 lg:gap-3 lg:pr-10"
+                    class="hidden lg:grid lg:grid-cols-4 lg:gap-3 lg:pr-10"
                 >
                     <div class="col-span-1 font-bold">Tarih</div>
                     <div class="col-span-1 font-bold">Randevu süresi (dakika)</div>
                     <div class="col-span-1 font-bold">Randevu Tipi</div>
                     <div class="col-span-1 font-bold">Hizmet</div>
-                    <div class="col-span-3 font-bold">Not</div>
                 </div>
 
                 <div
@@ -127,7 +127,7 @@ watch(
                     :key="index"
                     class="flex gap-3"
                 >
-                    <div class="grid grow gap-3 lg:grid-cols-7">
+                    <div class="grid grow gap-3 border-b pb-3 lg:grid-cols-4">
                         <FloatLabel class="lg:col-span-1" variant="on">
                             <DatePicker
                                 v-model="appointment.start_date"
@@ -194,6 +194,8 @@ watch(
                                 v-model="appointment.service_id"
                                 :invalid="!!form.errors[`appointments.${index}.service_id`]"
                                 :options="serviceOptions"
+                                auto-filter-focus
+                                filter
                                 fluid
                                 option-label="name"
                                 option-value="id"
@@ -204,10 +206,10 @@ watch(
                             <label class="block lg:hidden">Hizmet</label>
                         </FloatLabel>
 
-                        <FloatLabel class="lg:col-span-3" variant="on">
-                            <InputText v-model="appointment.note" fluid size="small" />
+                        <FloatLabel class="lg:col-span-full" variant="on">
+                            <TextareaField v-model="appointment.note" fluid size="small" />
 
-                            <label class="block lg:hidden">Not</label>
+                            <label>Not</label>
                         </FloatLabel>
 
                         <div
