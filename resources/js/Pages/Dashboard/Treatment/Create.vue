@@ -76,7 +76,7 @@ if (props.hospitals || props.doctors) {
 
 const serviceOptions = computed(() => {
     if (props.services) {
-        if (hospital.value === undefined) {
+        if (!hospital.value) {
             return props.services;
         }
 
