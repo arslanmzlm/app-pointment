@@ -26,6 +26,8 @@ class AppointmentReminder extends Command
      */
     public function handle(): void
     {
+        \Log::info('Appointment reminder command executed.');
+
         MessageService::remindMany();
     }
 }
