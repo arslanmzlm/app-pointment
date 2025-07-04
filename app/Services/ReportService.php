@@ -33,15 +33,20 @@ class ReportService
     {
         $this->hospitalId = auth()->user()->hospital_id;
 
-        if (request()->has('start_date') && request()->has('due_date')) {
+        if (request()->has('start_date')) {
             try {
                 $this->start = request()->date('start_date');
                 $this->start->setTimezone('Europe/Istanbul');
                 $this->start->startOfDay();
 
-                $this->due = request()->date('due_date');
-                $this->due->setTimezone('Europe/Istanbul');
-                $this->due->endOfDay();
+                if (request()->has('due_date')) {
+                    $this->due = request()->date('due_date');
+                    $this->due->setTimezone('Europe/Istanbul');
+                    $this->due->endOfDay();
+                } else {
+                    $this->due = $this->start->clone()->endOfDay();
+                }
+
             } catch (\Exception|\Error $exception) {
                 $this->start = now()->startOfMonth();
                 $this->due = now()->endOfMonth();
@@ -67,7 +72,7 @@ class ReportService
     {
         $cacheKey = $this->getCacheKey('report:transaction');
 
-        if (Cache::has($cacheKey)) {
+        if (app()->isProduction() && Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
 
@@ -159,7 +164,9 @@ class ReportService
             }
         }
 
-        Cache::put($cacheKey, $data, now()->addMinutes(20));
+        if (app()->isProduction()) {
+            Cache::put($cacheKey, $data, now()->addMinutes(20));
+        }
 
         return $data;
     }
@@ -168,7 +175,7 @@ class ReportService
     {
         $cacheKey = $this->getCacheKey('report:patient', true);
 
-        if (Cache::has($cacheKey)) {
+        if (app()->isProduction() && Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
 
@@ -192,7 +199,9 @@ class ReportService
 
         $data = compact('total', 'old_patient', 'registered_own', 'per_province', 'per_gender');
 
-        Cache::put($cacheKey, $data, now()->addMinutes(20));
+        if (app()->isProduction()) {
+            Cache::put($cacheKey, $data, now()->addMinutes(20));
+        }
 
         return $data;
     }
@@ -201,7 +210,7 @@ class ReportService
     {
         $cacheKey = $this->getCacheKey('report:treatment');
 
-        if (Cache::has($cacheKey)) {
+        if (app()->isProduction() && Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
 
@@ -261,7 +270,9 @@ class ReportService
             'perProductReport' => $per_product,
         ];
 
-        Cache::put($cacheKey, $response, now()->addMinutes(20));
+        if (app()->isProduction()) {
+            Cache::put($cacheKey, $data, now()->addMinutes(20));
+        }
 
         return $response;
     }
@@ -270,7 +281,7 @@ class ReportService
     {
         $cacheKey = $this->getCacheKey('report:appointment');
 
-        if (Cache::has($cacheKey)) {
+        if (app()->isProduction() && Cache::has($cacheKey)) {
             return Cache::get($cacheKey);
         }
 
@@ -329,7 +340,9 @@ class ReportService
             'per_doctor' => $per_doctor,
         ];
 
-        Cache::put($cacheKey, $data, now()->addMinutes(20));
+        if (app()->isProduction()) {
+            Cache::put($cacheKey, $data, now()->addMinutes(20));
+        }
 
         return $data;
     }

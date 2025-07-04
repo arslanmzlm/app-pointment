@@ -21,11 +21,20 @@ const dateRange = ref<Array<Date | null>>([
 
 const entire = ref<boolean>(false);
 
-if (urlParams.has('start_date') && urlParams.has('due_date')) {
+if (urlParams.has('start_date')) {
     const startDate = new Date(<string>urlParams.get('start_date'));
-    const dueDate = new Date(<string>urlParams.get('due_date'));
-    if (!isNaN(startDate.getTime()) && !isNaN(dueDate.getTime())) {
-        dateRange.value = [startDate, dueDate];
+    let dueDate = null;
+
+    if (urlParams.has('due_date')) {
+        dueDate = new Date(<string>urlParams.get('due_date'));
+    }
+
+    if (!isNaN(startDate.getTime())) {
+        if (dueDate && !isNaN(dueDate.getTime())) {
+            dateRange.value = [startDate, dueDate];
+        } else {
+            dateRange.value = [startDate, null];
+        }
     }
 } else if (urlParams.has('entire') && getBool(urlParams.get('entire'))) {
     entire.value = true;
@@ -39,10 +48,10 @@ const title = computed(() => {
     }
 
     let val = '';
-    if (dateFormat(dateRange.value[0]) !== null) {
+    if (dateRange.value[0] !== null) {
         val += dateFormat(dateRange.value[0]);
     }
-    if (dateFormat(dateRange.value[1]) !== null) {
+    if (dateRange.value[1] !== null) {
         if (val !== '') val += ' -';
         val += ' ' + dateFormat(dateRange.value[1]);
     }
@@ -56,9 +65,12 @@ function reloadData() {
         due_date?: string;
     } = {};
 
-    if (isArray(dateRange.value) && dateRange.value[0] !== null && dateRange.value[1] !== null) {
+    if (isArray(dateRange.value) && dateRange.value[0] !== null) {
         query.start_date = dayjs(dateRange.value[0]).format('YYYY-MM-DD');
-        query.due_date = dayjs(dateRange.value[1]).format('YYYY-MM-DD');
+
+        if (dateRange.value[1] !== null) {
+            query.due_date = dayjs(dateRange.value[1]).format('YYYY-MM-DD');
+        }
 
         router.visit(window.location.pathname, {
             only: ['reports'],
@@ -91,10 +103,7 @@ const items = ref([
                 command: () => {
                     entire.value = false;
 
-                    dateRange.value = [
-                        dayjs().startOf('day').toDate(),
-                        dayjs().endOf('day').toDate(),
-                    ];
+                    dateRange.value = [dayjs().startOf('day').toDate(), null];
                 },
             },
             {
@@ -102,10 +111,7 @@ const items = ref([
                 command: () => {
                     entire.value = false;
 
-                    dateRange.value = [
-                        dayjs().subtract(1, 'day').startOf('day').toDate(),
-                        dayjs().subtract(1, 'day').endOf('day').toDate(),
-                    ];
+                    dateRange.value = [dayjs().subtract(1, 'day').startOf('day').toDate(), null];
                 },
             },
             {
@@ -168,13 +174,12 @@ function clearCache() {
             key: props.cacheKey,
         };
 
-        if (
-            isArray(dateRange.value) &&
-            dateRange.value[0] !== null &&
-            dateRange.value[1] !== null
-        ) {
+        if (isArray(dateRange.value) && dateRange.value[0] !== null) {
             data.start_date = dayjs(dateRange.value[0]).format('YYYY-MM-DD');
-            data.due_date = dayjs(dateRange.value[1]).format('YYYY-MM-DD');
+
+            if (dateRange.value[1] !== null) {
+                data.due_date = dayjs(dateRange.value[1]).format('YYYY-MM-DD');
+            }
         } else if (entire.value === true) {
             data.entire = true;
         }

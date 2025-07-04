@@ -121,7 +121,7 @@ onMounted(() => {
                                         <div class="flex size-5 items-center justify-center border">
                                             <span
                                                 v-if="field.value.selection === option.id"
-                                                class="pi pi-check text-xs"
+                                                class="pi pi-check text-xs !font-bold"
                                             ></span>
                                         </div>
                                     </div>

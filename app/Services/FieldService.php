@@ -36,11 +36,14 @@ class FieldService
 
             if ($field->input === FieldInput::RADIO_TEXT && $fieldValue) {
                 $value = [
-                    'selection' => $fieldValue->field_value_id,
+                    'selection' => $fieldValue->field_value_id ? intval($fieldValue->field_value_id) : null,
                     'description' => $fieldValue->value,
                 ];
             } else {
                 $value = $fieldValue?->field_value_id ?? $fieldValue?->value ?? null;
+                if ($value && is_numeric($value)) {
+                    $value = intval($value);
+                }
             }
 
             $data->push([
@@ -68,9 +71,11 @@ class FieldService
         $patient->fields->each(function ($row) use ($fields, $data) {
             $field = $fields->find($row->field_id);
 
-            if ($field->input === FieldInput::RADIO_TEXT && $row->field_value_id && $fieldValue = $field->values->find($row->field_value_id)) {
+            if ($field->input === FieldInput::RADIO_TEXT) {
+                $fieldValue = $field->values->find($row->field_value_id);
+
                 $value = [
-                    'selection' => $fieldValue->value,
+                    'selection' => $fieldValue?->value,
                     'description' => $row->value,
                 ];
             } else if ($row->field_value_id && $fieldValue = $field->values->find($row->field_value_id)) {
@@ -109,14 +114,14 @@ class FieldService
 
             $value = null;
 
-            if ($patientField) {
-                if ($field->input === FieldInput::RADIO_TEXT) {
-                    $value = [
-                        'selection' => $patientField->field_value_id,
-                        'description' => $patientField->value,
-                        'options' => $field->values()->get(['id', 'value']),
-                    ];
-                } else if ($patientField->field_value_id && $fieldValue = $field->values->find($patientField->field_value_id)) {
+            if ($field->input === FieldInput::RADIO_TEXT) {
+                $value = [
+                    'selection' => $patientField && $patientField->field_value_id ? intval($patientField->field_value_id) : null,
+                    'description' => $patientField?->value,
+                    'options' => $field->values()->get(['id', 'value']),
+                ];
+            } else if ($patientField) {
+                if ($patientField->field_value_id && $fieldValue = $field->values->find($patientField->field_value_id)) {
                     $value = $fieldValue->value;
                 } else if ($field->input === FieldInput::CHECKBOX) {
                     $value = $field->values->whereIn('id', $patientField->value)->pluck('value');

@@ -12,6 +12,10 @@ class SmsService
 
     public static function send(string $phone, string $message)
     {
+        if (!app()->isProduction()) {
+            return 0;
+        }
+
         $client = self::getClient();
 
         $requestData = [
@@ -44,6 +48,10 @@ class SmsService
 
     public static function sendMany(array $messages)
     {
+        if (!app()->isProduction()) {
+            return 0;
+        }
+
         $client = self::getClient();
 
         $requestData = [
@@ -85,7 +93,7 @@ class SmsService
         return self::$client;
     }
 
-    private static function getUrl(string $endpoint)
+    private static function getUrl(string $endpoint): string
     {
         return trim(config('sms.url'), '/') . "/{$endpoint}";
     }

@@ -147,7 +147,8 @@ class PatientService
                 ];
 
                 if ($field->input === FieldInput::RADIO_TEXT) {
-                    $data['value'] = $value['description'];
+                    $description = $value['description'] ? trim($value['description']) : null;
+                    $data['value'] = !empty($description) ? $description : null;
                     if (!empty($value['selection']) && $fieldValue = $field->values->find($value['selection'])) {
                         $data['field_value_id'] = $fieldValue->id;
                     } else {
@@ -164,8 +165,12 @@ class PatientService
                 }
 
                 if ($patientField = $patientFields->find($row['id'])) {
-                    $patientField->update($data);
-                } else {
+                    if (empty($data['value']) && empty($data['field_value_id'])) {
+                        $patientField->delete();
+                    } else {
+                        $patientField->update($data);
+                    }
+                } else if (!empty($data['value']) && !empty($data['field_value_id'])) {
                     $patient->fields()->create($data);
                 }
             }
