@@ -175,7 +175,7 @@ class AppointmentService
 
         return FilterHelper::filter($query)
             ->dateRange(default: 0)
-            ->hasHospital()
+            ->hasHospital(true)
             ->hasDoctor()
             ->get();
     }

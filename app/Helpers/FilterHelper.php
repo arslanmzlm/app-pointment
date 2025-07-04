@@ -196,10 +196,16 @@ class FilterHelper
         return $this;
     }
 
-    public function hasHospital(): self
+    public function hasHospital(bool $fromRequest = false): self
     {
         if (auth()->user() && auth()->user()->hasHospital()) {
             $this->query->where('hospital_id', auth()->user()->hospital_id);
+        } else if ($fromRequest) {
+            $value = request('hospital');
+
+            if (!empty($value) && is_numeric($value)) {
+                $this->query->where('hospital_id', $value);
+            }
         }
 
         return $this;

@@ -149,6 +149,7 @@ if (urlParams.has('states')) {
 
 function reloadData() {
     let query: {
+        hospital?: number;
         doctor?: number;
         start_date?: string;
         due_date?: string;
@@ -157,6 +158,8 @@ function reloadData() {
 
     if (filters.value.doctor !== null) {
         query.doctor = filters.value.doctor;
+    } else if (filters.value.hospital !== null) {
+        query.hospital = filters.value.hospital;
     }
 
     if (isArray(filters.value.dateRange)) {
@@ -221,7 +224,7 @@ function showConfirm(event: Event, url: string) {
         accept: () => {
             router.post(url, undefined, {
                 onSuccess: () => {
-                    updateEvents();
+                    reloadData();
                 },
             });
         },

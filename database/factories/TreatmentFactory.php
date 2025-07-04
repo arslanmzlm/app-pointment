@@ -94,10 +94,10 @@ class TreatmentFactory extends Factory
             $treatment->total = $total;
             $treatment->save();
 
-            $payments = [
+            $payments = [[
                 'method' => $this->faker->randomElement(PaymentMethod::cases()),
                 'amount' => $treatment->total
-            ];
+            ]];
 
             TransactionService::storeByTreatment($treatment, $payments);
         });

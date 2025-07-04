@@ -44,7 +44,6 @@ class AppointmentFactory extends Factory
             'start_date' => $date,
             'due_date' => $date->clone()->addMinutes($duration),
             'duration' => $duration,
-            'title' => $this->faker->sentence(),
             'note' => $this->faker->boolean() ? $this->faker->paragraph() : null,
         ];
     }
