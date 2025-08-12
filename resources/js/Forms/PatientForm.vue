@@ -82,8 +82,22 @@ function getFieldError(field_id: number) {
                     label="Telefon"
                     mask="phone"
                     name="phone"
-                    required
                 />
+
+                <div>
+                    <InputField
+                        v-model="form.contact_phone"
+                        :error="form.errors.contact_phone"
+                        label="İkincil Telefon"
+                        mask="contact_phone"
+                        name="contact_phone"
+                    />
+
+                    <Message class="mt-3" severity="error">
+                        Yurt dışı veya Veli numaralarını bu alana giriniz. Yurt dışı numaralarında
+                        ülke kodu ile başlamalı, yurt içi numaralarında ise 0 ile başlamalı.
+                    </Message>
+                </div>
 
                 <InputField
                     v-model="form.email"

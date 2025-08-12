@@ -9,6 +9,10 @@ class FieldValue extends Model
 {
     protected $fillable = ['field_id', 'value'];
 
+    protected $casts = [
+        'field_id' => 'int',
+    ];
+
     public function field(): BelongsTo
     {
         return $this->belongsTo(Field::class);

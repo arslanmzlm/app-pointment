@@ -29,6 +29,7 @@ class Doctor extends Model
     ];
 
     protected $casts = [
+        'hospital_id' => 'int',
         'phone' => PhoneCast::class,
     ];
 

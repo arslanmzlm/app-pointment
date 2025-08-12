@@ -79,6 +79,7 @@ export interface Patient extends Model {
     gender: Gender;
     birthday: string | null;
     notification: boolean;
+    contact_phone: string | null;
     created_by: number | null;
     deleted_at: string | null;
 

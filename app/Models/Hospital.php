@@ -32,6 +32,7 @@ class Hospital extends Model
     ];
 
     protected $casts = [
+        'province_id' => 'int',
         'phone' => PhoneCast::class,
         'disabled_days' => 'json',
     ];

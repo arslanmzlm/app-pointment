@@ -9,7 +9,12 @@ class PatientField extends Model
 {
     protected $fillable = ['patient_id', 'field_id', 'field_value_id', 'value'];
 
-    protected $casts = ['value' => 'json'];
+    protected $casts = [
+        'patient_id' => 'int',
+        'field_id' => 'int',
+        'field_value_id' => 'int',
+        'value' => 'json'
+    ];
 
     public function patient(): BelongsTo
     {

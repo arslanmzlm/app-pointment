@@ -24,6 +24,10 @@ class Transaction extends Model
     ];
 
     protected $casts = [
+        'user_id' => 'int',
+        'doctor_id' => 'int',
+        'patient_id' => 'int',
+        'treatment_id' => 'int',
         'type' => TransactionType::class,
         'method' => PaymentMethod::class,
         'total' => 'float',

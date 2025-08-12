@@ -19,6 +19,7 @@ class Notification extends Model
     ];
 
     protected $casts = [
+        'user_id' => 'int',
         'seen_at' => 'timestamp',
     ];
 

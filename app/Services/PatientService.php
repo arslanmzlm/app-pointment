@@ -63,12 +63,13 @@ class PatientService
         $patient->name = $data['name'];
         $patient->surname = $data['surname'];
         $patient->full_name = "{$data['name']} {$data['surname']}";
-        $patient->phone = $data['phone'];
+        $patient->phone = $data['phone'] ?? null;
         $patient->email = $data['email'] ?? null;
         $patient->gender = $data['gender'] ?? null;
         $patient->birthday = !empty($data['birthday']) ? Carbon::parse($data['birthday'])->setTimezone('Europe/Istanbul') : $patient->birthday;
         $patient->notification = $data['notification'] ?? true;
         $patient->created_by = auth()->id();
+        $patient->contact_phone = $data['contact_phone'] ?? null;
 
         $patient->save();
 
@@ -108,6 +109,7 @@ class PatientService
         $patient->gender = $data['gender'] ?? $patient->gender;
         $patient->birthday = !empty($data['birthday']) ? Carbon::parse($data['birthday'])->setTimezone('Europe/Istanbul') : $patient->birthday;
         $patient->notification = $data['notification'] ?? $patient->notification ?? true;
+        $patient->contact_phone = $data['contact_phone'] ?? $patient->contact_phone;
 
         $patient->save();
 

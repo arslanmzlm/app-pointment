@@ -9,6 +9,11 @@ class ProductStock extends Model
 {
     protected $fillable = ['hospital_id', 'product_id', 'stock'];
 
+    protected $casts = [
+        'hospital_id' => 'int',
+        'product_id' => 'int',
+    ];
+
     protected $appends = ['hospital_name'];
 
     public function hospital(): BelongsTo

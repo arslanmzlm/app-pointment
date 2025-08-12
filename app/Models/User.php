@@ -34,6 +34,9 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
+        'hospital_id' => 'int',
+        'doctor_id' => 'int',
+        'patient_id' => 'int',
         'password' => 'hashed',
         'type' => UserType::class,
         'phone' => PhoneCast::class,

@@ -97,24 +97,26 @@ class UserService
 
     public function storeOrUpdatePatient(Patient $patient, ?string $password = null): ?User
     {
-        $phoneClean = preg_replace('/^(?:\+90|90|0)\s*/', '', $patient->phone->getRawNumber());
+        if ($patient->phone) {
+            $phoneClean = preg_replace('/^(?:\+90|90|0)\s*/', '', $patient->phone->getRawNumber());
 
-        $data = [
-            'username' => $phoneClean,
-            'name' => $patient->full_name,
-            'phone' => $patient->phone,
-            'email' => $patient->email,
-        ];
+            $data = [
+                'username' => $phoneClean,
+                'name' => $patient->full_name,
+                'phone' => $patient->phone,
+                'email' => $patient->email,
+            ];
 
-        if (!$patient->user) {
-            $data['patient_id'] = $patient->id;
-            $data['password'] = $password ?? substr($phoneClean, -6);
-        }
+            if (!$patient->user) {
+                $data['patient_id'] = $patient->id;
+                $data['password'] = $password ?? substr($phoneClean, -6);
+            }
 
-        if ($patient->user) {
-            return $this->update($patient->user, $data);
-        } else if (!User::query()->where('username', $data['username'])->withTrashed()->exists()) {
-            return $this->store($data, UserType::PATIENT);
+            if ($patient->user) {
+                return $this->update($patient->user, $data);
+            } else if (!User::query()->where('username', $data['username'])->withTrashed()->exists()) {
+                return $this->store($data, UserType::PATIENT);
+            }
         }
 
         return null;

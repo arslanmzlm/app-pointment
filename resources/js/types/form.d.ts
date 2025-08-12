@@ -56,6 +56,7 @@ export interface PatientFormType extends FormDataType {
     gender: Gender;
     birthday: Date | null;
     notification: boolean;
+    contact_phone: string | null;
     fields: {
         id: number | null;
         field_id: number;

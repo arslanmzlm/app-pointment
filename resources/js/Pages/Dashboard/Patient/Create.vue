@@ -26,6 +26,7 @@ const form = useForm<PatientFormType>({
     birthday: null,
     notification: true,
     fields: [],
+    contact_phone: null,
 });
 
 if (props.fields.length > 0) {

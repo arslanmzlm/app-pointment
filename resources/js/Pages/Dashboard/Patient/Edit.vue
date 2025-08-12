@@ -28,6 +28,7 @@ const form = useForm<PatientFormType>({
     birthday: patient.birthday ? new Date(patient.birthday) : null,
     notification: patient.notification,
     fields: props.fieldValues,
+    contact_phone: patient.contact_phone,
 });
 
 function submit() {

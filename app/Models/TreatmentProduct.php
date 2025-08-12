@@ -13,6 +13,8 @@ class TreatmentProduct extends Model
     protected $fillable = ['treatment_id', 'product_id', 'count', 'price', 'total'];
 
     protected $casts = [
+        'treatment_id' => 'int',
+        'product_id' => 'int',
         'count' => 'int',
         'price' => 'float',
         'total' => 'float',

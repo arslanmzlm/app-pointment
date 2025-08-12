@@ -19,6 +19,7 @@ class Service extends Model
     ];
 
     protected $casts = [
+        'hospital_id' => 'int',
         'active' => 'boolean',
         'price' => 'float',
     ];

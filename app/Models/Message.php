@@ -18,6 +18,8 @@ class Message extends Model
     ];
 
     protected $casts = [
+        'patient_id' => 'int',
+        'user_id' => 'int',
         'type' => MessageType::class,
     ];
 

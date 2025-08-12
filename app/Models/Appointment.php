@@ -28,6 +28,13 @@ class Appointment extends Model
     ];
 
     protected $casts = [
+        'appointment_type_id' => 'int',
+        'user_id' => 'int',
+        'hospital_id' => 'int',
+        'doctor_id' => 'int',
+        'patient_id' => 'int',
+        'treatment_id' => 'int',
+        'service_id' => 'int',
         'state' => AppointmentState::class,
         'start_date' => 'datetime',
         'due_date' => 'datetime',

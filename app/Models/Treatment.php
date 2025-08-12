@@ -21,6 +21,10 @@ class Treatment extends Model
     ];
 
     protected $casts = [
+        'user_id' => 'int',
+        'hospital_id' => 'int',
+        'doctor_id' => 'int',
+        'patient_id' => 'int',
         'total' => 'float',
     ];
 

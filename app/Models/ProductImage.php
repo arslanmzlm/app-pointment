@@ -10,6 +10,10 @@ class ProductImage extends Model
 {
     protected $fillable = ['product_id', 'file', 'order'];
 
+    protected $casts = [
+        'product_id' => 'int',
+    ];
+
     protected $appends = ['file_src'];
 
     public function product(): BelongsTo

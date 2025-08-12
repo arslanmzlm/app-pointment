@@ -26,9 +26,11 @@ class Patient extends Model
         'gender',
         'birthday',
         'notification',
+        'contact_phone'
     ];
 
     protected $casts = [
+        'province_id' => 'int',
         'old' => 'boolean',
         'phone' => PhoneCast::class,
         'gender' => Gender::class,

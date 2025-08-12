@@ -10,6 +10,8 @@ class TreatmentService extends Model
     protected $fillable = ['treatment_id', 'service_id', 'price'];
 
     protected $casts = [
+        'treatment_id' => 'int',
+        'service_id' => 'int',
         'price' => 'float',
     ];
 
