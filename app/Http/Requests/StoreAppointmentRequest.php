@@ -43,6 +43,7 @@ class StoreAppointmentRequest extends FormRequest
             'appointments.*.start_date' => ['required', 'date'],
             'appointments.*.duration' => ['required', 'integer', 'min:1'],
             'appointments.*.note' => ['nullable', 'string', 'max:255'],
+            'appointments.*.call' => ['boolean'],
             'appointments.*' => ['array', new CheckAppointmentOverlap()],
         ];
 

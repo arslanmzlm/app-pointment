@@ -4,7 +4,9 @@ import {clone} from 'lodash';
 import {Button, Card, DatePicker, FloatLabel, InputNumber, Select} from 'primevue';
 import {computed, watch} from 'vue';
 import PreviewDates from '@/Forms/Parts/PreviewDates.vue';
+import CheckboxField from '@/Components/Form/CheckboxField.vue';
 import TextareaField from '@/Components/Form/TextareaField.vue';
+import {getDuration} from '@/Utilities/hospital';
 import {AppointmentMultipleFormType, TreatmentFormType} from '@/types/form';
 import {AppointmentType, Service} from '@/types/model';
 
@@ -21,7 +23,7 @@ function add() {
     if (props.form.appointments) {
         props.form.appointments.push({
             start_date: null,
-            duration: 60,
+            duration: <number>getDuration(30),
             appointment_type_id: null,
             service_id: null,
             note: '',
@@ -141,7 +143,6 @@ watch(
                                 "
                                 :min-date="getMinDate(index)"
                                 :step-minute="5"
-                                date-format="d MM"
                                 fluid
                                 hour-format="24"
                                 show-time
@@ -205,6 +206,15 @@ watch(
 
                             <label class="block lg:hidden">Hizmet</label>
                         </FloatLabel>
+
+                        <div class="lg:col-span-full">
+                            <CheckboxField
+                                v-model="appointment.call"
+                                :value="true"
+                                label="Özel aranma isteği"
+                                name="call"
+                            />
+                        </div>
 
                         <FloatLabel class="lg:col-span-full" variant="on">
                             <TextareaField v-model="appointment.note" fluid size="small" />

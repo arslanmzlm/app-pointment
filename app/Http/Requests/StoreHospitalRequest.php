@@ -29,6 +29,7 @@ class StoreHospitalRequest extends FormRequest
             'end_work' => ['required', 'date_format:H:i', 'after:start_work'],
             'duration' => ['required', 'integer', 'min:0'],
             'disabled_days' => ['nullable', 'array'],
+            'disabled_days.*' => ['required', 'integer', 'min:1', 'max:7'],
             'title' => ['nullable', 'string', 'max:255'],
             'logo' => ['nullable', 'image', 'max:1024'],
             'description' => ['nullable', 'string'],

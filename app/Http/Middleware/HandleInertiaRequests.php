@@ -34,6 +34,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
+                'hospital' => $request->user()?->hospital,
             ],
             'toasts' => $this->getToasts($request),
             'activeAppointment' => $this->getActiveAppointment()

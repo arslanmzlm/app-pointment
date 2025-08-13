@@ -6,38 +6,39 @@ import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import FullCalendar from '@fullcalendar/vue3';
-import {router} from '@inertiajs/vue3';
+import {router, usePage} from '@inertiajs/vue3';
 import dayjs from 'dayjs';
 import {isArray} from 'lodash';
 import {Button, Card, ContextMenu, Tag, useConfirm} from 'primevue';
 import {MenuItem} from 'primevue/menuitem';
 import {computed, reactive, ref, watch} from 'vue';
-import {useHospitalStore} from '@/Stores/hospital';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
+import DateField from '@/Components/Form/DateField.vue';
 import MultiSelectField from '@/Components/Form/MultiSelectField.vue';
 import SelectField from '@/Components/Form/SelectField.vue';
-import {appointmentState} from '@/Utilities/enumHelper';
+import {appointmentState, appointmentStateCalendarColor} from '@/Utilities/enumHelper';
+import {getEndWork, getStartWork} from '@/Utilities/hospital';
 import {getInt} from '@/Utilities/parser';
 import {AppointmentState} from '@/types/enums';
 import {Appointment, Doctor, Hospital} from '@/types/model';
 import {EnumResponse} from '@/types/response';
 
 const props = defineProps<{
-    appointments: Appointment[] | null;
+    appointments?: Appointment[] | null;
     appointmentStates: EnumResponse[];
     hospitals?: Hospital[];
     doctors?: Doctor[];
 }>();
 
-const hospitalStore = useHospitalStore();
+const hospital = usePage().props.auth.hospital;
 
 const calendarOptions = reactive<CalendarOptions>({
     plugins: [dayGridPlugin, listPlugin, timeGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
     locale: trLocale,
     expandRows: true,
-    slotMinTime: `${hospitalStore.start_work}:00:00`,
-    slotMaxTime: `${hospitalStore.end_work}:00:00`,
+    slotMinTime: getStartWork('09:00'),
+    slotMaxTime: getEndWork('19:00'),
     eventClick: (data) => {
         openContextMenu(data);
     },
@@ -75,7 +76,7 @@ function updateEvents() {
                 title: eventTitle(appointment),
                 start: appointment.start_date,
                 end: appointment.due_date,
-                color: appointmentState(appointment.state).color,
+                color: appointmentStateCalendarColor(appointment),
             };
         });
     } else {
@@ -264,6 +265,16 @@ const openContextMenu = (event: EventClickArg) => {
     eventId.value = event.event.id;
     menu.value.show(event.jsEvent);
 };
+
+const fullCalendar = ref();
+const goToDate = ref<Date | null>(null);
+
+watch(goToDate, () => {
+    if (goToDate.value && fullCalendar.value) {
+        fullCalendar.value.getApi().changeView('timeGridDay');
+        fullCalendar.value.getApi().gotoDate(goToDate.value);
+    }
+});
 </script>
 
 <template>
@@ -320,13 +331,37 @@ const openContextMenu = (event: EventClickArg) => {
                             />
                         </template>
                     </MultiSelectField>
+
+                    <DateField v-model="goToDate" label="Tarihe Git" show-icon />
                 </div>
             </template>
         </Card>
 
         <Card>
             <template #content>
-                <FullCalendar :options="calendarOptions" />
+                <h4>Statüler</h4>
+                <div class="flex flex-col gap-3 lg:flex-row">
+                    <div v-for="(state, index) in appointmentStates" :key="index">
+                        <div
+                            :style="{backgroundColor: appointmentState(state.value).color}"
+                            class="inline-block size-3 rounded-full"
+                        ></div>
+                        <div class="ml-1 inline-block">{{ state.label }}</div>
+                    </div>
+                    <div>
+                        <div
+                            class="inline-block size-3 rounded-full"
+                            style="background-color: var(--p-fuchsia-500)"
+                        ></div>
+                        <div class="ml-1 inline-block">Özel arama istiyor</div>
+                    </div>
+                </div>
+            </template>
+        </Card>
+
+        <Card>
+            <template #content>
+                <FullCalendar ref="fullCalendar" :options="calendarOptions" />
             </template>
         </Card>
     </DashboardLayout>

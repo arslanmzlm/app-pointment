@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 import {Head, Link, useForm} from '@inertiajs/vue3';
-import axios from 'axios';
-import {isObject} from 'lodash';
 import {Button} from 'primevue';
-import {useHospitalStore} from '@/Stores/hospital';
 import GuestAuthLayout from '@/Layouts/GuestAuthLayout.vue';
 import InputField from '@/Components/Form/InputField.vue';
 
@@ -12,18 +9,8 @@ const form = useForm({
     password: '',
 });
 
-const hospitalStore = useHospitalStore();
-
 function submit() {
-    form.post(route('login.store'), {
-        onSuccess: () => {
-            axios.get(route('dashboard.hospital.info')).then((response) => {
-                if (response.data !== null && isObject(response.data)) {
-                    hospitalStore.update(response.data);
-                }
-            });
-        },
-    });
+    form.post(route('login.store'));
 }
 </script>
 

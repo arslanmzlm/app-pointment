@@ -205,6 +205,7 @@ export interface Appointment extends Model {
     note: string | null;
     treatment_id: number | null;
     service_id: number | null;
+    call: boolean;
 
     type_name: string;
     state_label: string;

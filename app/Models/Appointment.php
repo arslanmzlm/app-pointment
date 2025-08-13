@@ -25,6 +25,7 @@ class Appointment extends Model
         'duration',
         'note',
         'service_id',
+        'call',
     ];
 
     protected $casts = [
@@ -38,6 +39,7 @@ class Appointment extends Model
         'state' => AppointmentState::class,
         'start_date' => 'datetime',
         'due_date' => 'datetime',
+        'call' => 'boolean',
     ];
 
     protected $appends = ['type_name', 'state_label'];

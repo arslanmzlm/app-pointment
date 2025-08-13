@@ -227,6 +227,7 @@ class AppointmentService
         $appointment->duration = $data['duration'];
         $appointment->note = $data['note'];
         $appointment->service_id = $data['service_id'];
+        $appointment->call = $data['call'] ?? false;
 
         $appointment->save();
 

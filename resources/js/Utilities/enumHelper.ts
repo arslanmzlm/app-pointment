@@ -1,4 +1,5 @@
 import {AppointmentState, Gender, PaymentMethod, TransactionType, UserType} from '@/types/enums';
+import {Appointment} from '@/types/model';
 
 export function userType(method: UserType): {
     severity: string;
@@ -90,7 +91,7 @@ export function appointmentState(state: AppointmentState): {
             };
         case AppointmentState.RESCHEDULED:
             return {
-                color: 'var(--p-orange-600)',
+                color: 'var(--p-yellow-400)',
                 class: 'bg-warn',
                 severity: 'warn',
                 icon: 'pi pi-calendar-plus',
@@ -102,6 +103,19 @@ export function appointmentState(state: AppointmentState): {
                 severity: 'danger',
                 icon: 'pi pi-calendar-times',
             };
+    }
+}
+
+export function appointmentStateCalendarColor(appointment: Appointment): string {
+    if (
+        appointment.call &&
+        (appointment.state === AppointmentState.PENDING ||
+            appointment.state === AppointmentState.CONFIRMED ||
+            appointment.state === AppointmentState.RESCHEDULED)
+    ) {
+        return 'var(--p-fuchsia-500)';
+    } else {
+        return appointmentState(appointment.state).color;
     }
 }
 
