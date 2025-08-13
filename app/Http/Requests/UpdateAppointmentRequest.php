@@ -32,6 +32,7 @@ class UpdateAppointmentRequest extends FormRequest
             'duration' => ['required', 'integer', 'min:1'],
             'note' => ['nullable', 'string', 'max:255'],
             'service_id' => ['nullable', Rule::exists('services', 'id')->where('hospital_id', $appointment->hospital_id)],
+            'call' => ['boolean'],
         ];
     }
 }

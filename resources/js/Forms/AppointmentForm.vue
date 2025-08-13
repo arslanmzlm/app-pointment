@@ -4,6 +4,7 @@ import {Button, Card} from 'primevue';
 import {computed} from 'vue';
 import PatientSelector from '@/Forms/Parts/PatientSelector.vue';
 import PreviewDates from '@/Forms/Parts/PreviewDates.vue';
+import CheckboxField from '@/Components/Form/CheckboxField.vue';
 import DateField from '@/Components/Form/DateField.vue';
 import InputField from '@/Components/Form/InputField.vue';
 import NumberField from '@/Components/Form/NumberField.vue';
@@ -78,6 +79,13 @@ const disabledDates = computed(() => {
                     :options="services"
                     label="Hizmet"
                     required
+                />
+
+                <CheckboxField
+                    v-model="form.call"
+                    :value="true"
+                    label="Özel aranma isteği"
+                    name="call"
                 />
             </template>
         </Card>

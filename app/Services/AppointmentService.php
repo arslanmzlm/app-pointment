@@ -272,6 +272,7 @@ class AppointmentService
         $appointment->appointment_type_id = $data['appointment_type_id'];
         $appointment->note = $data['note'];
         $appointment->service_id = $data['service_id'];
+        $appointment->call = $data['call'] ?? false;
 
         $appointment->save();
 

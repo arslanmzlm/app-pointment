@@ -22,6 +22,7 @@ const form = useForm<AppointmentFormType>({
     duration: appointment.duration,
     note: appointment.note,
     service_id: appointment.service_id,
+    call: appointment.call,
 });
 
 function submit() {
