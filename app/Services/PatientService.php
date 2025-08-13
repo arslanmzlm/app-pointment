@@ -172,7 +172,7 @@ class PatientService
                     } else {
                         $patientField->update($data);
                     }
-                } else if (!empty($data['value']) && !empty($data['field_value_id'])) {
+                } else if (!empty($data['value']) || !empty($data['field_value_id'])) {
                     $patient->fields()->create($data);
                 }
             }
